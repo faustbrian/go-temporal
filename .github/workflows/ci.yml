@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  GO_VERSION: 1.26.5
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - run: make fmt-check vet lint staticcheck
+      - name: Advisory NilAway
+        continue-on-error: true
+        run: make nilaway
+      - run: make test coverage race fuzz-smoke actionlint docs api-check
+      - run: make vuln
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+        with:
+          name: coverage
+          path: coverage.out
+
+  compatibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: faustbrian/temporal
+          ref: 469603239dbe700739c29b4c532a90382b6cbedf
+          path: php-temporal
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240
+        with:
+          php-version: 8.5.8
+          coverage: none
+      - run: make php-compat PHP_TEMPORAL_SOURCE="$GITHUB_WORKSPACE/php-temporal"
+
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18.3-alpine
+        env:
+          POSTGRES_DB: temporal_test
+          POSTGRES_USER: temporal
+          POSTGRES_PASSWORD: temporal
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U temporal -d temporal_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - run: go test -tags=integration ./postgres
+        env:
+          TEMPORAL_POSTGRES_DSN: postgres://temporal:temporal@localhost:5432/temporal_test?sslmode=disable
+
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - run: make mutation
+
+  benchmarks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - run: make bench | tee benchmarks.txt
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+        with:
+          name: benchmarks
+          path: benchmarks.txt
+
+  release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [quality, compatibility, postgres, mutation, benchmarks]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Create immutable source release
+        run: gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
