@@ -3,7 +3,7 @@ package instant
 import (
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // Duration returns the fixed elapsed duration from start to end. It reports

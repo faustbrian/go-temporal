@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"unicode/utf8"
 
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/dateperiod"
+	calendar "github.com/faustbrian/go-calendar"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/dateperiod"
 )
 
 // ParseDate decodes one complete bounded civil-date interval.

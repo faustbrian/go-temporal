@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	calendartz "github.com/faustbrian/golib/pkg/calendar/timezone"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	calendartz "github.com/faustbrian/go-calendar/timezone"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 func instantAt(hour int) time.Time {

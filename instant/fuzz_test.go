@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/instant"
 )
 
 func FuzzInstantSplitting(f *testing.F) {

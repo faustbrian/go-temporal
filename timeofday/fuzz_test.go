@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/timeofday"
 )
 
 func FuzzDailyIntervalIteration(f *testing.F) {

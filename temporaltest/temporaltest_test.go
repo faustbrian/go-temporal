@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
-	"github.com/faustbrian/golib/pkg/temporal/temporaltest"
-	"github.com/faustbrian/golib/pkg/temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/instant"
+	"github.com/faustbrian/go-temporal/temporaltest"
+	"github.com/faustbrian/go-temporal/timeofday"
 )
 
 func TestAllenCasesAreExhaustiveAndConverseCoherent(t *testing.T) {

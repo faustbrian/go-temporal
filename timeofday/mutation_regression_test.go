@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	calendartz "github.com/faustbrian/golib/pkg/calendar/timezone"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	calendar "github.com/faustbrian/go-calendar"
+	calendartz "github.com/faustbrian/go-calendar/timezone"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 func mutationTime(t *testing.T, hour, minute, second, nanosecond, digits int) Time {

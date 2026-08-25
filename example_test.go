@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	calendartz "github.com/faustbrian/golib/pkg/calendar/timezone"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/dateperiod"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
-	"github.com/faustbrian/golib/pkg/temporal/timeofday"
+	calendar "github.com/faustbrian/go-calendar"
+	calendartz "github.com/faustbrian/go-calendar/timezone"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/dateperiod"
+	"github.com/faustbrian/go-temporal/instant"
+	"github.com/faustbrian/go-temporal/timeofday"
 )
 
 func Example_instantPeriod() {

@@ -3,7 +3,7 @@ package timeofday
 import (
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // Since constructs a daily interval of duration beginning at start.

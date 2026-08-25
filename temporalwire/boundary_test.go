@@ -3,9 +3,9 @@ package temporalwire_test
 import (
 	"testing"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/temporalwire"
-	"github.com/faustbrian/golib/pkg/temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/temporalwire"
+	"github.com/faustbrian/go-temporal/timeofday"
 )
 
 func TestWireDocumentsAcceptEveryExactLimit(t *testing.T) {

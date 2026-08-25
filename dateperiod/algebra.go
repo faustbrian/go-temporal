@@ -1,8 +1,8 @@
 package dateperiod
 
 import (
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	calendar "github.com/faustbrian/go-calendar"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // RelationTo returns the unique Allen endpoint relation to other. Empty date

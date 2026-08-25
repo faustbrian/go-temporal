@@ -4,7 +4,7 @@ import (
 	"cmp"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // RoundingMode defines fixed-duration rounding direction.

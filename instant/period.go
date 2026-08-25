@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // Period is an immutable bounded interval between two instants. Construction

@@ -3,7 +3,7 @@ package instant
 import (
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // Point constructs a singleton at value.

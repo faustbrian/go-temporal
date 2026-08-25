@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/dateperiod"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
+	calendar "github.com/faustbrian/go-calendar"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/dateperiod"
+	"github.com/faustbrian/go-temporal/instant"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

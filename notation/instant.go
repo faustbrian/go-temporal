@@ -7,8 +7,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/instant"
 )
 
 // Format identifies a supported interval notation.

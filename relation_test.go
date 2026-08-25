@@ -3,7 +3,7 @@ package temporal_test
 import (
 	"testing"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 func TestRelationsHaveCoherentConverses(t *testing.T) {

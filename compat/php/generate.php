@@ -348,7 +348,7 @@ $publicAPI = public_api_inventory($source);
 $fixture = [
     'schema' => 'php-temporal-compat/v1',
     'source' => [
-        'repository' => 'github.com/faustbrian/golib/pkg/temporal',
+        'repository' => 'github.com/faustbrian/go-temporal',
         'commit' => '469603239dbe700739c29b4c532a90382b6cbedf',
         'namespace' => 'Cline\\Temporal',
     ],

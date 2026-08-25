@@ -3,11 +3,11 @@
 package temporalvalidation
 
 import (
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/dateperiod"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
-	"github.com/faustbrian/golib/pkg/temporal/timeofday"
-	validation "github.com/faustbrian/golib/pkg/validation"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/dateperiod"
+	"github.com/faustbrian/go-temporal/instant"
+	"github.com/faustbrian/go-temporal/timeofday"
+	validation "github.com/faustbrian/go-validation"
 )
 
 // InstantNonEmpty rejects instant periods representing the empty set.

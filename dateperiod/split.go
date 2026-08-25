@@ -1,7 +1,7 @@
 package dateperiod
 
 import (
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // SplitDays partitions represented dates into closed chunks of at most step

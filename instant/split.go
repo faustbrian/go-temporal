@@ -3,7 +3,7 @@ package instant
 import (
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // SplitForward partitions p from start to end by a positive fixed step.

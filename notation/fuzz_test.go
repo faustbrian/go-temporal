@@ -3,9 +3,9 @@ package notation_test
 import (
 	"testing"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/notation"
-	"github.com/faustbrian/golib/pkg/temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/notation"
+	"github.com/faustbrian/go-temporal/timeofday"
 )
 
 func FuzzInstantNotation(f *testing.F) {

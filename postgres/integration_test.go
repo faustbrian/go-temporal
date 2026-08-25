@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/dateperiod"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
-	temporalpostgres "github.com/faustbrian/golib/pkg/temporal/postgres"
+	calendar "github.com/faustbrian/go-calendar"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/dateperiod"
+	"github.com/faustbrian/go-temporal/instant"
+	temporalpostgres "github.com/faustbrian/go-temporal/postgres"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 )

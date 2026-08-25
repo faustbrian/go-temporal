@@ -3,8 +3,8 @@ package temporalwire_test
 import (
 	"testing"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/temporalwire"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/temporalwire"
 )
 
 func FuzzDocumentJSON(f *testing.F) {

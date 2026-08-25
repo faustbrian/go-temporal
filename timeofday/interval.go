@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // IntervalKind distinguishes ordinary, circular, collapsed, and full-day

@@ -5,9 +5,9 @@ package temporaltest
 import (
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
-	"github.com/faustbrian/golib/pkg/temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/instant"
+	"github.com/faustbrian/go-temporal/timeofday"
 )
 
 // TestingT is the minimal testing contract used by assertions.

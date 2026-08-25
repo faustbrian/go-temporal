@@ -61,5 +61,5 @@ assertions.
 The Go package documentation is the signature-level source of truth:
 
 ```sh
-go doc -all github.com/faustbrian/golib/pkg/temporal/instant
+go doc -all github.com/faustbrian/go-temporal/instant
 ```

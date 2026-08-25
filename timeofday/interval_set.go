@@ -7,7 +7,7 @@ import (
 	"sort"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 type dailySegment struct {

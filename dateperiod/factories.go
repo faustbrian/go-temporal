@@ -3,8 +3,8 @@ package dateperiod
 import (
 	"time"
 
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	calendar "github.com/faustbrian/go-calendar"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // Day constructs a one-day closed period.

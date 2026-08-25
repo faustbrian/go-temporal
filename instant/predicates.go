@@ -1,7 +1,7 @@
 package instant
 
 import (
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 // IsBefore reports the formal Allen before relation.

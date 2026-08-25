@@ -1,22 +1,32 @@
 # temporal
 
+[![CI](https://github.com/faustbrian/go-temporal/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-temporal/actions/workflows/ci.yml)
+[![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-temporal/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-temporal.svg)](https://pkg.go.dev/github.com/faustbrian/go-temporal)
+[![Release](https://img.shields.io/github/v/release/faustbrian/go-temporal?sort=semver)](https://github.com/faustbrian/go-temporal/releases)
+[![Go](https://img.shields.io/badge/go-1.26.6-00ADD8?logo=go)](https://go.dev/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 `temporal` is immutable temporal algebra for Go. It provides bounded instant
 and civil-date periods, explicit endpoint bounds, Allen relations, normalized
 period sets, fixed elapsed durations, local times, circular daily intervals,
 strict notation, versioned scalar/set encoding, PostgreSQL range adapters, and
 bounded parsers and iterators.
 
-The module is a Go-native successor to `github.com/faustbrian/golib/pkg/temporal`. It
+The module is a Go-native successor to `github.com/faustbrian/go-temporal`. It
 preserves useful mathematics without copying mutable or PHP-specific APIs.
 
 ## Install
 
 ```sh
-go get github.com/faustbrian/golib/pkg/temporal
+go get github.com/faustbrian/go-temporal
 ```
 
 The minimum supported toolchain is Go 1.26.6. Civil-date features use
-`github.com/faustbrian/golib/pkg/calendar`; clocks and timers deliberately remain in
+`github.com/faustbrian/go-calendar`; clocks and timers deliberately remain in
 `clock`.
 
 ## Five-minute instant period

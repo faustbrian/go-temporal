@@ -9,7 +9,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
+	temporal "github.com/faustbrian/go-temporal"
 )
 
 const day = 24 * time.Hour

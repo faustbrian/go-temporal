@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/postgres"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/postgres"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

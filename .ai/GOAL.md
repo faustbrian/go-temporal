@@ -8,7 +8,7 @@ time-of-day values, fixed durations, circular daily intervals, and normalized
 interval sets.
 
 The package MUST provide a Go-native successor to
-`github.com/faustbrian/golib/pkg/temporal` while using explicit immutable values, typed
+`github.com/faustbrian/go-temporal` while using explicit immutable values, typed
 errors, generics only where they clarify safety, and standard Go integration.
 It MUST preserve the valuable mathematical behavior without transliterating a
 mutable or PHP-specific API.

@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/instant"
-	"github.com/faustbrian/golib/pkg/temporal/notation"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/instant"
+	"github.com/faustbrian/go-temporal/notation"
 )
 
 func notationPeriod(t *testing.T, bounds temporal.Bounds) instant.Period {

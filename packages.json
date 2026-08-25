@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "repository": "github.com/faustbrian/go-temporal",
+  "packages": [
+    {
+      "module_directory": ".",
+      "directory": ".",
+      "name": "temporal",
+      "import_path": "github.com/faustbrian/go-temporal",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "dateperiod",
+      "name": "dateperiod",
+      "import_path": "github.com/faustbrian/go-temporal/dateperiod",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "instant",
+      "name": "instant",
+      "import_path": "github.com/faustbrian/go-temporal/instant",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "notation",
+      "name": "notation",
+      "import_path": "github.com/faustbrian/go-temporal/notation",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "postgres",
+      "name": "postgres",
+      "import_path": "github.com/faustbrian/go-temporal/postgres",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "temporalconfig",
+      "name": "temporalconfig",
+      "import_path": "github.com/faustbrian/go-temporal/temporalconfig",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "temporaltest",
+      "name": "temporaltest",
+      "import_path": "github.com/faustbrian/go-temporal/temporaltest",
+      "kind": "test support",
+      "production": false,
+      "executable": true,
+      "coverage_required": false,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "temporalvalidation",
+      "name": "temporalvalidation",
+      "import_path": "github.com/faustbrian/go-temporal/temporalvalidation",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "temporalwire",
+      "name": "temporalwire",
+      "import_path": "github.com/faustbrian/go-temporal/temporalwire",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "timeofday",
+      "name": "timeofday",
+      "import_path": "github.com/faustbrian/go-temporal/timeofday",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    }
+  ]
+}
