@@ -63,7 +63,7 @@ bench:
 	$(GO) test -run='^$$' -bench=. -benchmem ./...
 
 mutation:
-	$$(git rev-parse --show-toplevel)/scripts/check-mutation.sh .
+	$$(git rev-parse --show-toplevel)/.golib/scripts/check-mutation.sh .
 
 vuln: $(TOOLS_BIN)/govulncheck
 	$(TOOLS_BIN)/govulncheck ./...
