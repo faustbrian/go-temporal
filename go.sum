@@ -5,7 +5,7 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/faustbrian/go-calendar v1.0.0 h1:slKfy50cBpXkVt604i2EK4yNB4HDMsW83o5DexEUwJM=
 github.com/faustbrian/go-calendar v1.0.0/go.mod h1:BgDZIrkEx6CZDebZLlrApN8s47aFdQMc0aRB+ZKXx/s=
-github.com/faustbrian/go-config v1.0.0 h1:p2YTEa83SbgpH+TFFCyyihRfeMP+onmFqNv0DoR8clE=
+github.com/faustbrian/go-config v1.0.0 h1:qDlATQn1NgZGahHtqQFZXAGify8rF95OHc2u1EauxyY=
 github.com/faustbrian/go-config v1.0.0/go.mod h1:pnqiOzoqa91gG8gWhQI7S1BXuE/E0DKRCOh19SQ3qYc=
 github.com/faustbrian/go-validation v1.0.0 h1:xdcMbe4iXEgWBbX7KOpxY63dsCnevzhgk2jtPw5iD0s=
 github.com/faustbrian/go-validation v1.0.0/go.mod h1:oSoKEITwgaCzWpdgdxrV+Q6QPpteJJvRldAeOZL9Plg=
