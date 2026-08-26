@@ -9,7 +9,7 @@ github.com/faustbrian/go-config v1.0.0 h1:7hN5bWt63nUd87Iu99gI/87aUOLjE437WGrhJB
 github.com/faustbrian/go-config v1.0.0/go.mod h1:pnqiOzoqa91gG8gWhQI7S1BXuE/E0DKRCOh19SQ3qYc=
 github.com/faustbrian/go-validation v1.0.0 h1:xdcMbe4iXEgWBbX7KOpxY63dsCnevzhgk2jtPw5iD0s=
 github.com/faustbrian/go-validation v1.0.0/go.mod h1:oSoKEITwgaCzWpdgdxrV+Q6QPpteJJvRldAeOZL9Plg=
-github.com/faustbrian/go-wire v1.0.0 h1:mNATysIJhl1PC5jsQxN+2URsx95iRuiZDsjq3Rs6pyI=
+github.com/faustbrian/go-wire v1.0.0 h1:m0Rcz+vdhobAKzaySFmMFgwq4qTCzeKhJG1wQ0n6dKM=
 github.com/faustbrian/go-wire v1.0.0/go.mod h1:wcQnBeNpF6pw7vFhnBd0W9+qS7zlATxn2zuUae8aLyU=
 github.com/fxamacker/cbor/v2 v2.9.2 h1:X4Ksno9+x3cz0TZv69ec1hxP/+tymuR8PXQJyDwfh78=
 github.com/fxamacker/cbor/v2 v2.9.2/go.mod h1:vM4b+DJCtHn+zz7h3FFp/hDAI9WNWCsZj23V5ytsSxQ=
