@@ -1,0 +1,108 @@
+schema_version: 1
+tool_version: v1.0.6
+tool_checksums_sha256: d43e6a07573371e95d5fcf47c94e78f9983e903ef4eaab8e39f9bfc5dc224525
+manifest:
+  modules: modules.json
+  packages: packages.json
+evidence:
+  root: .verification
+mutation:
+  root: .verification/mutation
+  imports:
+  - module: .
+    archive: .verification/mutation/bootstrap/root.zip
+    ledger: .verification/mutation/migration-ledger.json
+api:
+  baselines:
+  - module: .
+    mode: apidiff
+    path: api/v1.export
+operations:
+- module: .
+  gate: fuzz
+  steps:
+  - type: go-test
+    packages: [./notation]
+    fuzz: '^FuzzInstantNotation$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./notation]
+    fuzz: '^FuzzDateNotation$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./notation]
+    fuzz: '^FuzzDailyIntervalNotation$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./notation]
+    fuzz: '^FuzzFixedDurationNotation$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./notation]
+    fuzz: '^FuzzLocalTime$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./instant]
+    fuzz: '^FuzzInstantSplitting$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./dateperiod]
+    fuzz: '^FuzzDateSplitting$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./timeofday]
+    fuzz: '^FuzzDailySetNormalization$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./timeofday]
+    fuzz: '^FuzzDailyIntervalIteration$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./temporalwire]
+    fuzz: '^FuzzDocumentJSON$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./temporalwire]
+    fuzz: '^FuzzCollectionDocumentJSON$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./postgres]
+    fuzz: '^FuzzInstantRangeSQLScan$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./postgres]
+    fuzz: '^FuzzDateRangeSQLScan$'
+    budget: 10000x
+    timeout: 2m
+  - type: go-test
+    packages: [./postgres]
+    fuzz: '^FuzzInstantPGXMultirange$'
+    budget: 10000x
+    timeout: 2m
+- module: .
+  gate: docs
+  steps:
+  - type: make
+    makefile: verification/package.mk
+    target: docs
+    timeout: 20m
+- module: .
+  gate: benchmark
+  steps:
+  - type: go-test
+    packages: [./...]
+    benchmark: .
+    budget: 100ms
+    timeout: 20m

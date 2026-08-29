@@ -131,16 +131,19 @@ optional `temporalchart` extension seam over immutable public values.
 
 ## Gate evidence
 
-The following current-tree commands passed:
+The release baseline recorded the following gate evidence. The migrated
+entrypoints below preserve those gate scopes; fresh post-migration execution
+is provided by the shared CI workflow.
 
-- `make check`: format, vet, lint, static analysis, tests, exact 100.0%
+- `make check`: the shared contract's format, vet, lint, static analysis, tests,
+  exact 100.0%
   statement coverage, race, fuzz smoke, workflow lint, docs, and API diff;
-- `make nilaway`: advisory and clean;
-- `make vuln`: no known vulnerabilities;
-- `make bench`: relation and notation hot paths reported zero allocations;
-- `make php-compat PHP_TEMPORAL_SOURCE=<pinned checkout>`: exact fixture match;
+- `golib check --all`: the shared contract's blocking security and benchmark
+  gates;
+- `make -f verification/package.mk php-compat PHP_TEMPORAL_SOURCE=<pinned checkout>`:
+  exact fixture match;
 - `go test -tags=integration ./postgres`: PostgreSQL 18.3 integration;
-- `make mutation`: no surviving mutant in any configured scope.
+- `golib mutation --module .`: no surviving mutant in any configured scope.
 
 Mutation detail:
 
