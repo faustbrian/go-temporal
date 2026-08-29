@@ -126,11 +126,9 @@ Full PHP-package compatibility is not claimed while this gap remains.
 
 ```sh
 make check
-make nilaway       # advisory
-make mutation
-make vuln
-make bench
-make php-compat PHP_TEMPORAL_SOURCE=/path/to/php-temporal
+golib mutation --module .
+golib docs check --module .
+make -f verification/package.mk php-compat PHP_TEMPORAL_SOURCE=/path/to/php-temporal
 ```
 
 See [docs/testing.md](docs/testing.md) for the evidence model and

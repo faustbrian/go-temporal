@@ -1,6 +1,7 @@
 # Testing evidence
 
-Production statement coverage is exactly 100%, enforced by `make coverage`.
+Production statement coverage is exactly 100%, enforced by the shared `golib`
+repository contract.
 Confidence additionally comes from:
 
 - all 13 Allen relations across all four bound modes;
@@ -18,9 +19,9 @@ Confidence additionally comes from:
 - allocation-reporting benchmarks for relations, parsing, 1,000-period
   normalization, splitting, daily algebra, and early limit rejection.
 
-Every CI command has a matching `make` target. NilAway is advisory because the
-upstream analyzer explicitly permits false positives; other configured gates
-block releases.
+The reusable CI workflow runs the same contract locally exposed by `make check`.
+NilAway is advisory because the upstream analyzer explicitly permits false
+positives; other configured gates block releases.
 
 The requirement-by-requirement truth tables, algebra laws, resource budgets,
 interoperability runs, and mutation classifications are recorded in the

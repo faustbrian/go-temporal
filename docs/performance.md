@@ -11,6 +11,7 @@ Values are small immutable structs. Normalized sets own copied slices.
 | normalized intersection | `O(n+m)` |
 | split/steps | `O(k)`, bounded by `Limits.Steps` |
 
-Run `make bench` for relation, normalization, parser, and daily-set allocation
-evidence. Benchmark output is an artifact, not a cross-machine hard threshold;
-regression decisions compare like-for-like runners.
+The shared `golib check` contract runs relation, normalization, parser, and
+daily-set allocation benchmarks. Benchmark output is an artifact, not a
+cross-machine hard threshold; regression decisions compare like-for-like
+runners.
