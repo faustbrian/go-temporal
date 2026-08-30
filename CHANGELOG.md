@@ -14,6 +14,11 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 - Remove the archived monorepo documentation link; package guidance remains in
   the repository-owned documentation.
+- Publish the auditable [temporal specification register](docs/specification-decisions.md)
+  and conformance map: TEMPORAL-DEC-001 sha256:7858a8bedd4143c177fb9670508d564d30049b8c099c66d19ffc3b83a7f3da14,
+  TEMPORAL-DEC-002 sha256:01b85dcf0eac47ccfa1f69262044dd1206e261a72009a24832f112a2bb8555a1,
+  TEMPORAL-DEC-003 sha256:2caaf9ce53ec7c2c383c73925f4a672a8f78e4724370bba981fbfdc8c82b2028,
+  and TEMPORAL-DEC-004 sha256:aa94f39bba10c27ad85d3c2a400ce1190f0695bbba30d0ed526dcd5ec234755c.
 
 ## 1.0.0 - 2026-08-25
 

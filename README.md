@@ -134,6 +134,9 @@ make -f verification/package.mk php-compat PHP_TEMPORAL_SOURCE=/path/to/php-temp
 See [docs/testing.md](docs/testing.md) for the evidence model and
 [docs/hardening.md](docs/hardening.md) for the current algebra audit. See
 [SECURITY.md](SECURITY.md) for hostile-input and disclosure guidance.
+The [specification decision register](docs/specification-decisions.md) separates
+standard-backed codec and PostgreSQL behavior from package API policy. This
+library does not implement the Temporal service protocol.
 
 ## License
 

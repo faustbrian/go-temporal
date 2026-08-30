@@ -20,8 +20,16 @@ docs/quickstart.md
 docs/relations.md
 docs/security.md
 docs/semantics.md
+docs/specification-decisions.md
 docs/testing.md
-docs/troubleshooting.md'
+docs/troubleshooting.md
+specification/README.md
+specification/conformance.json
+specification/decision-history.json
+specification/decisions.json
+specification/interoperability.tsv
+specification/monitoring.json
+specification/sources.tsv'
 
 echo "$required" | while IFS= read -r file; do
     test -s "$file" || { echo "missing documentation: $file"; exit 1; }

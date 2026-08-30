@@ -19,6 +19,28 @@ api:
     path: api/v1.export
 operations:
 - module: .
+  gate: conformance
+  steps:
+  - type: go-test
+    packages: [./notation]
+    run: '^(TestBoundedNotationRoundTripsEveryBoundsMode|TestISO8601RoundTripAndLosslessBoundPolicy|TestBracketSemanticsAreExact|TestFixedISODurationFormatRoundTrips)$'
+    timeout: 5m
+  - type: go-test
+    packages: [./postgres]
+    run: '^(TestInstantPGXRangeRoundTripsEveryBoundsMode|TestDatePGXRangeCanonicalizesRepresentedDates)$'
+    timeout: 5m
+- module: .
+  gate: interoperability
+  steps:
+  - type: go-test
+    packages: [./notation]
+    run: '^(TestBoundedNotationRoundTripsEveryBoundsMode|TestBracketSemanticsAreExact|TestFixedISODurationRejectsCalendarAndMalformedComponents)$'
+    timeout: 5m
+  - type: go-test
+    packages: [./postgres]
+    run: '^TestDatePGXRangeCanonicalizesRepresentedDates$'
+    timeout: 5m
+- module: .
   gate: fuzz
   steps:
   - type: go-test

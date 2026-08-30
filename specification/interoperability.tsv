@@ -1,0 +1,5 @@
+case_id	peer	peer_version	peer_source_sha256	local_evidence	observation	classification
+instant-rfc3339	Go time	go1.26.6	standard-library	TestBoundedNotationRoundTripsEveryBoundsMode	RFC3339Nano endpoints round-trip with explicit offsets and at most nine fractional digits	normative agreement
+interval-bounds	faustbrian/temporal	469603239dbe700739c29b4c532a90382b6cbedf	8cb1a19051dd812064d1b2363c57e0f2c20d9175d67b05b6526bb00e29b52c52	TestBracketSemanticsAreExact	Both implementations expose ISO 80000 and Bourbaki brackets; Go additionally rejects lossy ISO 8601 bounds	deliberate policy difference
+fixed-duration	faustbrian/temporal	469603239dbe700739c29b4c532a90382b6cbedf	8cb1a19051dd812064d1b2363c57e0f2c20d9175d67b05b6526bb00e29b52c52	TestFixedISODurationRejectsCalendarAndMalformedComponents	The peer accepts calendar-relative ISO durations while Go restricts this API to fixed elapsed units	deliberate policy difference
+postgresql-daterange	PostgreSQL	18.3	990b51ea9026e83727f053b7c161040150984c234fbbc3629cf869c70fe5bff3	TestPostgreSQLRangeAndMultirangeRoundTrips	Finite dateranges canonicalize to inclusive lower and exclusive upper bounds	normative agreement
