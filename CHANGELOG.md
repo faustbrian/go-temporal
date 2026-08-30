@@ -6,7 +6,7 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ### Changed
 
-- Replace copied repository tooling with the released `go-library-tools` v1.0.6
+- Replace copied repository tooling with the released `go-library-tools` v1.0.13
   contract while retaining repository-owned fixtures, API baselines, and
   content-addressed mutation evidence.
 
