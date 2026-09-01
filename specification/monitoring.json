@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-30",
+  "review_interval_days": 90,
+  "authorities": [
+    {"id":"rfc3339-source","kind":"specification","version":"RFC 3339","url":"https://www.rfc-editor.org/rfc/rfc3339.txt","sha256":"9ab2b8864a85dca73a88f49b0927bc7bc85f596926e4fd1890905777924e700a","specifications":["RFC 3339 Date and Time on the Internet: Timestamps"]},
+    {"id":"rfc3339-errata","kind":"errata","url":"https://errata.rfc-editor.org/rfc3339","sha256":"b75d552ecea5ea3ba4e5b85d2e722b45f541c9796c38be9f35a8b864fe50541e","specifications":["RFC 3339 Date and Time on the Internet: Timestamps"]},
+    {"id":"temporal-compat-source","kind":"extension","version":"469603239dbe700739c29b4c532a90382b6cbedf","url":"https://codeload.github.com/faustbrian/temporal/tar.gz/469603239dbe700739c29b4c532a90382b6cbedf","sha256":"8cb1a19051dd812064d1b2363c57e0f2c20d9175d67b05b6526bb00e29b52c52","specifications":["faustbrian/temporal notation compatibility profile"]},
+    {"id":"temporal-compat-releases","kind":"releases","url":"https://api.github.com/repos/faustbrian/temporal/tags","sha256":"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945","specifications":["faustbrian/temporal notation compatibility profile"]},
+    {"id":"postgresql18-ranges","kind":"specification","version":"PostgreSQL 18.3","url":"https://www.postgresql.org/docs/18/rangetypes.html","sha256":"990b51ea9026e83727f053b7c161040150984c234fbbc3629cf869c70fe5bff3","specifications":["PostgreSQL 18.3 range and multirange semantics"]},
+    {"id":"postgresql18-releases","kind":"releases","url":"https://www.postgresql.org/docs/release/18.3/","sha256":"b77f24f3c47eac89b76837b85e654ca3df42d971063c5ff18603be91e0e5dbcb","specifications":["PostgreSQL 18.3 range and multirange semantics"]}
+  ]
+}
