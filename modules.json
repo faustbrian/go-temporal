@@ -159,10 +159,22 @@
       "test_tags": [
         "integration"
       ],
-      "interoperability_tools": [],
-      "specifications": [],
-      "conformance_corpora": [],
-      "provenance": [],
+      "interoperability_tools": [
+        "Go 1.26.6 time package",
+        "faustbrian/temporal at 469603239dbe700739c29b4c532a90382b6cbedf",
+        "PostgreSQL 18.3"
+      ],
+      "specifications": [
+        "RFC 3339 Date and Time on the Internet: Timestamps",
+        "faustbrian/temporal notation compatibility profile",
+        "PostgreSQL 18.3 range and multirange semantics"
+      ],
+      "conformance_corpora": [
+        "specification/interoperability.tsv"
+      ],
+      "provenance": [
+        "specification/sources.tsv"
+      ],
       "goal_files": [
         ".ai/GOAL.md",
         ".ai/GOAL_HARDEN.md"
@@ -247,7 +259,7 @@
       "gates": {
         "api_compatibility": true,
         "benchmarks": true,
-        "conformance": false,
+        "conformance": true,
         "coverage": true,
         "documentation": true,
         "fuzz": true,
