@@ -12,6 +12,11 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 - Adopt the checksum-verified `go-library-tools` v1.3.0 CLI, schema-v2 cohesion
   metadata, and repository-local cohesion gate while retaining package-owned
   source and evidence.
+- Adopt the checksum-verified `go-library-tools` v1.4.0 CLI and immutable
+  shared workflow so authority monitoring uses the stabilized request profile
+  and public-first module resolution.
+- Reconcile the `go-calendar`, `go-config`, `go-validation`, and `go-wire`
+  v1.0.0 checksums with their immutable public module archives.
 
 ### Documentation
 
@@ -21,7 +26,7 @@ This project follows Semantic Versioning. Dates use ISO 8601.
   TEMPORAL-DEC-004 sha256:116d63c5d537d80713f36b10a1a992c6ad104b561abd53f5a3fae3e0ab7f5d1b.
 - Remove the archived monorepo documentation link; package guidance remains in
   the repository-owned documentation.
-- Link the module to the immutable v1.3.0 Golib ecosystem guidance.
+- Link the module to the immutable v1.4.0 Golib ecosystem guidance.
 - Publish the auditable [temporal specification register](docs/specification-decisions.md)
   and conformance map: TEMPORAL-DEC-001 sha256:7858a8bedd4143c177fb9670508d564d30049b8c099c66d19ffc3b83a7f3da14,
   TEMPORAL-DEC-002 sha256:01b85dcf0eac47ccfa1f69262044dd1206e261a72009a24832f112a2bb8555a1,

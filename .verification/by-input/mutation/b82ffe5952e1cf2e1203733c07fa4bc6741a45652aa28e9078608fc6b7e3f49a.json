@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "repository": "github.com/faustbrian/go-temporal",
+  "module": ".",
+  "package": "temporalwire",
+  "gate": "mutation",
+  "input_digest": "sha256:b82ffe5952e1cf2e1203733c07fa4bc6741a45652aa28e9078608fc6b7e3f49a",
+  "verifier_digest": "sha256:9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+  "result": "passed",
+  "report_digest": "sha256:2ded504f9cc62c4f0bbdec0f0e5a64450234a9ea94165db4ae9a397018b80317",
+  "environment": {
+    "CGO_ENABLED": "1",
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.26.6",
+    "gremlins_binary_sha256": "sha256:e05bf25d661b16ab96d6f2e17aed481d393930e0f24205cc341b010f887368a0"
+  },
+  "completed_at": "2026-09-03T09:41:12.923622Z"
+}

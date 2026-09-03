@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "repository": "github.com/faustbrian/go-temporal",
+  "module": ".",
+  "package": "instant",
+  "gate": "mutation",
+  "input_digest": "sha256:643fd66123147f96ada2a6d2566fcd03bdf43ee12773c8c2fd60d7b886a1e689",
+  "verifier_digest": "sha256:9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+  "result": "passed",
+  "report_digest": "sha256:4073917668cc9639c7ff279095fdf286ccb546968cb7cdf2882f4a045466212f",
+  "environment": {
+    "CGO_ENABLED": "1",
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.26.6",
+    "gremlins_binary_sha256": "sha256:e05bf25d661b16ab96d6f2e17aed481d393930e0f24205cc341b010f887368a0"
+  },
+  "completed_at": "2026-09-03T09:38:44.919099Z"
+}

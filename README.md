@@ -122,8 +122,8 @@ package and no terminal/Gantt renderer in core. Every PHP chart type and option
 is inventoried, and the core period/set values preserve a future renderer seam.
 Full PHP-package compatibility is not claimed while this gap remains.
 
-See the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.3.0/docs/ecosystem/README.md)
-and [package-family selection guidance](https://github.com/faustbrian/go-library-tools/blob/v1.3.0/docs/ecosystem/design-language.md#package-families-and-selection)
+See the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md)
+and [package-family selection guidance](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/design-language.md#package-families-and-selection)
 for the shared design language this module follows.
 
 ## Quality and local gates
