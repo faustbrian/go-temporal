@@ -9,11 +9,15 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 - Replace copied repository tooling with the released `go-library-tools`
   v1.2.0 specification-governance contract while retaining repository-owned
   fixtures, API baselines, and content-addressed mutation evidence.
+- Adopt the checksum-verified `go-library-tools` v1.3.0 CLI, schema-v2 cohesion
+  metadata, and repository-local cohesion gate while retaining package-owned
+  source and evidence.
 
 ### Documentation
 
 - Remove the archived monorepo documentation link; package guidance remains in
   the repository-owned documentation.
+- Link the module to the immutable v1.3.0 Golib ecosystem guidance.
 - Publish the auditable [temporal specification register](docs/specification-decisions.md)
   and conformance map: TEMPORAL-DEC-001 sha256:7858a8bedd4143c177fb9670508d564d30049b8c099c66d19ffc3b83a7f3da14,
   TEMPORAL-DEC-002 sha256:01b85dcf0eac47ccfa1f69262044dd1206e261a72009a24832f112a2bb8555a1,
