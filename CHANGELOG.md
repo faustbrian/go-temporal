@@ -15,6 +15,10 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ### Documentation
 
+- Revalidate the pinned Temporal compatibility profile and advance the
+  loss-checked range authority and supported deployment baseline to PostgreSQL
+  18.6 without changing the selected mapping behavior.
+  TEMPORAL-DEC-004 sha256:116d63c5d537d80713f36b10a1a992c6ad104b561abd53f5a3fae3e0ab7f5d1b.
 - Remove the archived monorepo documentation link; package guidance remains in
   the repository-owned documentation.
 - Link the module to the immutable v1.3.0 Golib ecosystem guidance.

@@ -3,6 +3,10 @@
 `postgres` maps instant periods to `tstzrange`, date periods to `daterange`, and
 normalized sets to corresponding multiranges.
 
+PostgreSQL 18.6 is the supported deployment baseline. Its range definition is
+identical to the reviewed 18.3 definition, including timestamp precision and
+discrete-range canonicalization.
+
 PostgreSQL timestamps are microsecond precision. Instant values with non-zero
 sub-microsecond data are rejected; they are never rounded silently. Unbounded
 and PostgreSQL-empty ranges are rejected because core periods are bounded and
