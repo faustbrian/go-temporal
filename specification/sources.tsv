@@ -1,4 +1,4 @@
 id	version	url	sha256	status
 rfc3339-source	RFC 3339	https://www.rfc-editor.org/rfc/rfc3339.txt	9ab2b8864a85dca73a88f49b0927bc7bc85f596926e4fd1890905777924e700a	pinned
 temporal-compat-source	469603239dbe700739c29b4c532a90382b6cbedf	https://codeload.github.com/faustbrian/temporal/tar.gz/469603239dbe700739c29b4c532a90382b6cbedf	8cb1a19051dd812064d1b2363c57e0f2c20d9175d67b05b6526bb00e29b52c52	pinned
-postgresql18-ranges	PostgreSQL 18.3	https://www.postgresql.org/docs/18/rangetypes.html	990b51ea9026e83727f053b7c161040150984c234fbbc3629cf869c70fe5bff3	pinned
+postgresql18-ranges	PostgreSQL 18.6	https://raw.githubusercontent.com/postgres/postgres/REL_18_6/doc/src/sgml/rangetypes.sgml	cfeffb134d2acc2ec45141726583b041410665c4a2f8ecf66cd3f9484a7f0014	pinned

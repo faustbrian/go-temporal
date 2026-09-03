@@ -228,7 +228,7 @@
           "faq": "docs/faq.md",
           "changelog": "CHANGELOG.md",
           "pkg_go_dev": "https://pkg.go.dev/github.com/faustbrian/go-temporal",
-          "ecosystem_index": "https://github.com/faustbrian/go-library-tools/blob/v1.3.0/docs/ecosystem/README.md"
+          "ecosystem_index": "https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md"
         },
         "known_good_compatibility_sets": [],
         "delivery": {
@@ -262,12 +262,12 @@
       "interoperability_tools": [
         "Go 1.26.6 time package",
         "faustbrian/temporal at 469603239dbe700739c29b4c532a90382b6cbedf",
-        "PostgreSQL 18.3"
+        "PostgreSQL 18.6"
       ],
       "specifications": [
         "RFC 3339 Date and Time on the Internet: Timestamps",
         "faustbrian/temporal notation compatibility profile",
-        "PostgreSQL 18.3 range and multirange semantics"
+        "PostgreSQL 18.6 range and multirange semantics"
       ],
       "conformance_corpora": [
         "specification/interoperability.tsv"
