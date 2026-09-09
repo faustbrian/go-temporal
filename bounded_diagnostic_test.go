@@ -1,3 +1,4 @@
+//lint:file-ignore SA1019 Compatibility coverage intentionally exercises deprecated paths.
 package temporal_test
 
 import (
@@ -13,8 +14,8 @@ import (
 	newpostgres "github.com/faustbrian/go-temporal/adapters/postgres"
 	newwire "github.com/faustbrian/go-temporal/adapters/wire"
 	"github.com/faustbrian/go-temporal/notation"
-	oldconfig "github.com/faustbrian/go-temporal/temporalconfig"
-	"github.com/faustbrian/go-temporal/temporalwire"
+	oldconfig "github.com/faustbrian/go-temporal/temporalconfig" //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
+	"github.com/faustbrian/go-temporal/temporalwire"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
 	"github.com/faustbrian/go-temporal/timeofday"
 )
 

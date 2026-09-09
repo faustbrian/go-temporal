@@ -1,3 +1,4 @@
+// Package diagnostic provides bounded errors for hostile input boundaries.
 package diagnostic
 
 import "unicode/utf8"

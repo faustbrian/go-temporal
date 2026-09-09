@@ -16,7 +16,10 @@ func TestErrorBoundsUTF8AndProtectsCauseSlice(t *testing.T) {
 		t.Fatalf("bounded error = %q", err)
 	}
 
-	bounded := err.(*Error)
+	var bounded *Error
+	if !errors.As(err, &bounded) {
+		t.Fatalf("bounded error type = %T", err)
+	}
 	causes := bounded.Unwrap()
 	causes[0] = errors.New("changed")
 	if !errors.Is(bounded, sentinel) {

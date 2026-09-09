@@ -20,7 +20,7 @@ import (
 func TestPostgreSQLRangeAndMultirangeRoundTrips(t *testing.T) {
 	dsn := os.Getenv("TEMPORAL_POSTGRES_DSN")
 	if dsn == "" {
-		t.Fatal("TEMPORAL_POSTGRES_DSN is required for integration tests")
+		t.Skip("TEMPORAL_POSTGRES_DSN is not set")
 	}
 	ctx := context.Background()
 	connection, err := pgx.Connect(ctx, dsn)
