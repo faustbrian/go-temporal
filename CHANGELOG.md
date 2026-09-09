@@ -4,6 +4,8 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ## Unreleased
 
+## 1.1.0 - 2026-09-09
+
 ### Added
 
 - Add canonical `adapters/config`, `adapters/postgres`,
@@ -27,6 +29,9 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 - Adopt the checksum-verified `go-library-tools` v1.4.0 CLI and immutable
   shared workflow so authority monitoring uses the stabilized request profile
   and public-first module resolution.
+- Pin the shared workflow and CLI to `go-library-tools` v1.6.1 so ordinary CI
+  runs the proportional local contract while release rehearsals remain
+  explicit.
 - Reconcile the `go-calendar`, `go-config`, `go-validation`, and `go-wire`
   v1.0.0 checksums with their immutable public module archives.
 - Require `go-validation` v1.1.0 so Temporal findings compose with context
