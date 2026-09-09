@@ -101,11 +101,15 @@ fmt.Println(night.Kind(), night.Duration(), offHours.Len(), instantNight.Start()
 - `dateperiod`: bounded `calendar.Date` periods and normalized sets.
 - `timeofday`: local times, fixed durations, circular intervals, and sets.
 - `notation`: strict ISO 8601, ISO 80000, and Bourbaki codecs.
-- `postgres`: loss-checked PostgreSQL range and multirange adapters.
-- `temporalwire`: versioned format-neutral scalar and set documents.
-- `temporalvalidation`: deterministic `validation` rules.
-- `temporalconfig`: atomic `config` text wrappers.
+- `adapters/postgres`: loss-checked PostgreSQL range and multirange adapters.
+- `adapters/wire`: versioned format-neutral scalar and set documents.
+- `adapters/validation`: deterministic `validation` rules.
+- `adapters/config`: atomic `config` text wrappers.
 - `temporaltest`: exhaustive relation fixtures and set assertions.
+
+The released `postgres`, `temporalwire`, `temporalvalidation`, and
+`temporalconfig` imports remain compatibility facades for the longer of 180
+days after successor availability and two subsequent stable minor releases.
 
 ## Compatibility status
 
@@ -136,7 +140,7 @@ golib docs check --module .
 make -f verification/package.mk php-compat PHP_TEMPORAL_SOURCE=/path/to/php-temporal
 ```
 
-See [docs/testing.md](docs/testing.md) for the evidence model and
+See the [documentation index](docs/README.md) and [testing guide](docs/testing.md) for the evidence model and
 [docs/hardening.md](docs/hardening.md) for the current algebra audit. See
 [SECURITY.md](SECURITY.md) for hostile-input and disclosure guidance.
 The [specification decision register](docs/specification-decisions.md) separates

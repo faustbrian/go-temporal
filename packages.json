@@ -4,6 +4,54 @@
   "packages": [
     {
       "module_directory": ".",
+      "directory": "adapters/config",
+      "name": "temporalconfig",
+      "import_path": "github.com/faustbrian/go-temporal/adapters/config",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "adapters/postgres",
+      "name": "temporalpostgres",
+      "import_path": "github.com/faustbrian/go-temporal/adapters/postgres",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "adapters/validation",
+      "name": "temporalvalidation",
+      "import_path": "github.com/faustbrian/go-temporal/adapters/validation",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "adapters/wire",
+      "name": "temporalwire",
+      "import_path": "github.com/faustbrian/go-temporal/adapters/wire",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
       "directory": ".",
       "name": "temporal",
       "import_path": "github.com/faustbrian/go-temporal",

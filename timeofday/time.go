@@ -10,6 +10,7 @@ import (
 	"unicode/utf8"
 
 	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/internal/diagnostic"
 )
 
 const day = 24 * time.Hour
@@ -106,67 +107,83 @@ func Parse(value string, limits temporal.Limits) (Time, error) {
 	if err := limits.Validate(); err != nil {
 		return Time{}, err
 	}
+	fail := func(stage string, cause error) (Time, error) {
+		return Time{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: "+stage,
+			temporal.ErrParse, cause)
+	}
 	if len(value) > limits.ParseBytes {
-		return Time{}, &temporal.LimitError{
+		cause := &temporal.LimitError{
 			Field: "parse_bytes",
 			Value: len(value),
 			Max:   limits.ParseBytes,
 		}
+		return Time{}, diagnostic.New(limits.ErrorBytes, temporal.ErrLimit.Error(), temporal.ErrLimit, cause)
 	}
 	if !utf8.ValidString(value) {
-		return Time{}, fmt.Errorf("%w: invalid UTF-8", temporal.ErrParse)
+		return fail("syntax", temporal.ErrParse)
 	}
 	if value == "24:00" {
 		return EndOfDay(), nil
 	}
 	if len(value) < 5 || value[2] != ':' {
-		return Time{}, temporal.ErrParse
+		return fail("time syntax", temporal.ErrParse)
 	}
 
 	hour, ok := twoDigits(value[0:2])
 	if !ok {
-		return Time{}, temporal.ErrParse
+		return fail("hour syntax", temporal.ErrParse)
 	}
 	minute, ok := twoDigits(value[3:5])
 	if !ok {
-		return Time{}, temporal.ErrParse
+		return fail("minute syntax", temporal.ErrParse)
 	}
 	if len(value) == 5 {
 		parsed, err := New(hour, minute, 0, 0, 0)
 		parsed.hasSeconds = false
-		return parsed, err
+		if err != nil {
+			return fail("time value", err)
+		}
+		return parsed, nil
 	}
 	if len(value) < 8 {
-		return Time{}, temporal.ErrParse
+		return fail("time syntax", temporal.ErrParse)
 	}
 	if value[5] != ':' {
-		return Time{}, temporal.ErrParse
+		return fail("time syntax", temporal.ErrParse)
 	}
 	second, ok := twoDigits(value[6:8])
 	if !ok {
-		return Time{}, temporal.ErrParse
+		return fail("second syntax", temporal.ErrParse)
 	}
 	if len(value) == 8 {
-		return New(hour, minute, second, 0, 0)
+		parsed, err := New(hour, minute, second, 0, 0)
+		if err != nil {
+			return fail("time value", err)
+		}
+		return parsed, nil
 	}
 	if value[8] != '.' {
-		return Time{}, temporal.ErrParse
+		return fail("fraction syntax", temporal.ErrParse)
 	}
 
 	digits := len(value) - 9
 	if digits < 1 || digits > limits.Precision {
-		return Time{}, temporal.ErrPrecision
+		return fail("fraction precision", temporal.ErrPrecision)
 	}
 	fraction := value[9:]
 	for index := range fraction {
 		if fraction[index] < '0' || fraction[index] > '9' {
-			return Time{}, temporal.ErrParse
+			return fail("fraction syntax", temporal.ErrParse)
 		}
 	}
 	nanosecond, _ := strconv.Atoi(fraction)
 	nanosecond *= precisionUnit(digits)
 
-	return New(hour, minute, second, nanosecond, digits)
+	parsed, err := New(hour, minute, second, nanosecond, digits)
+	if err != nil {
+		return fail("time value", err)
+	}
+	return parsed, nil
 }
 
 // Components returns hour, minute, second, and nanosecond. EndOfDay returns

@@ -12,16 +12,19 @@ Confidence additionally comes from:
   values, duration arithmetic, time arithmetic, interval kinds, predicates,
   algebra, complement, splitting, and stepping;
 - fuzz targets for instant/date/daily/duration/time notation, split progress,
-  set normalization, versioned JSON, and PostgreSQL range text;
+  set normalization, both wire paths, and both PostgreSQL range paths;
 - race tests with concurrent reads over shared immutable values;
 - PostgreSQL 18 range and multirange integration;
 - Gremlins arithmetic and conditional mutation operators;
 - allocation-reporting benchmarks for relations, parsing, 1,000-period
   normalization, splitting, daily algebra, and early limit rejection.
 
-The reusable CI workflow runs the same contract locally exposed by `make check`.
-NilAway is advisory because the upstream analyzer explicitly permits false
-positives; other configured gates block releases.
+The reusable CI workflow runs the proportional local contract on pull requests
+and pushes. `make check` runs the broader all-tier contract, including configured
+service-backed and expensive gates. PostgreSQL integration tests participate
+when `TEMPORAL_POSTGRES_DSN` is configured. NilAway is advisory because the
+upstream analyzer explicitly permits false positives; other gates in the active
+contract block that run.
 
 The requirement-by-requirement truth tables, algebra laws, resource budgets,
 interoperability runs, and mutation classifications are recorded in the

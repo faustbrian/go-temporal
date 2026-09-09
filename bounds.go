@@ -2,7 +2,11 @@
 // resource limits for bounded temporal algebra packages.
 package temporal
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/faustbrian/go-temporal/internal/diagnostic"
+)
 
 // Side identifies one endpoint of a bounded interval.
 type Side uint8
@@ -163,11 +167,12 @@ func (b Bounds) MarshalText() ([]byte, error) {
 // UnmarshalText implements encoding.TextUnmarshaler.
 func (b *Bounds) UnmarshalText(text []byte) error {
 	if len(text) > DefaultLimits().ParseBytes {
-		return &LimitError{
+		cause := &LimitError{
 			Field: "parse_bytes",
 			Value: len(text),
 			Max:   DefaultLimits().ParseBytes,
 		}
+		return diagnostic.New(DefaultLimits().ErrorBytes, ErrLimit.Error(), ErrLimit, cause)
 	}
 
 	var parsed Bounds
@@ -181,7 +186,7 @@ func (b *Bounds) UnmarshalText(text []byte) error {
 	case "(]":
 		parsed = OpenClosed
 	default:
-		return fmt.Errorf("%w: %q", ErrBounds, text)
+		return diagnostic.New(DefaultLimits().ErrorBytes, ErrBounds.Error(), ErrBounds)
 	}
 
 	*b = parsed

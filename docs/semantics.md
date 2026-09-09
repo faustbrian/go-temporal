@@ -82,7 +82,7 @@ value. Implementations must check limits before allocation or append.
 |---|---:|
 | input text | 64 KiB |
 | fractional precision | 9 digits |
-| error text | 1 KiB |
+| hostile parse/decode outer error text | `Limits.ErrorBytes` after valid limit resolution; default 1 KiB |
 | formatted output | 64 KiB |
 | periods accepted by one set operation | 100,000 |
 | periods emitted by one set operation | 100,000 |

@@ -4,6 +4,18 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ## Unreleased
 
+### Added
+
+- Add canonical `adapters/config`, `adapters/postgres`,
+  `adapters/validation`, and `adapters/wire` package paths while retaining the
+  released integration imports as compatibility facades.
+
+### Fixed
+
+- Bound hostile parse and decode diagnostics by `Limits.ErrorBytes`, remove
+  rejected input and unsafe parser causes from returned errors, and preserve
+  stable Temporal and safe structured classifications.
+
 ### Changed
 
 - Replace copied repository tooling with the released `go-library-tools`
@@ -17,6 +29,8 @@ This project follows Semantic Versioning. Dates use ISO 8601.
   and public-first module resolution.
 - Reconcile the `go-calendar`, `go-config`, `go-validation`, and `go-wire`
   v1.0.0 checksums with their immutable public module archives.
+- Require `go-validation` v1.1.0 so Temporal findings compose with context
+  terminal reports without losing either error identity.
 
 ### Documentation
 

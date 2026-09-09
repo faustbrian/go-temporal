@@ -86,7 +86,7 @@ for adversarial alternating inputs.
 |---|---:|
 | parser input | 64 KiB |
 | fractional precision | 9 digits |
-| error text | 1 KiB |
+| hostile parse/decode outer error text | `Limits.ErrorBytes` after valid limit resolution; default 1 KiB |
 | formatted output | 64 KiB |
 | input periods | 100,000 |
 | output periods | 100,000 |

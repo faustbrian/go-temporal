@@ -1,7 +1,8 @@
 # PostgreSQL
 
-`postgres` maps instant periods to `tstzrange`, date periods to `daterange`, and
-normalized sets to corresponding multiranges.
+`adapters/postgres` maps instant periods to `tstzrange`, date periods to
+`daterange`, and normalized sets to corresponding multiranges. The released
+`postgres` path remains a compatibility facade.
 
 PostgreSQL 18.6 is the supported deployment baseline. Its range definition is
 identical to the reviewed 18.3 definition, including timestamp precision and
@@ -21,5 +22,5 @@ Run the disposable integration suite with:
 
 ```sh
 TEMPORAL_POSTGRES_DSN='postgres://temporal:temporal@localhost/temporal_test' \
-  go test -tags=integration ./postgres
+  go test -tags=integration ./adapters/postgres ./postgres
 ```

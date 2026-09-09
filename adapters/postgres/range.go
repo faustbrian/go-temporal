@@ -1,6 +1,6 @@
-// Package postgres provides loss-checked PostgreSQL range and multirange
+// Package temporalpostgres provides loss-checked PostgreSQL range and multirange
 // mappings for temporal values.
-package postgres
+package temporalpostgres
 
 import (
 	"fmt"

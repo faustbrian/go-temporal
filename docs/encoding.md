@@ -12,7 +12,7 @@ unknown formats.
   nanoseconds. Years and months are rejected because they require a reference
   calendar date.
 
-`temporalwire.Document` uses `version`, `kind`, and canonical `value` fields for
+`adapters/wire.Document` uses `version`, `kind`, and canonical `value` fields for
 scalar values. `CollectionDocument` uses `version`, `kind`, and canonical
 `values` for normalized instant, date, and daily sets. Elements retain stable
 normalized order and use ISO 80000 notation. The only current version is
@@ -20,5 +20,11 @@ normalized order and use ISO 80000 notation. The only current version is
 excess, and byte-limit violations fail. New compatible readers may be added,
 but v1 output will not silently change.
 
+Hostile parse and decode operations bound the outer diagnostic by
+`Limits.ErrorBytes`. Their messages use fixed package-owned stage text and do
+not retain rejected input or unsafe parser causes. Use `errors.Is` and
+`errors.As` for stable classification; error strings are not classification
+contracts.
+
 Core values do not expose mutable JSON unmarshal hooks. Decode through
-`temporalwire` or atomic `temporalconfig` wrappers.
+`adapters/wire` or atomic `adapters/config` wrappers.

@@ -1,6 +1,6 @@
 //go:build integration
 
-package postgres_test
+package temporalpostgres_test
 
 import (
 	"context"
@@ -10,9 +10,9 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar"
 	temporal "github.com/faustbrian/go-temporal"
+	temporalpostgres "github.com/faustbrian/go-temporal/adapters/postgres"
 	"github.com/faustbrian/go-temporal/dateperiod"
 	"github.com/faustbrian/go-temporal/instant"
-	temporalpostgres "github.com/faustbrian/go-temporal/postgres"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 )

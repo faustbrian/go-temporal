@@ -7,8 +7,8 @@ github.com/faustbrian/go-calendar v1.0.0 h1:NXJClH6GIYbxHVu1ivVYkfRdJx5NvGcQyVeh
 github.com/faustbrian/go-calendar v1.0.0/go.mod h1:BgDZIrkEx6CZDebZLlrApN8s47aFdQMc0aRB+ZKXx/s=
 github.com/faustbrian/go-config v1.0.0 h1:jM5qlZmMbcLmo/SZmB5gRs4BoZIRdLg3ZXjSfkpnxrI=
 github.com/faustbrian/go-config v1.0.0/go.mod h1:pnqiOzoqa91gG8gWhQI7S1BXuE/E0DKRCOh19SQ3qYc=
-github.com/faustbrian/go-validation v1.0.0 h1:cwdaKKJrNdFCY2kz1xO54r1Vq7oE7M9qkx8tYyT4QvA=
-github.com/faustbrian/go-validation v1.0.0/go.mod h1:oSoKEITwgaCzWpdgdxrV+Q6QPpteJJvRldAeOZL9Plg=
+github.com/faustbrian/go-validation v1.1.0 h1:nGpU161/dzIkp5L/tAGJSHpCOa81hqcPM6lxt8aCJ9k=
+github.com/faustbrian/go-validation v1.1.0/go.mod h1:oSoKEITwgaCzWpdgdxrV+Q6QPpteJJvRldAeOZL9Plg=
 github.com/faustbrian/go-wire v1.0.0 h1:vVniAQ0+dtWPlYvLzJc4xM74oyZ4ZGo5IvQKBTO6UyM=
 github.com/faustbrian/go-wire v1.0.0/go.mod h1:wcQnBeNpF6pw7vFhnBd0W9+qS7zlATxn2zuUae8aLyU=
 github.com/fxamacker/cbor/v2 v2.9.2 h1:X4Ksno9+x3cz0TZv69ec1hxP/+tymuR8PXQJyDwfh78=

@@ -46,6 +46,21 @@ All variable-output operations accept `temporal.Limits` and may return
 `LimitError`. All arithmetic and parsing errors are typed and compatible with
 `errors.Is`/`errors.As`.
 
+## Adapter import migration
+
+| Retained compatibility import | Canonical import |
+|---|---|
+| `go-temporal/temporalconfig` | `go-temporal/adapters/config` |
+| `go-temporal/postgres` | `go-temporal/adapters/postgres` |
+| `go-temporal/temporalvalidation` | `go-temporal/adapters/validation` |
+| `go-temporal/temporalwire` | `go-temporal/adapters/wire` |
+
+Change imports when convenient; released signatures and named-type identities
+remain supported at the old paths. The compatibility paths remain for the
+longer of 180 days after successor public availability and two subsequently
+published stable root-module minor releases. Removal additionally requires an
+authorized next major release and consumer verification.
+
 ## Unsupported charting gap
 
 `Period\Chart` has no v1 Go implementation. This includes `Chart`, `Data`,

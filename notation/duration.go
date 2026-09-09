@@ -9,6 +9,7 @@ import (
 	"unicode/utf8"
 
 	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/internal/diagnostic"
 	"github.com/faustbrian/go-temporal/timeofday"
 )
 
@@ -24,20 +25,21 @@ func ParseDuration(value string, limits temporal.Limits) (timeofday.Duration, er
 		return timeofday.Duration{}, err
 	}
 	if len(value) > limits.ParseBytes {
-		return timeofday.Duration{}, &temporal.LimitError{
+		cause := &temporal.LimitError{
 			Field: "parse_bytes", Value: len(value), Max: limits.ParseBytes,
 		}
+		return timeofday.Duration{}, diagnostic.New(limits.ErrorBytes, temporal.ErrLimit.Error(), temporal.ErrLimit, cause)
 	}
 	if !utf8.ValidString(value) {
-		return timeofday.Duration{}, temporal.ErrParse
+		return timeofday.Duration{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: syntax", temporal.ErrParse)
 	}
 	matches := fixedDurationPattern.FindStringSubmatch(value)
 	if matches == nil || noDurationComponents(matches) ||
 		(strings.Contains(value, "T") && matches[4] == "" && matches[5] == "" && matches[6] == "") {
-		return timeofday.Duration{}, temporal.ErrParse
+		return timeofday.Duration{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: duration syntax", temporal.ErrParse)
 	}
 	if len(matches[7]) > limits.Precision {
-		return timeofday.Duration{}, temporal.ErrPrecision
+		return timeofday.Duration{}, boundedParseError(limits, "duration precision", temporal.ErrPrecision)
 	}
 
 	negative := matches[1] == "-"
@@ -58,18 +60,18 @@ func ParseDuration(value string, limits temporal.Limits) (timeofday.Duration, er
 		}
 		count, err := strconv.Atoi(component.text)
 		if err != nil {
-			return timeofday.Duration{}, temporal.ErrOverflow
+			return timeofday.Duration{}, boundedParseError(limits, "duration component", temporal.ErrOverflow)
 		}
 		part, err := timeofday.NewDuration(component.unit).Multiply(count)
 		if err != nil {
-			return timeofday.Duration{}, err
+			return timeofday.Duration{}, boundedParseError(limits, "duration component", err)
 		}
 		if negative {
 			part, _ = part.Negate()
 		}
 		result, err = result.Add(part)
 		if err != nil {
-			return timeofday.Duration{}, err
+			return timeofday.Duration{}, boundedParseError(limits, "duration total", err)
 		}
 	}
 
@@ -84,7 +86,7 @@ func ParseDuration(value string, limits temporal.Limits) (timeofday.Duration, er
 		}
 		result, err = result.Add(part)
 		if err != nil {
-			return timeofday.Duration{}, err
+			return timeofday.Duration{}, boundedParseError(limits, "duration total", err)
 		}
 	}
 

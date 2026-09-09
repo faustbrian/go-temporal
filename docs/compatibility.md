@@ -84,6 +84,12 @@ Typed PHP errors (`InvalidInterval`, `InaccessibleInterval`, and
 `UnprocessableInterval`) map to errors discoverable with `errors.Is` and
 `errors.As`; error strings are not compatibility contracts.
 
+The additive `adapters/config`, `adapters/postgres`, `adapters/validation`, and
+`adapters/wire` paths are canonical. Their released predecessor imports remain
+source-compatible facades with distinct named-type identities. Hostile-input
+diagnostic text and access to unsafe parser-specific causes are intentionally
+corrected security behavior; stable Temporal classifications remain available.
+
 ## Time namespace
 
 | PHP type and behavior | Go destination | Status and deliberate difference |

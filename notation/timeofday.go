@@ -5,6 +5,7 @@ import (
 	"unicode/utf8"
 
 	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/internal/diagnostic"
 	"github.com/faustbrian/go-temporal/timeofday"
 )
 
@@ -16,12 +17,13 @@ func ParseDailyInterval(value string, format Format, limits temporal.Limits) (ti
 		return timeofday.Interval{}, err
 	}
 	if len(value) > limits.ParseBytes {
-		return timeofday.Interval{}, &temporal.LimitError{
+		cause := &temporal.LimitError{
 			Field: "parse_bytes", Value: len(value), Max: limits.ParseBytes,
 		}
+		return timeofday.Interval{}, diagnostic.New(limits.ErrorBytes, temporal.ErrLimit.Error(), temporal.ErrLimit, cause)
 	}
 	if !utf8.ValidString(value) {
-		return timeofday.Interval{}, fmt.Errorf("%w: invalid UTF-8", temporal.ErrParse)
+		return timeofday.Interval{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: syntax", temporal.ErrParse)
 	}
 
 	var startText, endText string
@@ -36,19 +38,19 @@ func ParseDailyInterval(value string, format Format, limits temporal.Limits) (ti
 	case Bourbaki:
 		startText, endText, bounds, err = splitBounded(value, true)
 	default:
-		return timeofday.Interval{}, temporal.ErrUnsupported
+		return timeofday.Interval{}, diagnostic.New(limits.ErrorBytes, temporal.ErrUnsupported.Error(), temporal.ErrUnsupported)
 	}
 	if err != nil {
-		return timeofday.Interval{}, err
+		return timeofday.Interval{}, boundedParseError(limits, "interval syntax", err)
 	}
 
 	start, err := timeofday.Parse(startText, limits)
 	if err != nil {
-		return timeofday.Interval{}, fmt.Errorf("%w: start: %w", temporal.ErrParse, err)
+		return timeofday.Interval{}, boundedParseError(limits, "start time", err)
 	}
 	end, err := timeofday.Parse(endText, limits)
 	if err != nil {
-		return timeofday.Interval{}, fmt.Errorf("%w: end: %w", temporal.ErrParse, err)
+		return timeofday.Interval{}, boundedParseError(limits, "end time", err)
 	}
 
 	if start.Equal(timeofday.Midnight()) && end.IsEndBoundary() && bounds == temporal.Closed {
@@ -58,10 +60,10 @@ func ParseDailyInterval(value string, format Format, limits temporal.Limits) (ti
 		if bounds == temporal.Open {
 			return timeofday.Collapsed(start), nil
 		}
-		return timeofday.Interval{}, temporal.ErrInvalidTime
+		return timeofday.Interval{}, boundedParseError(limits, "interval value", temporal.ErrInvalidTime)
 	}
 	if start.IsEndBoundary() && end.Equal(timeofday.Midnight()) {
-		return timeofday.Interval{}, temporal.ErrInvalidTime
+		return timeofday.Interval{}, boundedParseError(limits, "interval value", temporal.ErrInvalidTime)
 	}
 
 	interval, _ := timeofday.Between(start, end, bounds)

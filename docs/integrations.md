@@ -9,14 +9,19 @@ both `*time.Location` and a timezone resolution policy. This prevents
 accidental dependence on the process-local timezone or the standard library's
 implicit gap/fold choice.
 
-`temporalvalidation` returns immutable `validation` reports with stable
+`adapters/validation` returns immutable `validation` reports with stable
 codes: `temporal_empty`, `time_of_day_range`, and `fixed_duration_range`.
 
-`temporalconfig` wrappers implement atomic text decoding recognized by
+`adapters/config` wrappers implement atomic text decoding recognized by
 `config`. Keep the wrapper in configuration structs and call `Value()` after
 successful loading.
 
-`temporalwire.Document` and `CollectionDocument` are format-neutral and carry
+`adapters/wire.Document` and `CollectionDocument` are format-neutral and carry
 JSON/YAML/TOML tags. They may be passed through the corresponding `wire`
 encoder. Their JSON helpers are strict, bounded conveniences for consumers
 that need no broader wire stack.
+
+`adapters/postgres` maps finite Temporal periods and normalized sets to pgx
+ranges and multiranges and supplies nullable `database/sql` wrappers. It owns
+no connection or transaction. The four legacy integration imports remain
+supported compatibility facades during the documented migration interval.

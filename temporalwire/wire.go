@@ -1,25 +1,21 @@
-// Package temporalwire provides versioned, format-neutral documents for
-// encoding temporal values through wire or the standard JSON package.
+// Package temporalwire provides retained wire adapters.
+//
+// Deprecated: use github.com/faustbrian/go-temporal/adapters/wire. This
+// package remains supported for the longer of 180 days after successor public
+// availability and two subsequently published stable root-module minor
+// releases.
 package temporalwire
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"io"
-	"unicode/utf8"
-
 	temporal "github.com/faustbrian/go-temporal"
+	adapter "github.com/faustbrian/go-temporal/adapters/wire"
 	"github.com/faustbrian/go-temporal/dateperiod"
 	"github.com/faustbrian/go-temporal/instant"
-	"github.com/faustbrian/go-temporal/notation"
 	"github.com/faustbrian/go-temporal/timeofday"
 )
 
-// Version1 is the stable initial document schema identifier.
-const Version1 = "temporal/v1"
+const Version1 = adapter.Version1
 
-// Kind identifies the temporal value encoded by a document.
 type Kind string
 
 const (
@@ -33,8 +29,6 @@ const (
 	KindDailySet      Kind = "daily-set"
 )
 
-// Document is a format-neutral stable wire representation. Value is canonical
-// ISO 80000 notation for intervals and strict ISO text for scalar values.
 type Document struct {
 	Version string `json:"version" yaml:"version" toml:"version"`
 	Kind    Kind   `json:"kind" yaml:"kind" toml:"kind"`
@@ -42,149 +36,97 @@ type Document struct {
 }
 
 func FromInstant(value instant.Period, limits temporal.Limits) (Document, error) {
-	encoded, err := notation.FormatInstant(value, notation.ISO80000, limits)
-	return fromEncoded(KindInstantPeriod, encoded, err)
+	result, err := adapter.FromInstant(value, limits)
+	return fromAdapterDocument(result), err
 }
-
 func FromDate(value dateperiod.Period, limits temporal.Limits) (Document, error) {
-	encoded, err := notation.FormatDate(value, notation.ISO80000, limits)
-	return fromEncoded(KindDatePeriod, encoded, err)
+	result, err := adapter.FromDate(value, limits)
+	return fromAdapterDocument(result), err
 }
-
 func FromDailyInterval(value timeofday.Interval, limits temporal.Limits) (Document, error) {
-	encoded, err := notation.FormatDailyInterval(value, notation.ISO80000, limits)
-	return fromEncoded(KindDailyInterval, encoded, err)
+	result, err := adapter.FromDailyInterval(value, limits)
+	return fromAdapterDocument(result), err
 }
-
 func FromTime(value timeofday.Time, limits temporal.Limits) (Document, error) {
-	limits = limits.Resolve()
-	if err := limits.Validate(); err != nil {
-		return Document{}, err
-	}
-	encoded := value.String()
-	if len(encoded) > limits.FormatBytes {
-		return Document{}, &temporal.LimitError{Field: "format_bytes", Value: len(encoded), Max: limits.FormatBytes}
-	}
-	return Document{Version: Version1, Kind: KindTime, Value: encoded}, nil
+	result, err := adapter.FromTime(value, limits)
+	return fromAdapterDocument(result), err
 }
-
 func FromDuration(value timeofday.Duration, limits temporal.Limits) (Document, error) {
-	encoded, err := notation.FormatDuration(value, limits)
-	return fromEncoded(KindDuration, encoded, err)
-}
-
-func fromEncoded(kind Kind, encoded string, err error) (Document, error) {
-	if err != nil {
-		return Document{}, err
-	}
-	return Document{Version: Version1, Kind: kind, Value: encoded}, nil
+	result, err := adapter.FromDuration(value, limits)
+	return fromAdapterDocument(result), err
 }
 
 func (d Document) Instant(limits temporal.Limits) (instant.Period, error) {
-	if err := d.expect(KindInstantPeriod); err != nil {
-		return instant.Period{}, err
-	}
-	return notation.ParseInstant(d.Value, notation.ISO80000, limits)
+	return d.adapter().Instant(limits)
 }
-
 func (d Document) Date(limits temporal.Limits) (dateperiod.Period, error) {
-	if err := d.expect(KindDatePeriod); err != nil {
-		return dateperiod.Period{}, err
-	}
-	return notation.ParseDate(d.Value, notation.ISO80000, limits)
+	return d.adapter().Date(limits)
 }
-
 func (d Document) DailyInterval(limits temporal.Limits) (timeofday.Interval, error) {
-	if err := d.expect(KindDailyInterval); err != nil {
-		return timeofday.Interval{}, err
-	}
-	return notation.ParseDailyInterval(d.Value, notation.ISO80000, limits)
+	return d.adapter().DailyInterval(limits)
 }
-
 func (d Document) Time(limits temporal.Limits) (timeofday.Time, error) {
-	if err := d.expect(KindTime); err != nil {
-		return timeofday.Time{}, err
-	}
-	return timeofday.Parse(d.Value, limits)
+	return d.adapter().Time(limits)
 }
-
 func (d Document) Duration(limits temporal.Limits) (timeofday.Duration, error) {
-	if err := d.expect(KindDuration); err != nil {
-		return timeofday.Duration{}, err
-	}
-	return notation.ParseDuration(d.Value, limits)
+	return d.adapter().Duration(limits)
+}
+func (d Document) adapter() adapter.Document {
+	return adapter.Document{Version: d.Version, Kind: adapter.Kind(d.Kind), Value: d.Value}
+}
+func fromAdapterDocument(d adapter.Document) Document {
+	return Document{Version: d.Version, Kind: Kind(d.Kind), Value: d.Value}
 }
 
-func (d Document) expect(kind Kind) error {
-	if d.Version != Version1 || d.Kind != kind {
-		return temporal.ErrUnsupported
-	}
-	return nil
-}
-
-func (d Document) validate(limits temporal.Limits) error {
-	switch d.Kind {
-	case KindInstantPeriod:
-		_, err := d.Instant(limits)
-		return err
-	case KindDatePeriod:
-		_, err := d.Date(limits)
-		return err
-	case KindDailyInterval:
-		_, err := d.DailyInterval(limits)
-		return err
-	case KindTime:
-		_, err := d.Time(limits)
-		return err
-	case KindDuration:
-		_, err := d.Duration(limits)
-		return err
-	default:
-		return temporal.ErrUnsupported
-	}
-}
-
-// Marshal returns deterministic JSON for a valid versioned document.
 func Marshal(document Document, limits temporal.Limits) ([]byte, error) {
-	limits = limits.Resolve()
-	if err := limits.Validate(); err != nil {
-		return nil, err
-	}
-	if err := document.validate(limits); err != nil {
-		return nil, err
-	}
-	payload, _ := json.Marshal(document)
-	if len(payload) > limits.FormatBytes {
-		return nil, &temporal.LimitError{Field: "format_bytes", Value: len(payload), Max: limits.FormatBytes}
-	}
-	return payload, nil
+	return adapter.Marshal(document.adapter(), limits)
+}
+func Unmarshal(payload []byte, limits temporal.Limits) (Document, error) {
+	result, err := adapter.Unmarshal(payload, limits)
+	return fromAdapterDocument(result), err
 }
 
-// Unmarshal strictly decodes exactly one versioned JSON document.
-func Unmarshal(payload []byte, limits temporal.Limits) (Document, error) {
-	limits = limits.Resolve()
-	if err := limits.Validate(); err != nil {
-		return Document{}, err
-	}
-	if len(payload) > limits.ParseBytes {
-		return Document{}, &temporal.LimitError{Field: "parse_bytes", Value: len(payload), Max: limits.ParseBytes}
-	}
-	if !utf8.Valid(payload) {
-		return Document{}, temporal.ErrParse
-	}
+type CollectionDocument struct {
+	Version string   `json:"version" yaml:"version" toml:"version"`
+	Kind    Kind     `json:"kind" yaml:"kind" toml:"kind"`
+	Values  []string `json:"values" yaml:"values" toml:"values"`
+}
 
-	decoder := json.NewDecoder(bytes.NewReader(payload))
-	decoder.DisallowUnknownFields()
-	var document Document
-	if err := decoder.Decode(&document); err != nil {
-		return Document{}, fmt.Errorf("%w: %w", temporal.ErrParse, err)
+func FromInstantSet(set instant.Set, limits temporal.Limits) (CollectionDocument, error) {
+	result, err := adapter.FromInstantSet(set, limits)
+	return fromAdapterCollection(result), err
+}
+func FromDateSet(set dateperiod.Set, limits temporal.Limits) (CollectionDocument, error) {
+	result, err := adapter.FromDateSet(set, limits)
+	return fromAdapterCollection(result), err
+}
+func FromDailySet(set timeofday.IntervalSet, limits temporal.Limits) (CollectionDocument, error) {
+	result, err := adapter.FromDailySet(set, limits)
+	return fromAdapterCollection(result), err
+}
+func (d CollectionDocument) InstantSet(limits temporal.Limits) (instant.Set, error) {
+	return d.adapter().InstantSet(limits)
+}
+func (d CollectionDocument) DateSet(limits temporal.Limits) (dateperiod.Set, error) {
+	return d.adapter().DateSet(limits)
+}
+func (d CollectionDocument) DailySet(limits temporal.Limits) (timeofday.IntervalSet, error) {
+	return d.adapter().DailySet(limits)
+}
+func (d CollectionDocument) adapter() adapter.CollectionDocument {
+	return adapter.CollectionDocument{
+		Version: d.Version, Kind: adapter.Kind(d.Kind), Values: append([]string(nil), d.Values...),
 	}
-	var trailing any
-	if err := decoder.Decode(&trailing); err != io.EOF {
-		return Document{}, temporal.ErrParse
+}
+func fromAdapterCollection(d adapter.CollectionDocument) CollectionDocument {
+	return CollectionDocument{
+		Version: d.Version, Kind: Kind(d.Kind), Values: append([]string(nil), d.Values...),
 	}
-	if err := document.validate(limits); err != nil {
-		return Document{}, err
-	}
-	return document, nil
+}
+func MarshalCollection(document CollectionDocument, limits temporal.Limits) ([]byte, error) {
+	return adapter.MarshalCollection(document.adapter(), limits)
+}
+func UnmarshalCollection(payload []byte, limits temporal.Limits) (CollectionDocument, error) {
+	result, err := adapter.UnmarshalCollection(payload, limits)
+	return fromAdapterCollection(result), err
 }
