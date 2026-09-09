@@ -12,7 +12,7 @@ Confidence additionally comes from:
   values, duration arithmetic, time arithmetic, interval kinds, predicates,
   algebra, complement, splitting, and stepping;
 - fuzz targets for instant/date/daily/duration/time notation, split progress,
-  set normalization, versioned JSON, and PostgreSQL range text;
+  set normalization, both wire paths, and both PostgreSQL range paths;
 - race tests with concurrent reads over shared immutable values;
 - PostgreSQL 18 range and multirange integration;
 - Gremlins arithmetic and conditional mutation operators;

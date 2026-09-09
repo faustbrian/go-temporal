@@ -7,6 +7,7 @@ import (
 	calendar "github.com/faustbrian/go-calendar"
 	temporal "github.com/faustbrian/go-temporal"
 	"github.com/faustbrian/go-temporal/dateperiod"
+	"github.com/faustbrian/go-temporal/internal/diagnostic"
 )
 
 // ParseDate decodes one complete bounded civil-date interval.
@@ -16,12 +17,13 @@ func ParseDate(value string, format Format, limits temporal.Limits) (dateperiod.
 		return dateperiod.Period{}, err
 	}
 	if len(value) > limits.ParseBytes {
-		return dateperiod.Period{}, &temporal.LimitError{
+		cause := &temporal.LimitError{
 			Field: "parse_bytes", Value: len(value), Max: limits.ParseBytes,
 		}
+		return dateperiod.Period{}, diagnostic.New(limits.ErrorBytes, temporal.ErrLimit.Error(), temporal.ErrLimit, cause)
 	}
 	if !utf8.ValidString(value) {
-		return dateperiod.Period{}, fmt.Errorf("%w: invalid UTF-8", temporal.ErrParse)
+		return dateperiod.Period{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: syntax", temporal.ErrParse)
 	}
 
 	var startText, endText string
@@ -36,23 +38,23 @@ func ParseDate(value string, format Format, limits temporal.Limits) (dateperiod.
 	case Bourbaki:
 		startText, endText, bounds, err = splitBounded(value, true)
 	default:
-		return dateperiod.Period{}, temporal.ErrUnsupported
+		return dateperiod.Period{}, diagnostic.New(limits.ErrorBytes, temporal.ErrUnsupported.Error(), temporal.ErrUnsupported)
 	}
 	if err != nil {
-		return dateperiod.Period{}, err
+		return dateperiod.Period{}, boundedParseError(limits, "interval syntax", err)
 	}
 
 	start, err := calendar.ParseDate(startText)
 	if err != nil {
-		return dateperiod.Period{}, fmt.Errorf("%w: start: %w", temporal.ErrParse, err)
+		return dateperiod.Period{}, boundedParseError(limits, "start date", err)
 	}
 	end, err := calendar.ParseDate(endText)
 	if err != nil {
-		return dateperiod.Period{}, fmt.Errorf("%w: end: %w", temporal.ErrParse, err)
+		return dateperiod.Period{}, boundedParseError(limits, "end date", err)
 	}
 	period, err := dateperiod.New(start, end, bounds)
 	if err != nil {
-		return dateperiod.Period{}, fmt.Errorf("%w: %w", temporal.ErrParse, err)
+		return dateperiod.Period{}, boundedParseError(limits, "interval bounds", err)
 	}
 	return period, nil
 }

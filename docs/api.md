@@ -51,12 +51,14 @@ subtraction, gaps, and explicit full-day complement.
 ## Adapters
 
 `notation` provides strict instant/date/daily and fixed-duration codecs.
-`postgres` provides pgx ranges/multiranges and nullable `database/sql` values.
-`temporalwire.Document` and `CollectionDocument` are the `temporal/v1` stable
+`adapters/postgres` provides pgx ranges/multiranges and nullable `database/sql`
+values. `adapters/wire.Document` and `CollectionDocument` are the `temporal/v1` stable
 scalar and normalized-set wire envelopes.
-`temporalconfig` supplies atomic text wrappers. `temporalvalidation` supplies
-deterministic validators. `temporaltest` supplies exhaustive fixtures and
-assertions.
+`adapters/config` supplies atomic text wrappers. `adapters/validation`
+supplies deterministic validators. The released `postgres`, `temporalwire`,
+`temporalconfig`, and `temporalvalidation` packages retain their named types
+and signatures as compatibility facades. `temporaltest` supplies exhaustive
+fixtures and assertions.
 
 The Go package documentation is the signature-level source of truth:
 

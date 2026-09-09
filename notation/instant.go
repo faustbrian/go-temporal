@@ -2,13 +2,16 @@
 package notation
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"time"
 	"unicode/utf8"
 
+	calendar "github.com/faustbrian/go-calendar"
 	temporal "github.com/faustbrian/go-temporal"
 	"github.com/faustbrian/go-temporal/instant"
+	"github.com/faustbrian/go-temporal/internal/diagnostic"
 )
 
 // Format identifies a supported interval notation.
@@ -32,14 +35,15 @@ func ParseInstant(value string, format Format, limits temporal.Limits) (instant.
 		return instant.Period{}, err
 	}
 	if len(value) > limits.ParseBytes {
-		return instant.Period{}, &temporal.LimitError{
+		cause := &temporal.LimitError{
 			Field: "parse_bytes",
 			Value: len(value),
 			Max:   limits.ParseBytes,
 		}
+		return instant.Period{}, diagnostic.New(limits.ErrorBytes, temporal.ErrLimit.Error(), temporal.ErrLimit, cause)
 	}
 	if !utf8.ValidString(value) {
-		return instant.Period{}, fmt.Errorf("%w: invalid UTF-8", temporal.ErrParse)
+		return instant.Period{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: syntax", temporal.ErrParse)
 	}
 
 	var startText, endText string
@@ -54,27 +58,43 @@ func ParseInstant(value string, format Format, limits temporal.Limits) (instant.
 	case Bourbaki:
 		startText, endText, bounds, err = splitBounded(value, true)
 	default:
-		return instant.Period{}, temporal.ErrUnsupported
+		return instant.Period{}, diagnostic.New(limits.ErrorBytes, temporal.ErrUnsupported.Error(), temporal.ErrUnsupported)
 	}
 	if err != nil {
-		return instant.Period{}, err
+		return instant.Period{}, boundedParseError(limits, "interval syntax", err)
 	}
 
 	start, err := parseInstant(startText, limits.Precision)
 	if err != nil {
-		return instant.Period{}, fmt.Errorf("%w: start: %w", temporal.ErrParse, err)
+		return instant.Period{}, boundedParseError(limits, "start timestamp", err)
 	}
 	end, err := parseInstant(endText, limits.Precision)
 	if err != nil {
-		return instant.Period{}, fmt.Errorf("%w: end: %w", temporal.ErrParse, err)
+		return instant.Period{}, boundedParseError(limits, "end timestamp", err)
 	}
 
 	period, err := instant.New(start, end, bounds)
 	if err != nil {
-		return instant.Period{}, fmt.Errorf("%w: %w", temporal.ErrParse, err)
+		return instant.Period{}, boundedParseError(limits, "interval bounds", err)
 	}
 
 	return period, nil
+}
+
+func boundedParseError(limits temporal.Limits, stage string, cause error) error {
+	causes := []error{temporal.ErrParse}
+	for _, sentinel := range []error{temporal.ErrBounds, temporal.ErrPrecision, temporal.ErrInvalidTime,
+		temporal.ErrUnsupported, temporal.ErrOverflow, temporal.ErrReversed} {
+		if errors.Is(cause, sentinel) {
+			causes = append(causes, sentinel)
+		}
+	}
+	for _, sentinel := range []error{calendar.ErrInvalidFormat, calendar.ErrInvalidDate} {
+		if errors.Is(cause, sentinel) {
+			causes = append(causes, sentinel)
+		}
+	}
+	return diagnostic.New(limits.ErrorBytes, "temporal: parse error: "+stage, causes...)
 }
 
 // FormatInstant encodes a bounded instant interval without semantic loss.

@@ -52,6 +52,15 @@ func TestTimeConstructionAndNamedValues(t *testing.T) {
 	}
 }
 
+func TestParseBoundsFractionalValueErrors(t *testing.T) {
+	t.Parallel()
+
+	_, err := timeofday.Parse("99:00:00.1", temporal.Limits{ErrorBytes: 5})
+	if err == nil || len(err.Error()) > 5 || !errors.Is(err, temporal.ErrInvalidTime) {
+		t.Fatalf("Parse() error = %v", err)
+	}
+}
+
 func TestTimeRejectsInvalidComponentsAndPrecision(t *testing.T) {
 	t.Parallel()
 

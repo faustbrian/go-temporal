@@ -3,13 +3,13 @@ package temporalwire
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"unicode/utf8"
 
 	temporal "github.com/faustbrian/go-temporal"
 	"github.com/faustbrian/go-temporal/dateperiod"
 	"github.com/faustbrian/go-temporal/instant"
+	"github.com/faustbrian/go-temporal/internal/diagnostic"
 	"github.com/faustbrian/go-temporal/notation"
 	"github.com/faustbrian/go-temporal/timeofday"
 )
@@ -71,8 +71,16 @@ func newCollection(kind Kind, values []string, limits temporal.Limits) (Collecti
 
 // InstantSet decodes and normalizes an instant-set document.
 func (d CollectionDocument) InstantSet(limits temporal.Limits) (instant.Set, error) {
-	if err := d.expect(KindInstantSet); err != nil {
+	limits = limits.Resolve()
+	if err := limits.Validate(); err != nil {
 		return instant.Set{}, err
+	}
+	if err := d.expect(KindInstantSet); err != nil {
+		return instant.Set{}, boundedWireError(limits, "collection document kind", err)
+	}
+	if len(d.Values) > limits.InputPeriods {
+		cause := &temporal.LimitError{Field: "input_periods", Value: len(d.Values), Max: limits.InputPeriods}
+		return instant.Set{}, boundedWireError(limits, "collection document size", cause)
 	}
 	periods := make([]instant.Period, 0, len(d.Values))
 	for _, value := range d.Values {
@@ -82,13 +90,25 @@ func (d CollectionDocument) InstantSet(limits temporal.Limits) (instant.Set, err
 		}
 		periods = append(periods, period)
 	}
-	return instant.NewSet(limits, periods...)
+	set, err := instant.NewSet(limits, periods...)
+	if err != nil {
+		return instant.Set{}, boundedWireError(limits, "collection document value", err)
+	}
+	return set, nil
 }
 
 // DateSet decodes and normalizes a civil-date-set document.
 func (d CollectionDocument) DateSet(limits temporal.Limits) (dateperiod.Set, error) {
-	if err := d.expect(KindDateSet); err != nil {
+	limits = limits.Resolve()
+	if err := limits.Validate(); err != nil {
 		return dateperiod.Set{}, err
+	}
+	if err := d.expect(KindDateSet); err != nil {
+		return dateperiod.Set{}, boundedWireError(limits, "collection document kind", err)
+	}
+	if len(d.Values) > limits.InputPeriods {
+		cause := &temporal.LimitError{Field: "input_periods", Value: len(d.Values), Max: limits.InputPeriods}
+		return dateperiod.Set{}, boundedWireError(limits, "collection document size", cause)
 	}
 	periods := make([]dateperiod.Period, 0, len(d.Values))
 	for _, value := range d.Values {
@@ -98,13 +118,25 @@ func (d CollectionDocument) DateSet(limits temporal.Limits) (dateperiod.Set, err
 		}
 		periods = append(periods, period)
 	}
-	return dateperiod.NewSet(limits, periods...)
+	set, err := dateperiod.NewSet(limits, periods...)
+	if err != nil {
+		return dateperiod.Set{}, boundedWireError(limits, "collection document value", err)
+	}
+	return set, nil
 }
 
 // DailySet decodes and normalizes a daily interval-set document.
 func (d CollectionDocument) DailySet(limits temporal.Limits) (timeofday.IntervalSet, error) {
-	if err := d.expect(KindDailySet); err != nil {
+	limits = limits.Resolve()
+	if err := limits.Validate(); err != nil {
 		return timeofday.IntervalSet{}, err
+	}
+	if err := d.expect(KindDailySet); err != nil {
+		return timeofday.IntervalSet{}, boundedWireError(limits, "collection document kind", err)
+	}
+	if len(d.Values) > limits.InputPeriods {
+		cause := &temporal.LimitError{Field: "input_periods", Value: len(d.Values), Max: limits.InputPeriods}
+		return timeofday.IntervalSet{}, boundedWireError(limits, "collection document size", cause)
 	}
 	intervals := make([]timeofday.Interval, 0, len(d.Values))
 	for _, value := range d.Values {
@@ -114,7 +146,11 @@ func (d CollectionDocument) DailySet(limits temporal.Limits) (timeofday.Interval
 		}
 		intervals = append(intervals, interval)
 	}
-	return timeofday.NewIntervalSet(limits, intervals...)
+	set, err := timeofday.NewIntervalSet(limits, intervals...)
+	if err != nil {
+		return timeofday.IntervalSet{}, boundedWireError(limits, "collection document value", err)
+	}
+	return set, nil
 }
 
 func (d CollectionDocument) expect(kind Kind) error {
@@ -168,23 +204,24 @@ func UnmarshalCollection(payload []byte, limits temporal.Limits) (CollectionDocu
 		return CollectionDocument{}, err
 	}
 	if len(payload) > limits.ParseBytes {
-		return CollectionDocument{}, &temporal.LimitError{Field: "parse_bytes", Value: len(payload), Max: limits.ParseBytes}
+		cause := &temporal.LimitError{Field: "parse_bytes", Value: len(payload), Max: limits.ParseBytes}
+		return CollectionDocument{}, diagnostic.New(limits.ErrorBytes, temporal.ErrLimit.Error(), temporal.ErrLimit, cause)
 	}
 	if !utf8.Valid(payload) {
-		return CollectionDocument{}, temporal.ErrParse
+		return CollectionDocument{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: collection document syntax", temporal.ErrParse)
 	}
 	decoder := json.NewDecoder(bytes.NewReader(payload))
 	decoder.DisallowUnknownFields()
 	var document CollectionDocument
 	if err := decoder.Decode(&document); err != nil {
-		return CollectionDocument{}, fmt.Errorf("%w: %w", temporal.ErrParse, err)
+		return CollectionDocument{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: collection document syntax", temporal.ErrParse)
 	}
 	var trailing any
 	if err := decoder.Decode(&trailing); err != io.EOF {
-		return CollectionDocument{}, temporal.ErrParse
+		return CollectionDocument{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: trailing collection document", temporal.ErrParse)
 	}
 	if err := document.validate(limits); err != nil {
-		return CollectionDocument{}, err
+		return CollectionDocument{}, boundedWireError(limits, "collection document value", err)
 	}
 	document.Values = append([]string(nil), document.Values...)
 	return document, nil

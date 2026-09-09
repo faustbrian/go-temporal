@@ -1,100 +1,57 @@
-// Package temporalconfig provides atomic text wrappers for config and other
-// configuration decoders that honor encoding.TextUnmarshaler.
+// Package temporalconfig provides retained configuration adapters.
+//
+// Deprecated: use github.com/faustbrian/go-temporal/adapters/config. This
+// package remains supported for the longer of 180 days after successor public
+// availability and two subsequently published stable root-module minor
+// releases.
 package temporalconfig
 
 import (
-	temporal "github.com/faustbrian/go-temporal"
+	adapter "github.com/faustbrian/go-temporal/adapters/config"
 	"github.com/faustbrian/go-temporal/dateperiod"
 	"github.com/faustbrian/go-temporal/instant"
-	"github.com/faustbrian/go-temporal/notation"
 	"github.com/faustbrian/go-temporal/timeofday"
 )
 
-// InstantPeriod is a configuration boundary for an immutable instant period.
-type InstantPeriod struct{ value instant.Period }
+type InstantPeriod struct{ value adapter.InstantPeriod }
 
-func NewInstantPeriod(value instant.Period) InstantPeriod { return InstantPeriod{value: value} }
-func (v InstantPeriod) Value() instant.Period             { return v.value }
-func (v InstantPeriod) MarshalText() ([]byte, error) {
-	encoded, err := notation.FormatInstant(v.value, notation.ISO80000, temporal.Limits{})
-	return []byte(encoded), err
+func NewInstantPeriod(value instant.Period) InstantPeriod {
+	return InstantPeriod{value: adapter.NewInstantPeriod(value)}
 }
-func (v *InstantPeriod) UnmarshalText(text []byte) error {
-	parsed, err := notation.ParseInstant(string(text), notation.ISO80000, temporal.Limits{})
-	if err != nil {
-		return err
-	}
-	v.value = parsed
-	return nil
-}
+func (v InstantPeriod) Value() instant.Period            { return v.value.Value() }
+func (v InstantPeriod) MarshalText() ([]byte, error)     { return v.value.MarshalText() }
+func (v *InstantPeriod) UnmarshalText(text []byte) error { return v.value.UnmarshalText(text) }
 
-// DatePeriod is a configuration boundary for an immutable civil-date period.
-type DatePeriod struct{ value dateperiod.Period }
+type DatePeriod struct{ value adapter.DatePeriod }
 
-func NewDatePeriod(value dateperiod.Period) DatePeriod { return DatePeriod{value: value} }
-func (v DatePeriod) Value() dateperiod.Period          { return v.value }
-func (v DatePeriod) MarshalText() ([]byte, error) {
-	encoded, err := notation.FormatDate(v.value, notation.ISO80000, temporal.Limits{})
-	return []byte(encoded), err
+func NewDatePeriod(value dateperiod.Period) DatePeriod {
+	return DatePeriod{value: adapter.NewDatePeriod(value)}
 }
-func (v *DatePeriod) UnmarshalText(text []byte) error {
-	parsed, err := notation.ParseDate(string(text), notation.ISO80000, temporal.Limits{})
-	if err != nil {
-		return err
-	}
-	v.value = parsed
-	return nil
-}
+func (v DatePeriod) Value() dateperiod.Period         { return v.value.Value() }
+func (v DatePeriod) MarshalText() ([]byte, error)     { return v.value.MarshalText() }
+func (v *DatePeriod) UnmarshalText(text []byte) error { return v.value.UnmarshalText(text) }
 
-// DailyInterval is a configuration boundary for a daily interval.
-type DailyInterval struct{ value timeofday.Interval }
+type DailyInterval struct{ value adapter.DailyInterval }
 
-func NewDailyInterval(value timeofday.Interval) DailyInterval { return DailyInterval{value: value} }
-func (v DailyInterval) Value() timeofday.Interval             { return v.value }
-func (v DailyInterval) MarshalText() ([]byte, error) {
-	encoded, err := notation.FormatDailyInterval(v.value, notation.ISO80000, temporal.Limits{})
-	return []byte(encoded), err
+func NewDailyInterval(value timeofday.Interval) DailyInterval {
+	return DailyInterval{value: adapter.NewDailyInterval(value)}
 }
-func (v *DailyInterval) UnmarshalText(text []byte) error {
-	parsed, err := notation.ParseDailyInterval(string(text), notation.ISO80000, temporal.Limits{})
-	if err != nil {
-		return err
-	}
-	v.value = parsed
-	return nil
-}
+func (v DailyInterval) Value() timeofday.Interval        { return v.value.Value() }
+func (v DailyInterval) MarshalText() ([]byte, error)     { return v.value.MarshalText() }
+func (v *DailyInterval) UnmarshalText(text []byte) error { return v.value.UnmarshalText(text) }
 
-// Time is a configuration boundary for a local time-of-day value.
-type Time struct{ value timeofday.Time }
+type Time struct{ value adapter.Time }
 
-func NewTime(value timeofday.Time) Time { return Time{value: value} }
-func (v Time) Value() timeofday.Time    { return v.value }
-func (v Time) MarshalText() ([]byte, error) {
-	return []byte(v.value.String()), nil
-}
-func (v *Time) UnmarshalText(text []byte) error {
-	parsed, err := timeofday.Parse(string(text), temporal.Limits{})
-	if err != nil {
-		return err
-	}
-	v.value = parsed
-	return nil
-}
+func NewTime(value timeofday.Time) Time         { return Time{value: adapter.NewTime(value)} }
+func (v Time) Value() timeofday.Time            { return v.value.Value() }
+func (v Time) MarshalText() ([]byte, error)     { return v.value.MarshalText() }
+func (v *Time) UnmarshalText(text []byte) error { return v.value.UnmarshalText(text) }
 
-// Duration is a configuration boundary for a fixed elapsed duration.
-type Duration struct{ value timeofday.Duration }
+type Duration struct{ value adapter.Duration }
 
-func NewDuration(value timeofday.Duration) Duration { return Duration{value: value} }
-func (v Duration) Value() timeofday.Duration        { return v.value }
-func (v Duration) MarshalText() ([]byte, error) {
-	encoded, err := notation.FormatDuration(v.value, temporal.Limits{})
-	return []byte(encoded), err
+func NewDuration(value timeofday.Duration) Duration {
+	return Duration{value: adapter.NewDuration(value)}
 }
-func (v *Duration) UnmarshalText(text []byte) error {
-	parsed, err := notation.ParseDuration(string(text), temporal.Limits{})
-	if err != nil {
-		return err
-	}
-	v.value = parsed
-	return nil
-}
+func (v Duration) Value() timeofday.Duration        { return v.value.Value() }
+func (v Duration) MarshalText() ([]byte, error)     { return v.value.MarshalText() }
+func (v *Duration) UnmarshalText(text []byte) error { return v.value.UnmarshalText(text) }

@@ -1,4 +1,4 @@
-package postgres
+package temporalpostgres
 
 import (
 	"database/sql/driver"
