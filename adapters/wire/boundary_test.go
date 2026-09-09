@@ -141,25 +141,67 @@ func TestCollectionDiagnosticPreservesBoundedLimit(t *testing.T) {
 func TestWireCollectionsAcceptEveryExactLimit(t *testing.T) {
 	t.Parallel()
 
-	document := temporalwire.CollectionDocument{
-		Version: temporalwire.Version1,
-		Kind:    temporalwire.KindDailySet,
-		Values:  []string{"[08:00,17:00)"},
+	tests := map[string]struct {
+		document temporalwire.CollectionDocument
+		decode   func(temporalwire.CollectionDocument, temporal.Limits) error
+	}{
+		"instant": {
+			document: temporalwire.CollectionDocument{
+				Version: temporalwire.Version1,
+				Kind:    temporalwire.KindInstantSet,
+				Values:  []string{"[2026-01-01T08:00:00Z,2026-01-01T17:00:00Z)"},
+			},
+			decode: func(document temporalwire.CollectionDocument, limits temporal.Limits) error {
+				_, err := document.InstantSet(limits)
+				return err
+			},
+		},
+		"date": {
+			document: temporalwire.CollectionDocument{
+				Version: temporalwire.Version1,
+				Kind:    temporalwire.KindDateSet,
+				Values:  []string{"[2026-01-01,2026-01-02]"},
+			},
+			decode: func(document temporalwire.CollectionDocument, limits temporal.Limits) error {
+				_, err := document.DateSet(limits)
+				return err
+			},
+		},
+		"daily": {
+			document: temporalwire.CollectionDocument{
+				Version: temporalwire.Version1,
+				Kind:    temporalwire.KindDailySet,
+				Values:  []string{"[08:00,17:00)"},
+			},
+			decode: func(document temporalwire.CollectionDocument, limits temporal.Limits) error {
+				_, err := document.DailySet(limits)
+				return err
+			},
+		},
 	}
-	payload, err := temporalwire.MarshalCollection(document, temporal.Limits{InputPeriods: 1})
-	if err != nil {
-		t.Fatalf("MarshalCollection(exact input limit): %v", err)
-	}
-	if _, err := temporalwire.MarshalCollection(document, temporal.Limits{
-		InputPeriods: 1,
-		FormatBytes:  len(payload),
-	}); err != nil {
-		t.Fatalf("MarshalCollection(exact format limit): %v", err)
-	}
-	if _, err := temporalwire.UnmarshalCollection(payload, temporal.Limits{
-		InputPeriods: 1,
-		ParseBytes:   len(payload),
-	}); err != nil {
-		t.Fatalf("UnmarshalCollection(exact parse limit): %v", err)
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			limits := temporal.Limits{InputPeriods: 1}
+			if err := test.decode(test.document, limits); err != nil {
+				t.Fatalf("direct decode (exact input limit): %v", err)
+			}
+
+			payload, err := temporalwire.MarshalCollection(test.document, limits)
+			if err != nil {
+				t.Fatalf("MarshalCollection(exact input limit): %v", err)
+			}
+			if _, err := temporalwire.MarshalCollection(test.document, temporal.Limits{
+				InputPeriods: 1,
+				FormatBytes:  len(payload),
+			}); err != nil {
+				t.Fatalf("MarshalCollection(exact format limit): %v", err)
+			}
+			if _, err := temporalwire.UnmarshalCollection(payload, temporal.Limits{
+				InputPeriods: 1,
+				ParseBytes:   len(payload),
+			}); err != nil {
+				t.Fatalf("UnmarshalCollection(exact parse limit): %v", err)
+			}
+		})
 	}
 }
