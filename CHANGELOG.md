@@ -4,6 +4,12 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ## Unreleased
 
+### Changed
+
+- Require Go 1.27.0 and use it for development, CI, and interoperability
+  verification.
+  TEMPORAL-DEC-001 sha256:aa3f62b689f2a90a208f0f50e57d4a00b096b67e2e1f4866f5cff785393427b2.
+
 ## 1.1.0 - 2026-09-09
 
 ### Added
