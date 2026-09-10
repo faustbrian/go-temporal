@@ -7,7 +7,7 @@
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-temporal.svg)](https://pkg.go.dev/github.com/faustbrian/go-temporal)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-temporal?sort=semver)](https://github.com/faustbrian/go-temporal/releases)
-[![Go](https://img.shields.io/badge/go-1.26.6-00ADD8?logo=go)](https://go.dev/)
+[![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 `temporal` is immutable temporal algebra for Go. It provides bounded instant
@@ -25,7 +25,7 @@ preserves useful mathematics without copying mutable or PHP-specific APIs.
 go get github.com/faustbrian/go-temporal
 ```
 
-The minimum supported toolchain is Go 1.26.6. Civil-date features use
+The minimum supported toolchain is Go 1.27.0. Civil-date features use
 `github.com/faustbrian/go-calendar`; clocks and timers deliberately remain in
 `clock`.
 
