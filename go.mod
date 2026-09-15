@@ -3,7 +3,7 @@ module github.com/faustbrian/go-temporal
 go 1.27.0
 
 require (
-	github.com/faustbrian/go-calendar v1.0.0
+	github.com/faustbrian/go-calendar v1.1.0
 	github.com/faustbrian/go-config v1.0.0
 	github.com/faustbrian/go-validation v1.1.0
 	github.com/faustbrian/go-wire v1.0.0
