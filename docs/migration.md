@@ -1,5 +1,29 @@
 # Migration from faustbrian/temporal
 
+## Go major-version migration
+
+Use `github.com/faustbrian/go-temporal/v2` and add `/v2` before the package
+suffix in every Temporal import. Update directly composed dependencies and
+consumers together: a v1 `instant.Period`, `temporal.Limits`, or facade value is
+not assignable to its v2 counterpart. Sentinel names and `errors.Is` semantics
+remain, but v1 and v2 sentinel values are distinct; classify with the sentinel
+from the major that produced the error. Calendar types exposed by civil-date
+and timezone APIs must match the Calendar major selected by the Temporal
+module's `go.mod`. Temporal v2 uses the published
+`github.com/faustbrian/go-calendar/v2` v2.0.0 contract. Update Calendar imports
+to `/v2`, including `/v2/timezone`; Calendar v1 dates, local-time values,
+policies, and sentinels do not have the same identity as Calendar v2 values.
+Historical Temporal v1 consumers remain on their published dependency graph.
+Direct Opening and Rule Engine adapter adoption requires separate consumer
+migration and verification; this source change does not certify those routes.
+
+The `temporal/v1` wire schema is independent of the Go module major and remains
+unchanged, including empty collection normalization to JSON `null`. Retained
+facade packages remain distinct nominal APIs within `/v2`; prefer canonical
+adapters for new code. Public tags and releases establish availability.
+
+## PHP migration
+
 The Go API is deliberately not a transliteration. Start from represented-set
 behavior, then select the type whose semantics match.
 
@@ -50,20 +74,20 @@ All variable-output operations accept `temporal.Limits` and may return
 
 | Retained compatibility import | Canonical import |
 |---|---|
-| `go-temporal/temporalconfig` | `go-temporal/adapters/config` |
-| `go-temporal/postgres` | `go-temporal/adapters/postgres` |
-| `go-temporal/temporalvalidation` | `go-temporal/adapters/validation` |
-| `go-temporal/temporalwire` | `go-temporal/adapters/wire` |
+| `go-temporal/v2/temporalconfig` | `go-temporal/v2/adapters/config` |
+| `go-temporal/v2/postgres` | `go-temporal/v2/adapters/postgres` |
+| `go-temporal/v2/temporalvalidation` | `go-temporal/v2/adapters/validation` |
+| `go-temporal/v2/temporalwire` | `go-temporal/v2/adapters/wire` |
 
-Change imports when convenient; released signatures and named-type identities
-remain supported at the old paths. The compatibility paths remain for the
+Change imports when convenient; compatibility signatures and named-type identities
+remain supported within the same module major. The compatibility paths remain for the
 longer of 180 days after successor public availability and two subsequently
 published stable root-module minor releases. Removal additionally requires an
 authorized next major release and consumer verification.
 
 ## Unsupported charting gap
 
-`Period\Chart` has no v1 Go implementation. This includes `Chart`, `Data`,
+`Period\Chart` has no core Go implementation. This includes `Chart`, `Data`,
 `Dataset`, `GanttChart`, `GanttChartConfig`, `Output`, `StreamOutput`, terminal
 capabilities, colors, alignments, affix/reverse/generated labels, decimal,
 Latin-letter and Roman-number labels, chart errors, and every rendering

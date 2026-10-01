@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -222,10 +222,17 @@ func parseRangeShell(text string) (pgtype.BoundType, pgtype.BoundType, string, e
 }
 
 func sqlText(source any) (string, error) {
+	maxBytes := temporal.DefaultLimits().ParseBytes
 	switch value := source.(type) {
 	case string:
+		if len(value) > maxBytes {
+			return "", &temporal.LimitError{Field: "parse_bytes", Value: len(value), Max: maxBytes}
+		}
 		return value, nil
 	case []byte:
+		if len(value) > maxBytes {
+			return "", &temporal.LimitError{Field: "parse_bytes", Value: len(value), Max: maxBytes}
+		}
 		return string(value), nil
 	default:
 		return "", temporal.ErrUnsupported

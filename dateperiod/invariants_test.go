@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
 func TestPeriodDaysRejectsEitherInvalidEndpoint(t *testing.T) {

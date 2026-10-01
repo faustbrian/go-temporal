@@ -18,7 +18,13 @@ PostgreSQL canonicalizes discrete dateranges to closed-open. Conversion back to
 `dateperiod` retains represented dates, so structural bounds may differ while
 `SetEqual` remains true. Maximum-date exclusive-end overflow is rejected.
 
-Run the disposable integration suite with:
+The release dispatch (`release_dry_run: true`) additionally requires the two
+canonical and retained adapter tests against digest-pinned PostgreSQL 18.6.
+Missing or skipped expected tests fail that release gate. Connections and
+queries share a 30-second test context; cleanup uses an independent 10-second
+context. Ordinary local runs without a DSN may still skip these tagged tests.
+
+Run the disposable integration suite locally with:
 
 ```sh
 TEMPORAL_POSTGRES_DSN='postgres://temporal:temporal@localhost/temporal_test' \

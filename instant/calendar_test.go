@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	calendartz "github.com/faustbrian/go-calendar/timezone"
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/instant"
+	calendartz "github.com/faustbrian/go-calendar/v2/timezone"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/instant"
 )
 
 func TestSnapUsesCivilBoundariesAndExplicitDSTPolicy(t *testing.T) {

@@ -8,15 +8,15 @@ import (
 	"time"
 	"unicode/utf8"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
-	newconfig "github.com/faustbrian/go-temporal/adapters/config"
-	newpostgres "github.com/faustbrian/go-temporal/adapters/postgres"
-	newwire "github.com/faustbrian/go-temporal/adapters/wire"
-	"github.com/faustbrian/go-temporal/notation"
-	oldconfig "github.com/faustbrian/go-temporal/temporalconfig" //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
-	"github.com/faustbrian/go-temporal/temporalwire"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
-	"github.com/faustbrian/go-temporal/timeofday"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	newconfig "github.com/faustbrian/go-temporal/v2/adapters/config"
+	newpostgres "github.com/faustbrian/go-temporal/v2/adapters/postgres"
+	newwire "github.com/faustbrian/go-temporal/v2/adapters/wire"
+	"github.com/faustbrian/go-temporal/v2/notation"
+	oldconfig "github.com/faustbrian/go-temporal/v2/temporalconfig" //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
+	"github.com/faustbrian/go-temporal/v2/temporalwire"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 func TestHostileDiagnosticsAreBoundedAndSanitized(t *testing.T) {

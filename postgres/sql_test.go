@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
-	temporalpostgres "github.com/faustbrian/go-temporal/postgres"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	temporalpostgres "github.com/faustbrian/go-temporal/v2/postgres"
 )
 
 func TestInstantSQLRangeRoundTripAndNull(t *testing.T) {

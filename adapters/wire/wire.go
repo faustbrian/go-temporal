@@ -9,13 +9,13 @@ import (
 	"io"
 	"unicode/utf8"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
-	"github.com/faustbrian/go-temporal/internal/diagnostic"
-	"github.com/faustbrian/go-temporal/notation"
-	"github.com/faustbrian/go-temporal/timeofday"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v2/notation"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 // Version1 is the stable initial document schema identifier.
@@ -175,11 +175,48 @@ func Marshal(document Document, limits temporal.Limits) ([]byte, error) {
 	if err := document.validate(limits); err != nil {
 		return nil, err
 	}
+	if size, exceeds := scalarDocumentSize(document, limits.FormatBytes); exceeds {
+		return nil, &temporal.LimitError{Field: "format_bytes", Value: size, Max: limits.FormatBytes}
+	}
 	payload, _ := json.Marshal(document)
 	if len(payload) > limits.FormatBytes {
 		return nil, &temporal.LimitError{Field: "format_bytes", Value: len(payload), Max: limits.FormatBytes}
 	}
 	return payload, nil
+}
+
+func scalarDocumentSize(document Document, maximum int) (int, bool) {
+	size := len(`{"version":`) + jsonStringSize(document.Version) +
+		len(`,"kind":`) + jsonStringSize(string(document.Kind)) +
+		len(`,"value":`) + jsonStringSize(document.Value) + 1
+	return boundedJSONSize(size, maximum)
+}
+
+func jsonStringSize(value string) int {
+	// Count admitted UTF-8 strings without allocating their JSON representation.
+	// Document validation has already rejected invalid UTF-8. The replacement
+	// case remains a conservative bound for an invalid byte.
+	size := 2
+	for len(value) > 0 {
+		r, width := utf8.DecodeRuneInString(value)
+		value = value[width:]
+		switch {
+		case r == '"' || r == '\\' || r == '\b' || r == '\f' || r == '\n' || r == '\r' || r == '\t':
+			size += 2
+		case r < 0x20 || r == '<' || r == '>' || r == '&' || r == '\u2028' || r == '\u2029' || (r == utf8.RuneError && width == 1):
+			size += 6
+		default:
+			size += width
+		}
+	}
+	return size
+}
+
+func boundedJSONSize(size, maximum int) (int, bool) {
+	if size > maximum {
+		return size, true
+	}
+	return size, false
 }
 
 // Unmarshal strictly decodes exactly one versioned JSON document.
@@ -194,6 +231,9 @@ func Unmarshal(payload []byte, limits temporal.Limits) (Document, error) {
 	}
 	if !utf8.Valid(payload) {
 		return Document{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: scalar document syntax", temporal.ErrParse)
+	}
+	if err := validateJSONStructure(payload, limits.ParserDepth); err != nil {
+		return Document{}, boundedWireError(limits, "scalar document syntax", err)
 	}
 
 	decoder := json.NewDecoder(bytes.NewReader(payload))
@@ -210,6 +250,82 @@ func Unmarshal(payload []byte, limits temporal.Limits) (Document, error) {
 		return Document{}, boundedWireError(limits, "scalar document value", err)
 	}
 	return document, nil
+}
+
+func validateJSONStructure(payload []byte, maxDepth int) error {
+	decoder := json.NewDecoder(bytes.NewReader(payload))
+	token, err := decoder.Token()
+	if err != nil {
+		return temporal.ErrParse
+	}
+	if err := validateJSONValue(decoder, token, 1, maxDepth); err != nil {
+		return err
+	}
+	if _, err := decoder.Token(); err != io.EOF {
+		return temporal.ErrParse
+	}
+	return nil
+}
+
+func validateJSONValue(decoder *json.Decoder, token json.Token, depth, maxDepth int) error {
+	delimiter, compound := token.(json.Delim)
+	if !compound {
+		return nil
+	}
+	if depth > maxDepth {
+		return &temporal.LimitError{Field: "parser_depth", Value: depth, Max: maxDepth}
+	}
+
+	switch delimiter {
+	case '{':
+		keys := make(map[string]struct{})
+		for decoder.More() {
+			keyToken, err := decoder.Token()
+			if err != nil {
+				return temporal.ErrParse
+			}
+			key, ok := keyToken.(string)
+			if !ok {
+				return temporal.ErrParse
+			}
+			if _, exists := keys[key]; exists {
+				return temporal.ErrParse
+			}
+			keys[key] = struct{}{}
+			valueToken, err := decoder.Token()
+			if err != nil {
+				return temporal.ErrParse
+			}
+			if err := validateJSONValue(decoder, valueToken, depth+1, maxDepth); err != nil {
+				return err
+			}
+		}
+	case '[':
+		for decoder.More() {
+			valueToken, err := decoder.Token()
+			if err != nil {
+				return temporal.ErrParse
+			}
+			if err := validateJSONValue(decoder, valueToken, depth+1, maxDepth); err != nil {
+				return err
+			}
+		}
+	default:
+		return temporal.ErrParse
+	}
+
+	closing, err := decoder.Token()
+	if err != nil {
+		return temporal.ErrParse
+	}
+	expected := json.Delim('}')
+	if delimiter == '[' {
+		expected = ']'
+	}
+	if closing != expected {
+		return temporal.ErrParse
+	}
+	return nil
 }
 
 func boundedWireError(limits temporal.Limits, stage string, cause error) error {

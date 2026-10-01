@@ -4,7 +4,7 @@ import (
 	"sort"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal"
+	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
 // Set is an immutable, normalized collection of disjoint instant periods.
@@ -150,11 +150,16 @@ func (s Set) Gaps() []Period {
 
 // Union returns the normalized union with other.
 func (s Set) Union(other Set) (Set, error) {
+	limits := s.effectiveLimits()
+	inputCount := len(s.periods) + len(other.periods)
+	if inputCount > limits.InputPeriods {
+		return Set{}, &temporal.LimitError{Field: "input_periods", Value: inputCount, Max: limits.InputPeriods}
+	}
 	combined := make([]Period, 0, len(s.periods)+len(other.periods))
 	combined = append(combined, s.periods...)
 	combined = append(combined, other.periods...)
 
-	return NewSet(s.effectiveLimits(), combined...)
+	return NewSet(limits, combined...)
 }
 
 // Intersect returns the normalized intersection with other in O(n+m) time.

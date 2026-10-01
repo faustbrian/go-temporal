@@ -25,14 +25,69 @@ jobs:
       tooling_sha: 14d1e594d5f246a795d0c0c11cf7d2d6c8e5617f
       release_dry_run: ${{ inputs.release_dry_run || false }}
 
+  postgres:
+    name: PostgreSQL 18.6 release interoperability
+    if: github.event_name == 'workflow_dispatch' && inputs.release_dry_run == true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:18.6@sha256:5a5a84b19854a9ffaa54082c166ff4ec27473a361e496e5ea167f298f2da9722
+        env:
+          POSTGRES_USER: temporal
+          POSTGRES_PASSWORD: temporal
+          POSTGRES_DB: temporal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U temporal -d temporal_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.27.0'
+          cache: false
+      - name: Verify canonical and retained PostgreSQL adapters
+        shell: bash
+        env:
+          TEMPORAL_POSTGRES_DSN: postgres://temporal:temporal@localhost:5432/temporal_test?sslmode=disable
+          GOMAXPROCS: '2'
+          GOFLAGS: -p=1
+          GOTOOLCHAIN: local
+          GOWORK: 'off'
+        run: |
+          set -euo pipefail
+          test -n "${TEMPORAL_POSTGRES_DSN}"
+          task_cache=$(mktemp -d "${RUNNER_TEMP}/temporal-postgres.XXXXXX")
+          trap 'find "$task_cache" -type d -exec chmod u+w {} +; find "$task_cache" -depth -delete' EXIT
+          export GOCACHE="$task_cache/build" GOMODCACHE="$task_cache/modules" GOTMPDIR="$task_cache/tmp"
+          mkdir "$GOCACHE" "$GOMODCACHE" "$GOTMPDIR"
+          go test -tags=integration ./adapters/postgres ./postgres -run '^TestPostgreSQLRangeAndMultirangeRoundTrips$' -count=1 -timeout=120s -json | tee "$task_cache/tests.json"
+          jq -s -e '
+            ([.[] | select(.Test == "TestPostgreSQLRangeAndMultirangeRoundTrips" and .Action == "pass") | .Package] | sort) ==
+            ["github.com/faustbrian/go-temporal/v2/adapters/postgres", "github.com/faustbrian/go-temporal/v2/postgres"] and
+            ([.[] | select(.Test == "TestPostgreSQLRangeAndMultirangeRoundTrips" and .Action == "skip")] | length) == 0
+          ' "$task_cache/tests.json"
+
   required:
     name: Required
     if: always()
-    needs: ci
+    needs: [ci, postgres]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Require shared workflow
         env:
           CI_RESULT: ${{ needs.ci.result }}
-        run: test "${CI_RESULT}" = success
+          POSTGRES_RESULT: ${{ needs.postgres.result }}
+          RELEASE_SELECTED: ${{ github.event_name == 'workflow_dispatch' && inputs.release_dry_run == true }}
+        run: |
+          test "${CI_RESULT}" = success
+          if [ "${RELEASE_SELECTED}" = true ]; then
+            test "${POSTGRES_RESULT}" = success
+          else
+            test "${POSTGRES_RESULT}" = skipped
+          fi

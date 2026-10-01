@@ -8,9 +8,9 @@ import (
 	"time"
 	"unicode/utf8"
 
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/internal/diagnostic"
-	"github.com/faustbrian/go-temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 var fixedDurationPattern = regexp.MustCompile(

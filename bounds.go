@@ -5,7 +5,7 @@ package temporal
 import (
 	"fmt"
 
-	"github.com/faustbrian/go-temporal/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
 )
 
 // Side identifies one endpoint of a bounded interval.
@@ -166,6 +166,9 @@ func (b Bounds) MarshalText() ([]byte, error) {
 
 // UnmarshalText implements encoding.TextUnmarshaler.
 func (b *Bounds) UnmarshalText(text []byte) error {
+	if b == nil {
+		return ErrUnsupported
+	}
 	if len(text) > DefaultLimits().ParseBytes {
 		cause := &LimitError{
 			Field: "parse_bytes",

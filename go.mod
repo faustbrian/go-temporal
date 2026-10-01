@@ -1,13 +1,13 @@
-module github.com/faustbrian/go-temporal
+module github.com/faustbrian/go-temporal/v2
 
 go 1.27.0
 
 require (
-	github.com/faustbrian/go-calendar v1.0.0
+	github.com/faustbrian/go-calendar/v2 v2.0.0
 	github.com/faustbrian/go-config v1.0.0
 	github.com/faustbrian/go-validation v1.1.0
 	github.com/faustbrian/go-wire v1.0.0
-	github.com/jackc/pgx/v5 v5.10.0
+	github.com/jackc/pgx/v5 v5.11.0
 )
 
 require (

@@ -1,6 +1,6 @@
 // Package postgres provides retained PostgreSQL adapters.
 //
-// Deprecated: use github.com/faustbrian/go-temporal/adapters/postgres. This
+// Deprecated: use github.com/faustbrian/go-temporal/v2/adapters/postgres. This
 // package remains supported for the longer of 180 days after successor public
 // availability and two subsequently published stable root-module minor
 // releases.
@@ -10,11 +10,11 @@ import (
 	"database/sql/driver"
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
-	temporalpostgres "github.com/faustbrian/go-temporal/adapters/postgres"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	temporalpostgres "github.com/faustbrian/go-temporal/v2/adapters/postgres"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

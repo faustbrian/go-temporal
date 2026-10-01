@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
-	temporalwire "github.com/faustbrian/go-temporal/adapters/wire"
-	"github.com/faustbrian/go-temporal/timeofday"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	temporalwire "github.com/faustbrian/go-temporal/v2/adapters/wire"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 func TestWireDocumentsAcceptEveryExactLimit(t *testing.T) {

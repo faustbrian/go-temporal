@@ -3,11 +3,12 @@
 package temporalconfig
 
 import (
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
-	"github.com/faustbrian/go-temporal/notation"
-	"github.com/faustbrian/go-temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v2/notation"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 // InstantPeriod is a configuration boundary for an immutable instant period.
@@ -20,7 +21,14 @@ func (v InstantPeriod) MarshalText() ([]byte, error) {
 	return []byte(encoded), err
 }
 func (v *InstantPeriod) UnmarshalText(text []byte) error {
-	parsed, err := notation.ParseInstant(string(text), notation.ISO80000, temporal.Limits{})
+	if v == nil {
+		return temporal.ErrUnsupported
+	}
+	value, err := boundedText(text)
+	if err != nil {
+		return err
+	}
+	parsed, err := notation.ParseInstant(value, notation.ISO80000, temporal.Limits{})
 	if err != nil {
 		return err
 	}
@@ -38,7 +46,14 @@ func (v DatePeriod) MarshalText() ([]byte, error) {
 	return []byte(encoded), err
 }
 func (v *DatePeriod) UnmarshalText(text []byte) error {
-	parsed, err := notation.ParseDate(string(text), notation.ISO80000, temporal.Limits{})
+	if v == nil {
+		return temporal.ErrUnsupported
+	}
+	value, err := boundedText(text)
+	if err != nil {
+		return err
+	}
+	parsed, err := notation.ParseDate(value, notation.ISO80000, temporal.Limits{})
 	if err != nil {
 		return err
 	}
@@ -56,7 +71,14 @@ func (v DailyInterval) MarshalText() ([]byte, error) {
 	return []byte(encoded), err
 }
 func (v *DailyInterval) UnmarshalText(text []byte) error {
-	parsed, err := notation.ParseDailyInterval(string(text), notation.ISO80000, temporal.Limits{})
+	if v == nil {
+		return temporal.ErrUnsupported
+	}
+	value, err := boundedText(text)
+	if err != nil {
+		return err
+	}
+	parsed, err := notation.ParseDailyInterval(value, notation.ISO80000, temporal.Limits{})
 	if err != nil {
 		return err
 	}
@@ -73,7 +95,14 @@ func (v Time) MarshalText() ([]byte, error) {
 	return []byte(v.value.String()), nil
 }
 func (v *Time) UnmarshalText(text []byte) error {
-	parsed, err := timeofday.Parse(string(text), temporal.Limits{})
+	if v == nil {
+		return temporal.ErrUnsupported
+	}
+	value, err := boundedText(text)
+	if err != nil {
+		return err
+	}
+	parsed, err := timeofday.Parse(value, temporal.Limits{})
 	if err != nil {
 		return err
 	}
@@ -91,10 +120,26 @@ func (v Duration) MarshalText() ([]byte, error) {
 	return []byte(encoded), err
 }
 func (v *Duration) UnmarshalText(text []byte) error {
-	parsed, err := notation.ParseDuration(string(text), temporal.Limits{})
+	if v == nil {
+		return temporal.ErrUnsupported
+	}
+	value, err := boundedText(text)
+	if err != nil {
+		return err
+	}
+	parsed, err := notation.ParseDuration(value, temporal.Limits{})
 	if err != nil {
 		return err
 	}
 	v.value = parsed
 	return nil
+}
+
+func boundedText(text []byte) (string, error) {
+	limits := temporal.DefaultLimits()
+	if len(text) > limits.ParseBytes {
+		cause := &temporal.LimitError{Field: "parse_bytes", Value: len(text), Max: limits.ParseBytes}
+		return "", diagnostic.New(limits.ErrorBytes, temporal.ErrLimit.Error(), temporal.ErrLimit, cause)
+	}
+	return string(text), nil
 }

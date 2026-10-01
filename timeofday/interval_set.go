@@ -7,7 +7,7 @@ import (
 	"sort"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal"
+	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
 type dailySegment struct {
@@ -121,12 +121,21 @@ func (s IntervalSet) All() iter.Seq[Interval] {
 	}
 }
 
-// Union returns the normalized union with other.
+// Union returns the normalized union with other. Before copying or sorting,
+// combined normalized segments are limited to twice the receiver's resolved
+// InputPeriods: each original circular interval may expand into two segments,
+// and normalization does not retain the original raw interval count.
 func (s IntervalSet) Union(other IntervalSet) (IntervalSet, error) {
-	segments := make([]dailySegment, 0, len(s.segments)+len(other.segments))
+	limits := s.effectiveLimits()
+	count := len(s.segments) + len(other.segments)
+	maxSegments := 2 * limits.InputPeriods
+	if count > maxSegments {
+		return IntervalSet{}, &temporal.LimitError{Field: "input_segments", Value: count, Max: maxSegments}
+	}
+	segments := make([]dailySegment, 0, count)
 	segments = append(segments, s.segments...)
 	segments = append(segments, other.segments...)
-	return newIntervalSetFromSegments(s.effectiveLimits(), segments)
+	return newIntervalSetFromSegments(limits, segments)
 }
 
 // Intersect returns the normalized common daily members in O(n+m) time.

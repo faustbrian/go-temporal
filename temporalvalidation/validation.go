@@ -1,16 +1,16 @@
 // Package temporalvalidation provides retained validation adapters.
 //
-// Deprecated: use github.com/faustbrian/go-temporal/adapters/validation. This
+// Deprecated: use github.com/faustbrian/go-temporal/v2/adapters/validation. This
 // package remains supported for the longer of 180 days after successor public
 // availability and two subsequently published stable root-module minor
 // releases.
 package temporalvalidation
 
 import (
-	adapter "github.com/faustbrian/go-temporal/adapters/validation"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
-	"github.com/faustbrian/go-temporal/timeofday"
+	adapter "github.com/faustbrian/go-temporal/v2/adapters/validation"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 	validation "github.com/faustbrian/go-validation"
 )
 

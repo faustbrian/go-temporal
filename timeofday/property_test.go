@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 func TestCircularSetAlgebraProperties(t *testing.T) {

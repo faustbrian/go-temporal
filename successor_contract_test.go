@@ -8,16 +8,16 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal"
-	newconfig "github.com/faustbrian/go-temporal/adapters/config"
-	newpostgres "github.com/faustbrian/go-temporal/adapters/postgres"
-	newvalidation "github.com/faustbrian/go-temporal/adapters/validation"
-	newwire "github.com/faustbrian/go-temporal/adapters/wire"
-	"github.com/faustbrian/go-temporal/instant"
-	oldpostgres "github.com/faustbrian/go-temporal/postgres"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
-	oldconfig "github.com/faustbrian/go-temporal/temporalconfig"         //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
-	oldvalidation "github.com/faustbrian/go-temporal/temporalvalidation" //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
-	oldwire "github.com/faustbrian/go-temporal/temporalwire"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
+	temporal "github.com/faustbrian/go-temporal/v2"
+	newconfig "github.com/faustbrian/go-temporal/v2/adapters/config"
+	newpostgres "github.com/faustbrian/go-temporal/v2/adapters/postgres"
+	newvalidation "github.com/faustbrian/go-temporal/v2/adapters/validation"
+	newwire "github.com/faustbrian/go-temporal/v2/adapters/wire"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	oldpostgres "github.com/faustbrian/go-temporal/v2/postgres"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
+	oldconfig "github.com/faustbrian/go-temporal/v2/temporalconfig"         //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
+	oldvalidation "github.com/faustbrian/go-temporal/v2/temporalvalidation" //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
+	oldwire "github.com/faustbrian/go-temporal/v2/temporalwire"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
 	validation "github.com/faustbrian/go-validation"
 )
 
@@ -28,16 +28,16 @@ func TestSuccessorNamedTypesOwnTheirPackageIdentity(t *testing.T) {
 		value any
 		path  string
 	}{
-		"config instant":   {newconfig.InstantPeriod{}, "github.com/faustbrian/go-temporal/adapters/config"},
-		"config date":      {newconfig.DatePeriod{}, "github.com/faustbrian/go-temporal/adapters/config"},
-		"config daily":     {newconfig.DailyInterval{}, "github.com/faustbrian/go-temporal/adapters/config"},
-		"config time":      {newconfig.Time{}, "github.com/faustbrian/go-temporal/adapters/config"},
-		"config duration":  {newconfig.Duration{}, "github.com/faustbrian/go-temporal/adapters/config"},
-		"wire kind":        {newwire.Kind(""), "github.com/faustbrian/go-temporal/adapters/wire"},
-		"wire document":    {newwire.Document{}, "github.com/faustbrian/go-temporal/adapters/wire"},
-		"wire collection":  {newwire.CollectionDocument{}, "github.com/faustbrian/go-temporal/adapters/wire"},
-		"postgres instant": {newpostgres.InstantRange{}, "github.com/faustbrian/go-temporal/adapters/postgres"},
-		"postgres date":    {newpostgres.DateRange{}, "github.com/faustbrian/go-temporal/adapters/postgres"},
+		"config instant":   {newconfig.InstantPeriod{}, "github.com/faustbrian/go-temporal/v2/adapters/config"},
+		"config date":      {newconfig.DatePeriod{}, "github.com/faustbrian/go-temporal/v2/adapters/config"},
+		"config daily":     {newconfig.DailyInterval{}, "github.com/faustbrian/go-temporal/v2/adapters/config"},
+		"config time":      {newconfig.Time{}, "github.com/faustbrian/go-temporal/v2/adapters/config"},
+		"config duration":  {newconfig.Duration{}, "github.com/faustbrian/go-temporal/v2/adapters/config"},
+		"wire kind":        {newwire.Kind(""), "github.com/faustbrian/go-temporal/v2/adapters/wire"},
+		"wire document":    {newwire.Document{}, "github.com/faustbrian/go-temporal/v2/adapters/wire"},
+		"wire collection":  {newwire.CollectionDocument{}, "github.com/faustbrian/go-temporal/v2/adapters/wire"},
+		"postgres instant": {newpostgres.InstantRange{}, "github.com/faustbrian/go-temporal/v2/adapters/postgres"},
+		"postgres date":    {newpostgres.DateRange{}, "github.com/faustbrian/go-temporal/v2/adapters/postgres"},
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
