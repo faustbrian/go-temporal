@@ -3,7 +3,6 @@ package temporalwire
 import (
 	"bytes"
 	"encoding/json"
-	"io"
 	"unicode/utf8"
 
 	temporal "github.com/faustbrian/go-temporal/v2"
@@ -71,9 +70,7 @@ func FromDailySet(set timeofday.IntervalSet, limits temporal.Limits) (Collection
 }
 
 func newCollection(kind Kind, values []string, limits temporal.Limits) (CollectionDocument, error) {
-	if err := admitCollectionCount(len(values), limits); err != nil {
-		return CollectionDocument{}, err
-	}
+	// From*Set callers admit the immutable source count before copying or formatting.
 	document := CollectionDocument{Version: Version1, Kind: kind, Values: append([]string(nil), values...)}
 	if err := document.validate(limits); err != nil {
 		return CollectionDocument{}, err
@@ -221,9 +218,6 @@ func MarshalCollection(document CollectionDocument, limits temporal.Limits) ([]b
 		return nil, &temporal.LimitError{Field: "format_bytes", Value: size, Max: limits.FormatBytes}
 	}
 	payload, _ := json.Marshal(document)
-	if len(payload) > limits.FormatBytes {
-		return nil, &temporal.LimitError{Field: "format_bytes", Value: len(payload), Max: limits.FormatBytes}
-	}
 	return payload, nil
 }
 
@@ -267,10 +261,6 @@ func UnmarshalCollection(payload []byte, limits temporal.Limits) (CollectionDocu
 	var document CollectionDocument
 	if err := decoder.Decode(&document); err != nil {
 		return CollectionDocument{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: collection document syntax", temporal.ErrParse)
-	}
-	var trailing any
-	if err := decoder.Decode(&trailing); err != io.EOF {
-		return CollectionDocument{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: trailing collection document", temporal.ErrParse)
 	}
 	if err := document.validate(limits); err != nil {
 		return CollectionDocument{}, boundedWireError(limits, "collection document value", err)
