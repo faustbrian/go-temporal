@@ -5,6 +5,19 @@ The machine-readable objects below are the exact current records. `ISO8601`,
 subsets are claimed. Nothing in this package implements Temporal service RPCs,
 workflow history, commands, payloads, or compatibility behavior.
 
+## Scoped upstream review: 2026-10-01
+
+The current [PostgreSQL 18.6 release notes](https://www.postgresql.org/docs/release/18.6/)
+were reviewed for TEMPORAL-DEC-004 after the monitored page changed. They
+document no change to this adapter's finite range grammar, microsecond-exact
+timestamp mapping, canonical date bounds, or infinity rejection. Server
+statistics, planner, index, security maintenance, and timezone-data updates
+remain deployment responsibilities; this review is not runtime verification.
+The release-page checksum was refreshed without changing the range-source
+pin, authority version, or monitoring interval. Historical response bytes are
+unavailable, so the precise prior-to-current page delta is not claimed. Other
+authorities were not re-reviewed; their global review date remains unchanged.
+
 ## TEMPORAL-DEC-001: RFC 3339 instant endpoint profile
 
 Source URL: https://www.rfc-editor.org/rfc/rfc3339.txt
