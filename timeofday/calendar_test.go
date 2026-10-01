@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
-	calendartz "github.com/faustbrian/go-calendar/timezone"
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/timeofday"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	calendartz "github.com/faustbrian/go-calendar/v2/timezone"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 func TestApplyRequiresExplicitCalendarContextAndResolvesDST(t *testing.T) {

@@ -1,7 +1,9 @@
 package temporal
 
 const (
-	// HardMaxPeriods bounds the input and output of any set operation.
+	// HardMaxPeriods bounds raw input periods and normalized output periods.
+	// Daily set Union permits twice InputPeriods normalized input segments
+	// because each raw circular interval can expand into two segments.
 	HardMaxPeriods = 100_000
 	// HardMaxSteps bounds iteration and splitting.
 	HardMaxSteps = 1_000_000

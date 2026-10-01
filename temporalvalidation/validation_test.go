@@ -4,12 +4,12 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
-	"github.com/faustbrian/go-temporal/temporalvalidation"
-	"github.com/faustbrian/go-temporal/timeofday"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	"github.com/faustbrian/go-temporal/v2/temporalvalidation"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 	validation "github.com/faustbrian/go-validation"
 )
 

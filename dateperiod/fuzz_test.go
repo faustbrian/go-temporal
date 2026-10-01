@@ -3,8 +3,8 @@ package dateperiod_test
 import (
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/dateperiod"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
 )
 
 func FuzzDateSplitting(f *testing.F) {

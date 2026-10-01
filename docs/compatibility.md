@@ -29,7 +29,7 @@ an intentional Go-native replacement or omission.
 - Operations which are partial in PHP return typed errors in Go. Expected empty
   set results are values, not errors.
 - All variable-output operations accept limits and fail before exceeding them.
-- Charting remains deferred; therefore v1 does not claim complete package
+- Charting remains deferred; therefore core does not claim complete package
   compatibility.
 
 ## Period namespace
@@ -133,11 +133,11 @@ is intentionally not preserved.
 
 ## Deferred chart inventory
 
-No chart symbol is part of v1 core. The future optional `temporalchart` package
+No chart symbol is part of core. The future optional `temporalchart` package
 must account for every item in this inventory before the compatibility gap can
 be closed.
 
-| PHP chart surface | Observed contract / fixture | v1 status |
+| PHP chart surface | Observed contract / fixture | Core status |
 |---|---|---|
 | `Chart::stroke` | renders a `Dataset` through an output target | deferred |
 | `GanttChart`, constructor, `stroke` | empty data, periods, sequences, empty sequences, exact terminal fixtures | deferred |

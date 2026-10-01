@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal"
+	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
 func TestBoundsExposeEveryInclusionCombination(t *testing.T) {

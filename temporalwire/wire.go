@@ -1,17 +1,17 @@
 // Package temporalwire provides retained wire adapters.
 //
-// Deprecated: use github.com/faustbrian/go-temporal/adapters/wire. This
+// Deprecated: use github.com/faustbrian/go-temporal/v2/adapters/wire. This
 // package remains supported for the longer of 180 days after successor public
 // availability and two subsequently published stable root-module minor
 // releases.
 package temporalwire
 
 import (
-	temporal "github.com/faustbrian/go-temporal"
-	adapter "github.com/faustbrian/go-temporal/adapters/wire"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
-	"github.com/faustbrian/go-temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	adapter "github.com/faustbrian/go-temporal/v2/adapters/wire"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 const Version1 = adapter.Version1
@@ -114,8 +114,10 @@ func (d CollectionDocument) DailySet(limits temporal.Limits) (timeofday.Interval
 	return d.adapter().DailySet(limits)
 }
 func (d CollectionDocument) adapter() adapter.CollectionDocument {
+	// Canonical admission reads this borrowed view without retaining or mutating
+	// Values. Copying here would allocate before its count and byte checks.
 	return adapter.CollectionDocument{
-		Version: d.Version, Kind: adapter.Kind(d.Kind), Values: append([]string(nil), d.Values...),
+		Version: d.Version, Kind: adapter.Kind(d.Kind), Values: d.Values,
 	}
 }
 func fromAdapterCollection(d adapter.CollectionDocument) CollectionDocument {

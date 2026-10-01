@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
-	temporalpostgres "github.com/faustbrian/go-temporal/postgres"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	temporalpostgres "github.com/faustbrian/go-temporal/v2/postgres"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -22,13 +22,16 @@ func TestPostgreSQLRangeAndMultirangeRoundTrips(t *testing.T) {
 	if dsn == "" {
 		t.Skip("TEMPORAL_POSTGRES_DSN is not set")
 	}
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	connection, err := pgx.Connect(ctx, dsn)
 	if err != nil {
 		t.Fatalf("pgx.Connect(): %v", err)
 	}
 	t.Cleanup(func() {
-		if err := connection.Close(ctx); err != nil {
+		cleanupCtx, cleanupCancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cleanupCancel()
+		if err := connection.Close(cleanupCtx); err != nil {
 			t.Errorf("connection.Close(): %v", err)
 		}
 	})

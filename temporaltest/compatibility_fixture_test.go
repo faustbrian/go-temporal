@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/notation"
-	"github.com/faustbrian/go-temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/notation"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 func TestPinnedPHPCompatibilityFixture(t *testing.T) {

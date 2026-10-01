@@ -5,7 +5,7 @@ import (
 	"sort"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal"
+	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
 // All returns a stable iterator over normalized periods.

@@ -5,8 +5,8 @@ import (
 	"slices"
 	"sort"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
 // Set is an immutable normalized collection of disjoint civil-date periods.
@@ -126,10 +126,15 @@ func (s Set) Gaps() []Period {
 
 // Union returns the normalized union with other.
 func (s Set) Union(other Set) (Set, error) {
+	limits := s.effectiveLimits()
+	inputCount := len(s.periods) + len(other.periods)
+	if inputCount > limits.InputPeriods {
+		return Set{}, dateLimitError("input_periods", inputCount, limits.InputPeriods)
+	}
 	combined := make([]Period, 0, len(s.periods)+len(other.periods))
 	combined = append(combined, s.periods...)
 	combined = append(combined, other.periods...)
-	return NewSet(s.effectiveLimits(), combined...)
+	return NewSet(limits, combined...)
 }
 
 // Intersect returns common represented dates in O(n+m) time.

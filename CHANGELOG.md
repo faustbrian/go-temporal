@@ -4,8 +4,26 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ## Unreleased
 
+### Fixed
+
+- Bound daily set Union input segments before copying or sorting, allowing
+  twice the receiver's input-period limit to preserve circular expansion.
+- Reject duplicate JSON fields and enforce configured wire parser depth before
+  decoding scalar and collection documents.
+- Admit configuration and SQL text bytes before conversion, reject nil text
+  receivers, and enforce set and collection counts before owned copies.
+- Count admitted JSON output bytes without allocating an encoded string before
+  the format budget check.
+
 ### Changed
 
+- Move the root module and all owned imports to
+  `github.com/faustbrian/go-temporal/v2`. Major-version types and sentinels have
+  distinct identities; see the migration guide. Retained adapter facades and
+  the `temporal/v1` wire schema remain supported within the v2 module.
+- Adopt Calendar v2.0.0 for civil dates and timezone composition. Exposed
+  Calendar types and sentinels require matching `/v2` imports; historical
+  Temporal v1 dependency graphs are unchanged.
 - Require Go 1.27.0 and use it for development, CI, and interoperability
   verification.
   TEMPORAL-DEC-001 sha256:aa3f62b689f2a90a208f0f50e57d4a00b096b67e2e1f4866f5cff785393427b2.

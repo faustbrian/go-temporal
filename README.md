@@ -5,7 +5,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-temporal.svg)](https://pkg.go.dev/github.com/faustbrian/go-temporal)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-temporal/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-temporal/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-temporal?sort=semver)](https://github.com/faustbrian/go-temporal/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -16,17 +16,17 @@ period sets, fixed elapsed durations, local times, circular daily intervals,
 strict notation, versioned scalar/set encoding, PostgreSQL range adapters, and
 bounded parsers and iterators.
 
-The module is a Go-native successor to `github.com/faustbrian/go-temporal`. It
+The module is a Go-native successor to `faustbrian/temporal`. It
 preserves useful mathematics without copying mutable or PHP-specific APIs.
 
 ## Install
 
 ```sh
-go get github.com/faustbrian/go-temporal
+go get github.com/faustbrian/go-temporal/v2
 ```
 
 The minimum supported toolchain is Go 1.27.0. Civil-date features use
-`github.com/faustbrian/go-calendar`; clocks and timers deliberately remain in
+`github.com/faustbrian/go-calendar/v2`; clocks and timers deliberately remain in
 `clock`.
 
 ## Five-minute instant period
@@ -121,7 +121,7 @@ public symbol. Deliberate divergences are in
 [docs/migration.md](docs/migration.md). Generated compatibility evidence is
 stored under `compat/fixtures`.
 
-Charting is intentionally unsupported in v1. There is no `temporalchart`
+Charting is intentionally unsupported in core. There is no `temporalchart`
 package and no terminal/Gantt renderer in core. Every PHP chart type and option
 is inventoried, and the core period/set values preserve a future renderer seam.
 Full PHP-package compatibility is not claimed while this gap remains.

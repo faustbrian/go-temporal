@@ -63,5 +63,5 @@ fixtures and assertions.
 The Go package documentation is the signature-level source of truth:
 
 ```sh
-go doc -all github.com/faustbrian/go-temporal/instant
+go doc -all github.com/faustbrian/go-temporal/v2/instant
 ```

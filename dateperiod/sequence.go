@@ -4,8 +4,8 @@ import (
 	"iter"
 	"sort"
 
-	calendar "github.com/faustbrian/go-calendar"
-	temporal "github.com/faustbrian/go-temporal"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
 // All returns a stable iterator over normalized civil-date periods.

@@ -9,8 +9,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/internal/diagnostic"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
 )
 
 const day = 24 * time.Hour

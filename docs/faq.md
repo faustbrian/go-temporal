@@ -22,5 +22,5 @@ equal the next day's `00:00` in all contexts.
 
 ## Where is Gantt chart rendering?
 
-Deferred from v1. The compatibility matrix inventories it, but core makes no
+Deferred from core. The compatibility matrix inventories it, but core makes no
 claim of full PHP compatibility while charting is absent.

@@ -6,12 +6,12 @@ import (
 	"io"
 	"unicode/utf8"
 
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/dateperiod"
-	"github.com/faustbrian/go-temporal/instant"
-	"github.com/faustbrian/go-temporal/internal/diagnostic"
-	"github.com/faustbrian/go-temporal/notation"
-	"github.com/faustbrian/go-temporal/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	"github.com/faustbrian/go-temporal/v2/instant"
+	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v2/notation"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 // CollectionDocument is a stable wire envelope for one normalized interval
@@ -24,6 +24,9 @@ type CollectionDocument struct {
 
 // FromInstantSet constructs a versioned normalized instant-set document.
 func FromInstantSet(set instant.Set, limits temporal.Limits) (CollectionDocument, error) {
+	if err := admitCollectionCount(set.Len(), limits); err != nil {
+		return CollectionDocument{}, err
+	}
 	values := make([]string, 0, set.Len())
 	for _, period := range set.Periods() {
 		encoded, err := notation.FormatInstant(period, notation.ISO80000, limits)
@@ -37,6 +40,9 @@ func FromInstantSet(set instant.Set, limits temporal.Limits) (CollectionDocument
 
 // FromDateSet constructs a versioned normalized civil-date-set document.
 func FromDateSet(set dateperiod.Set, limits temporal.Limits) (CollectionDocument, error) {
+	if err := admitCollectionCount(set.Len(), limits); err != nil {
+		return CollectionDocument{}, err
+	}
 	values := make([]string, 0, set.Len())
 	for _, period := range set.Periods() {
 		encoded, err := notation.FormatDate(period, notation.ISO80000, limits)
@@ -50,6 +56,9 @@ func FromDateSet(set dateperiod.Set, limits temporal.Limits) (CollectionDocument
 
 // FromDailySet constructs a versioned normalized daily-set document.
 func FromDailySet(set timeofday.IntervalSet, limits temporal.Limits) (CollectionDocument, error) {
+	if err := admitCollectionCount(set.Len(), limits); err != nil {
+		return CollectionDocument{}, err
+	}
 	values := make([]string, 0, set.Len())
 	for _, interval := range set.Intervals() {
 		encoded, err := notation.FormatDailyInterval(interval, notation.ISO80000, limits)
@@ -62,11 +71,25 @@ func FromDailySet(set timeofday.IntervalSet, limits temporal.Limits) (Collection
 }
 
 func newCollection(kind Kind, values []string, limits temporal.Limits) (CollectionDocument, error) {
+	if err := admitCollectionCount(len(values), limits); err != nil {
+		return CollectionDocument{}, err
+	}
 	document := CollectionDocument{Version: Version1, Kind: kind, Values: append([]string(nil), values...)}
 	if err := document.validate(limits); err != nil {
 		return CollectionDocument{}, err
 	}
 	return document, nil
+}
+
+func admitCollectionCount(count int, limits temporal.Limits) error {
+	limits = limits.Resolve()
+	if err := limits.Validate(); err != nil {
+		return err
+	}
+	if count > limits.InputPeriods {
+		return &temporal.LimitError{Field: "input_periods", Value: count, Max: limits.InputPeriods}
+	}
+	return nil
 }
 
 // InstantSet decodes and normalizes an instant-set document.
@@ -189,12 +212,38 @@ func MarshalCollection(document CollectionDocument, limits temporal.Limits) ([]b
 	if err := document.validate(limits); err != nil {
 		return nil, err
 	}
-	document.Values = append([]string(nil), document.Values...)
+	// Preserve the released empty-collection representation without copying
+	// the caller's slice: both nil and nonnil empty values encode as null.
+	if len(document.Values) == 0 {
+		document.Values = nil
+	}
+	if size, exceeds := collectionDocumentSize(document, limits.FormatBytes); exceeds {
+		return nil, &temporal.LimitError{Field: "format_bytes", Value: size, Max: limits.FormatBytes}
+	}
 	payload, _ := json.Marshal(document)
 	if len(payload) > limits.FormatBytes {
 		return nil, &temporal.LimitError{Field: "format_bytes", Value: len(payload), Max: limits.FormatBytes}
 	}
 	return payload, nil
+}
+
+func collectionDocumentSize(document CollectionDocument, maximum int) (int, bool) {
+	size := len(`{"version":`) + jsonStringSize(document.Version) +
+		len(`,"kind":`) + jsonStringSize(string(document.Kind)) + len(`,"values":`)
+	if document.Values == nil {
+		return boundedJSONSize(size+len(`null}`), maximum)
+	}
+	size += len(`[]}`)
+	for index, value := range document.Values {
+		if index > 0 {
+			size++
+		}
+		size += jsonStringSize(value)
+		if size > maximum {
+			return size, true
+		}
+	}
+	return boundedJSONSize(size, maximum)
 }
 
 // UnmarshalCollection strictly decodes exactly one collection document.
@@ -209,6 +258,9 @@ func UnmarshalCollection(payload []byte, limits temporal.Limits) (CollectionDocu
 	}
 	if !utf8.Valid(payload) {
 		return CollectionDocument{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: collection document syntax", temporal.ErrParse)
+	}
+	if err := validateJSONStructure(payload, limits.ParserDepth); err != nil {
+		return CollectionDocument{}, boundedWireError(limits, "collection document syntax", err)
 	}
 	decoder := json.NewDecoder(bytes.NewReader(payload))
 	decoder.DisallowUnknownFields()
