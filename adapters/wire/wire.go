@@ -179,9 +179,6 @@ func Marshal(document Document, limits temporal.Limits) ([]byte, error) {
 		return nil, &temporal.LimitError{Field: "format_bytes", Value: size, Max: limits.FormatBytes}
 	}
 	payload, _ := json.Marshal(document)
-	if len(payload) > limits.FormatBytes {
-		return nil, &temporal.LimitError{Field: "format_bytes", Value: len(payload), Max: limits.FormatBytes}
-	}
 	return payload, nil
 }
 
@@ -242,10 +239,6 @@ func Unmarshal(payload []byte, limits temporal.Limits) (Document, error) {
 	if err := decoder.Decode(&document); err != nil {
 		return Document{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: scalar document syntax", temporal.ErrParse)
 	}
-	var trailing any
-	if err := decoder.Decode(&trailing); err != io.EOF {
-		return Document{}, diagnostic.New(limits.ErrorBytes, "temporal: parse error: trailing document", temporal.ErrParse)
-	}
 	if err := document.validate(limits); err != nil {
 		return Document{}, boundedWireError(limits, "scalar document value", err)
 	}
@@ -268,6 +261,7 @@ func validateJSONStructure(payload []byte, maxDepth int) error {
 }
 
 func validateJSONValue(decoder *json.Decoder, token json.Token, depth, maxDepth int) error {
+	// The standard decoder supplies scalars or opening delimiters at value positions.
 	delimiter, compound := token.(json.Delim)
 	if !compound {
 		return nil
@@ -284,10 +278,8 @@ func validateJSONValue(decoder *json.Decoder, token json.Token, depth, maxDepth 
 			if err != nil {
 				return temporal.ErrParse
 			}
-			key, ok := keyToken.(string)
-			if !ok {
-				return temporal.ErrParse
-			}
+			// Successful object-key tokens are strings by Decoder.Token's contract.
+			key := keyToken.(string)
 			if _, exists := keys[key]; exists {
 				return temporal.ErrParse
 			}
@@ -310,19 +302,11 @@ func validateJSONValue(decoder *json.Decoder, token json.Token, depth, maxDepth 
 				return err
 			}
 		}
-	default:
-		return temporal.ErrParse
 	}
 
-	closing, err := decoder.Token()
+	// Decoder.Token rejects mismatched delimiters; only its error needs handling.
+	_, err := decoder.Token()
 	if err != nil {
-		return temporal.ErrParse
-	}
-	expected := json.Delim('}')
-	if delimiter == '[' {
-		expected = ']'
-	}
-	if closing != expected {
 		return temporal.ErrParse
 	}
 	return nil

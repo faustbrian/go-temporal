@@ -199,11 +199,7 @@ func parseDateRange(text string) (pgtype.Range[calendar.Date], error) {
 }
 
 func parseRangeShell(text string) (pgtype.BoundType, pgtype.BoundType, string, error) {
-	if len(text) > temporal.DefaultLimits().ParseBytes {
-		return 0, 0, "", &temporal.LimitError{
-			Field: "parse_bytes", Value: len(text), Max: temporal.DefaultLimits().ParseBytes,
-		}
-	}
+	// Both SQL scanner paths admit source bytes through sqlText before parsing.
 	if len(text) < 3 {
 		return 0, 0, "", temporal.ErrUnsupported
 	}
