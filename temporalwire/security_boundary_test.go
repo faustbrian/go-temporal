@@ -1,20 +1,21 @@
-package temporal_test
+package temporalwire_test
 
 import (
 	"errors"
 	"strings"
 	"testing"
-	"time"
 
 	temporal "github.com/faustbrian/go-temporal/v2"
-	config "github.com/faustbrian/go-temporal/v2/adapters/config"
 	wire "github.com/faustbrian/go-temporal/v2/adapters/wire"
-	"github.com/faustbrian/go-temporal/v2/instant"
+	legacywire "github.com/faustbrian/go-temporal/v2/temporalwire"
 )
 
-func TestWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *testing.T) {
+func TestRetainedWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *testing.T) {
 	for name, decode := range map[string]func([]byte, temporal.Limits) (wire.Document, error){
-		"canonical": wire.Unmarshal,
+		"retained": func(input []byte, limits temporal.Limits) (wire.Document, error) {
+			value, err := legacywire.Unmarshal(input, limits)
+			return wire.Document{Version: value.Version, Kind: wire.Kind(value.Kind), Value: value.Value}, err
+		},
 	} {
 		t.Run(name, func(t *testing.T) {
 			for _, test := range []struct {
@@ -44,27 +45,12 @@ func TestWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *testing.T) {
 	}
 }
 
-func TestTextAdmissionRejectsNilReceivers(t *testing.T) {
-	for name, decode := range map[string]func([]byte) error{
-		"canonical time": (*config.Time)(nil).UnmarshalText,
-		"bounds":         func([]byte) error { return (*temporal.Bounds)(nil).UnmarshalText([]byte("[)")) },
-	} {
-		t.Run(name, func(t *testing.T) {
-			defer func() {
-				if recovered := recover(); recovered != nil {
-					t.Error("nil receiver panicked instead of returning ErrUnsupported")
-				}
-			}()
-			if err := decode([]byte("08:00")); !errors.Is(err, temporal.ErrUnsupported) {
-				t.Fatalf("nil receiver error = %v", err)
-			}
-		})
-	}
-}
-
-func TestCollectionWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *testing.T) {
+func TestRetainedCollectionWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *testing.T) {
 	for name, decode := range map[string]func([]byte, temporal.Limits) (wire.CollectionDocument, error){
-		"canonical": wire.UnmarshalCollection,
+		"retained": func(input []byte, limits temporal.Limits) (wire.CollectionDocument, error) {
+			value, err := legacywire.UnmarshalCollection(input, limits)
+			return wire.CollectionDocument{Version: value.Version, Kind: wire.Kind(value.Kind), Values: value.Values}, err
+		},
 	} {
 		t.Run(name, func(t *testing.T) {
 			for _, test := range []struct {
@@ -91,36 +77,13 @@ func TestCollectionWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *test
 	}
 }
 
-func TestCollectionAdmissionPreservesInclusiveCountAndOwnedSet(t *testing.T) {
-	base := time.Unix(0, 0).UTC()
-	first, err := instant.Range(base, base.Add(time.Hour))
-	if err != nil {
-		t.Fatal(err)
-	}
-	second, err := instant.Range(base.Add(2*time.Hour), base.Add(3*time.Hour))
-	if err != nil {
-		t.Fatal(err)
-	}
-	set, err := instant.NewSet(temporal.Limits{}, first, second)
-	if err != nil {
-		t.Fatal(err)
-	}
-	accepted, err := wire.FromInstantSet(set, temporal.Limits{InputPeriods: 2})
-	if err != nil || len(accepted.Values) != 2 {
-		t.Fatalf("inclusive count = %+v, %v", accepted, err)
-	}
-	rejected, err := wire.FromInstantSet(set, temporal.Limits{InputPeriods: 1})
-	if !errors.Is(err, temporal.ErrLimit) || rejected.Version != "" || rejected.Kind != "" || len(rejected.Values) != 0 {
-		t.Fatalf("over count = %+v, %v", rejected, err)
-	}
-	if set.Len() != 2 || !set.Periods()[0].SetEqual(first) || !set.Periods()[1].SetEqual(second) {
-		t.Fatal("collection admission changed the source set")
-	}
-}
-
-func TestCollectionMarshalPreservesNilAndEmptyBudgetBoundaries(t *testing.T) {
+func TestRetainedCollectionMarshalPreservesNilAndEmptyBudgetBoundaries(t *testing.T) {
 	for name, encode := range map[string]func(wire.CollectionDocument, temporal.Limits) ([]byte, error){
-		"canonical": wire.MarshalCollection,
+		"retained": func(document wire.CollectionDocument, limits temporal.Limits) ([]byte, error) {
+			return legacywire.MarshalCollection(legacywire.CollectionDocument{
+				Version: document.Version, Kind: legacywire.Kind(document.Kind), Values: document.Values,
+			}, limits)
+		},
 	} {
 		t.Run(name, func(t *testing.T) {
 			for _, test := range []struct {
