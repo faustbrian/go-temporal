@@ -2,11 +2,14 @@ package temporalwire
 
 import (
 	"encoding/json"
+	"errors"
 	"testing"
+
+	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
 func TestJSONStringSizeMatchesStandardEncodingWithoutChangingRepresentation(t *testing.T) {
-	for _, value := range []string{"", "08:00", "quoted\"\\", "\b\f\n\r\t\x01", "<>&", "é\u2028\u2029", "\ufffd"} {
+	for _, value := range []string{"", " ", "08:00", "quoted\"\\", "\b\f\n\r\t\x01", "<>&", "é\u2028\u2029", "\ufffd"} {
 		encoded, err := json.Marshal(value)
 		if err != nil {
 			t.Fatal(err)
@@ -14,6 +17,29 @@ func TestJSONStringSizeMatchesStandardEncodingWithoutChangingRepresentation(t *t
 		if got := jsonStringSize(value); got != len(encoded) {
 			t.Fatalf("encoded size = %d, want %d", got, len(encoded))
 		}
+	}
+}
+
+func TestCollectionCountAdmissionBeforeCopyingAndFormatting(t *testing.T) {
+	if err := admitCollectionCount(2, temporal.Limits{InputPeriods: 2}); err != nil {
+		t.Fatalf("inclusive count: %v", err)
+	}
+	for _, test := range []struct {
+		name   string
+		count  int
+		limits temporal.Limits
+		field  string
+	}{
+		{"count", 2, temporal.Limits{InputPeriods: 1}, "input_periods"},
+		{"invalid limits", 0, temporal.Limits{ErrorBytes: -1}, "error_bytes"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			err := admitCollectionCount(test.count, test.limits)
+			var limitError *temporal.LimitError
+			if !errors.Is(err, temporal.ErrLimit) || !errors.As(err, &limitError) || limitError.Field != test.field {
+				t.Fatalf("admission = %v; want ErrLimit for %s", err, test.field)
+			}
+		})
 	}
 }
 
