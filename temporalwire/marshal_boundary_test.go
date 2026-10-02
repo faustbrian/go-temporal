@@ -7,14 +7,14 @@ import (
 	"testing"
 
 	temporal "github.com/faustbrian/go-temporal/v2"
-	wire "github.com/faustbrian/go-temporal/v2/adapters/wire"
+	wire "github.com/faustbrian/go-temporal/v2/temporalwire"
 )
 
 func TestWireScalarMarshalExactEncodedBudget(t *testing.T) {
 	document := wire.Document{Version: wire.Version1, Kind: wire.KindTime, Value: "08:00"}
 	const want = `{"version":"temporal/v1","kind":"time-of-day","value":"08:00"}`
 	for name, marshal := range map[string]func(wire.Document, temporal.Limits) ([]byte, error){
-		"canonical": wire.Marshal,
+		"retained": wire.Marshal,
 	} {
 		t.Run(name, func(t *testing.T) {
 			got, err := marshal(document, temporal.Limits{FormatBytes: len(want)})
@@ -37,7 +37,7 @@ func TestWireCollectionMarshalExactEncodedBudget(t *testing.T) {
 	const second = "[03:00,04:00)"
 	const want = `{"version":"temporal/v1","kind":"daily-set","values":["[01:00,02:00)","[03:00,04:00)"]}`
 	for name, marshal := range map[string]func(wire.CollectionDocument, temporal.Limits) ([]byte, error){
-		"canonical": wire.MarshalCollection,
+		"retained": wire.MarshalCollection,
 	} {
 		t.Run(name, func(t *testing.T) {
 			values := []string{first, second}
@@ -60,7 +60,7 @@ func TestWireCollectionMarshalExactEncodedBudget(t *testing.T) {
 func TestWireNestedArrayDepthPrecedesTypedContent(t *testing.T) {
 	const input = `{"version":"temporal/v1","kind":"daily-set","values":[["application-private"]]}`
 	for name, unmarshal := range map[string]func([]byte, temporal.Limits) (wire.CollectionDocument, error){
-		"canonical": wire.UnmarshalCollection,
+		"retained": wire.UnmarshalCollection,
 	} {
 		t.Run(name, func(t *testing.T) {
 			got, err := unmarshal([]byte(input), temporal.Limits{ParserDepth: 2})
