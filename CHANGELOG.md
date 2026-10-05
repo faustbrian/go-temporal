@@ -4,6 +4,8 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ## Unreleased
 
+## 2.0.0 - 2026-10-05
+
 ### Fixed
 
 - Bound daily set Union input segments before copying or sorting, allowing
