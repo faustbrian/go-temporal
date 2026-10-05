@@ -297,7 +297,7 @@
       "tag_prefix": "v",
       "owned_dependencies": [
         "github.com/faustbrian/go-calendar/v2",
-        "github.com/faustbrian/go-config",
+        "github.com/faustbrian/go-config/v2",
         "github.com/faustbrian/go-validation",
         "github.com/faustbrian/go-wire"
       ],

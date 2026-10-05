@@ -17,6 +17,9 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ### Changed
 
+- Use the published Config v2.0.0 decoder for canonical and retained config
+  adapter integration coverage. Temporal wrapper types and transactional
+  decoding behavior remain unchanged.
 - Move the root module and all owned imports to
   `github.com/faustbrian/go-temporal/v2`. Major-version types and sentinels have
   distinct identities; see the migration guide. Retained adapter facades and
