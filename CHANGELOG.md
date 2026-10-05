@@ -4,6 +4,11 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ## Unreleased
 
+### Changed
+
+- Use Wire v1.0.1 for JSON codec composition in canonical and retained
+  wire adapters, preserving the `temporal/v1` document representation.
+
 ## 2.0.0 - 2026-10-05
 
 ### Fixed
