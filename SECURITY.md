@@ -5,6 +5,14 @@
 Report vulnerabilities privately through GitHub Security Advisories. Do not
 include secrets, production data, or exploit payloads in a public issue.
 
+Include the affected module and version, impact, reproduction, preconditions,
+and any suggested mitigation. Maintainers follow the pinned ecosystem
+[vulnerability-management process](https://github.com/faustbrian/go-library-tools/blob/77bfd78c12a853f0d490bb27a3fbcb5f34330772/docs/ecosystem/security/vulnerability-management.md)
+for severity assignment, acknowledgement and remediation targets, private
+embargo handling, advisory ranges, and coordinated affected-module releases.
+Targets begin when sufficient private evidence exists to reproduce or bound
+the report; the owner explains any changed target to the reporter.
+
 ## Supported versions
 
 The latest minor of each supported released major receives security fixes.
