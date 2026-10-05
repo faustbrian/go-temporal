@@ -5,7 +5,7 @@ import (
 	"time"
 
 	calendar "github.com/faustbrian/go-calendar/v2"
-	configdecode "github.com/faustbrian/go-config/decode"
+	configdecode "github.com/faustbrian/go-config/v2/decode"
 	temporal "github.com/faustbrian/go-temporal/v2"
 	temporalconfig "github.com/faustbrian/go-temporal/v2/adapters/config"
 	"github.com/faustbrian/go-temporal/v2/dateperiod"
