@@ -7,7 +7,7 @@ import (
 	"github.com/faustbrian/go-temporal/v2/dateperiod"
 	"github.com/faustbrian/go-temporal/v2/instant"
 	"github.com/faustbrian/go-temporal/v2/timeofday"
-	validation "github.com/faustbrian/go-validation"
+	validation "github.com/faustbrian/go-validation/v2"
 )
 
 // InstantNonEmpty rejects instant periods representing the empty set.

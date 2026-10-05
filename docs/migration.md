@@ -14,6 +14,15 @@ module's `go.mod`. Temporal v2 uses the published
 to `/v2`, including `/v2/timezone`; Calendar v1 dates, local-time values,
 policies, and sentinels do not have the same identity as Calendar v2 values.
 Historical Temporal v1 consumers remain on their published dependency graph.
+
+Temporal v2's canonical `adapters/validation` and retained `temporalvalidation`
+constructors return validators from the published
+`github.com/faustbrian/go-validation/v2` v2.0.0 module. Compose them with that
+major's `Validator`, `Context`, `Report`, and sentinels; Validation v1 types are
+not interchangeable. Nonempty and inclusive-range behavior, including
+Temporal's `ErrReversed`, remains unchanged. Retaining an adapter package path
+within Temporal v2 does not retain the Validation v1 dependency identity.
+
 Direct Opening and Rule Engine adapter adoption requires separate consumer
 migration and verification; this source change does not certify those routes.
 

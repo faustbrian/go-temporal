@@ -298,7 +298,7 @@
       "owned_dependencies": [
         "github.com/faustbrian/go-calendar/v2",
         "github.com/faustbrian/go-config/v2",
-        "github.com/faustbrian/go-validation",
+        "github.com/faustbrian/go-validation/v2",
         "github.com/faustbrian/go-wire"
       ],
       "reverse_owned_dependencies": [

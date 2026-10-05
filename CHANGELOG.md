@@ -17,6 +17,10 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ### Changed
 
+- Adopt public Validation v2.0.0 for canonical and retained validation
+  adapters before the first Temporal v2 release. Returned validators compose
+  with Validation `/v2` contexts, reports, and sentinels; nonempty and inclusive
+  range rules retain their behavior. Historical Temporal v1 graphs are unchanged.
 - Use the published Config v2.0.0 decoder for canonical and retained config
   adapter integration coverage. Temporal wrapper types and transactional
   decoding behavior remain unchanged.
