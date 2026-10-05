@@ -106,9 +106,44 @@ jobs:
         timeout-minutes: 10
         working-directory: verifier-tooling
         run: go test -p 1 -tags=verifierintegration ./internal/mutation -run '^TestPatchedVerifierResolvesPackageDirectories$' -count=1 -timeout=5m
+      - name: Verify union admission and exact counterfactual sensitivity
+        timeout-minutes: 10
+        working-directory: producer
+        env:
+          TEMPORAL_VERIFY_UNION_ADMISSION: 'true'
+        run: |
+          set -euo pipefail
+          proof_root=$(mktemp -d "${GOTMPDIR}/union-admission.XXXXXX")
+          trap 'find "${proof_root}" -type d -exec chmod u+w {} +; find "${proof_root}" -depth -delete' EXIT
+          test_name=TestDateSetUnionRefusesBeforeCombiningInputs
+          go test -p 1 ./dateperiod -run "^${test_name}$" -count=1 -timeout=60s -json | tee "${proof_root}/baseline.json"
+          jq -s -e --arg test "${test_name}" '
+            ([.[] | select(.Test == $test and .Action == "pass")] | length) == 1 and
+            ([.[] | select(.Test == $test and .Action == "skip")] | length) == 0
+          ' "${proof_root}/baseline.json"
+          mkdir "${proof_root}/counterfactual"
+          git archive --format=tar HEAD | tar -xf - -C "${proof_root}/counterfactual"
+          perl -0pi -e '
+            my $old = "\tinputCount := len(s.periods) + len(other.periods)\n";
+            my $new = "\tinputCount := len(s.periods) - len(other.periods)\n";
+            my $count = s/\Q$old\E/$new/g;
+            die "counterfactual source mismatch\n" unless $count == 1;
+          ' "${proof_root}/counterfactual/dateperiod/set.go"
+          if (cd "${proof_root}/counterfactual" && go test -p 1 ./dateperiod -run "^${test_name}$" -count=1 -timeout=60s -json) >"${proof_root}/counterfactual.json"; then
+            printf 'expected union admission counterfactual failure\n' >&2
+            exit 1
+          fi
+          jq -s -e --arg test "${test_name}" '
+            ([.[] | select(.Test == $test and .Action == "fail")] | length) == 1 and
+            any(.[]; .Test == $test and .Action == "output" and
+              (.Output | contains("Union allocated before refusing input_periods")))
+          ' "${proof_root}/counterfactual.json"
+          git diff --exit-code -- dateperiod/set.go
       - name: Qualify mutation for all thirteen root-module packages
         timeout-minutes: 140
         working-directory: producer
+        env:
+          TEMPORAL_VERIFY_UNION_ADMISSION: 'true'
         run: '"${GOTMPDIR}/golib" mutation --module .'
       - name: Require the viable wire boundary mutant to be killed
         working-directory: producer
