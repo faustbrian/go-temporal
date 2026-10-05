@@ -13,6 +13,11 @@ on:
         required: false
         default: false
         type: boolean
+      verifier_diagnostic:
+        description: Qualify corrected root-module verifier, not release CI
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -20,14 +25,141 @@ permissions:
 
 jobs:
   ci:
+    if: github.event_name != 'workflow_dispatch' || !inputs.verifier_diagnostic
     uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@14d1e594d5f246a795d0c0c11cf7d2d6c8e5617f # v1.6.1
     with:
       tooling_sha: 14d1e594d5f246a795d0c0c11cf7d2d6c8e5617f
       release_dry_run: ${{ inputs.release_dry_run || false }}
 
+  verifier-diagnostic:
+    name: Native security and root-module mutation (development only)
+    if: github.event_name == 'workflow_dispatch' && inputs.verifier_diagnostic
+    runs-on: ubuntu-24.04
+    timeout-minutes: 270
+    permissions:
+      contents: read
+    env:
+      GOENV: off
+      GOWORK: off
+      GOTOOLCHAIN: local
+      GOMAXPROCS: '2'
+      GOFLAGS: -p=1
+      GOPROXY: https://proxy.golang.org
+      GOSUMDB: sum.golang.org
+      GOPRIVATE: ''
+      GONOPROXY: ''
+      GONOSUMDB: ''
+    steps:
+      - name: Reject release substitution
+        env:
+          RELEASE_DRY_RUN: ${{ inputs.release_dry_run }}
+        run: test "${RELEASE_DRY_RUN}" = false
+      - name: Initialize task-owned resources
+        env:
+          TASK_ROOT: ${{ runner.temp }}/temporal-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          mkdir -p "${TASK_ROOT}/build" "${TASK_ROOT}/modules" "${TASK_ROOT}/tmp" "${TASK_ROOT}/lint"
+          for kind in container network volume image; do
+            case "${kind}" in
+              container|image) flags=(--all --quiet --no-trunc) ;;
+              network) flags=(--quiet --no-trunc) ;;
+              volume) flags=(--quiet) ;;
+            esac
+            docker "${kind}" ls "${flags[@]}" | sort -u >"${TASK_ROOT}/initial-${kind}.pending"
+            mv "${TASK_ROOT}/initial-${kind}.pending" "${TASK_ROOT}/initial-${kind}"
+          done
+          printf 'GOCACHE=%s\nGOMODCACHE=%s\nGOTMPDIR=%s\nGOLANGCI_LINT_CACHE=%s\nTMPDIR=%s\n' \
+            "${TASK_ROOT}/build" "${TASK_ROOT}/modules" "${TASK_ROOT}/tmp" \
+            "${TASK_ROOT}/lint" "${TASK_ROOT}/tmp" >>"${GITHUB_ENV}"
+      - name: Check out exact producer with complete history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: producer
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Check out reviewed corrected tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: faustbrian/go-library-tools
+          ref: d68ef229159f635f0bad6b8145f7c94c29a4a9bd
+          path: verifier-tooling
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.27.0'
+          cache: false
+      - name: Build development qualification tooling
+        timeout-minutes: 15
+        working-directory: verifier-tooling
+        run: go build -p 1 -trimpath -buildvcs=false -o "${GOTMPDIR}/golib" ./cmd/golib
+      - name: Run native security and bounded checks for all declared modules
+        timeout-minutes: 60
+        working-directory: producer
+        run: '"${GOTMPDIR}/golib" check --local --all'
+      - name: Verify existing five-second JSON size oracle
+        timeout-minutes: 5
+        working-directory: producer
+        run: go test -p 1 ./adapters/wire -run '^TestJSONStringSizeMatchesStandardEncodingWithoutChangingRepresentation$' -count=1 -timeout=60s
+      - name: Verify corrected source-directory backend regression
+        timeout-minutes: 10
+        working-directory: verifier-tooling
+        run: go test -p 1 -tags=verifierintegration ./internal/mutation -run '^TestPatchedVerifierResolvesPackageDirectories$' -count=1 -timeout=5m
+      - name: Qualify mutation for all thirteen root-module packages
+        timeout-minutes: 140
+        working-directory: producer
+        run: '"${GOTMPDIR}/golib" mutation --module .'
+      - name: Require the viable wire boundary mutant to be killed
+        working-directory: producer
+        run: |
+          set -euo pipefail
+          jq -s -e '
+            [.[].files[] | select(.file_name == "wire.go") | .mutations[] |
+              select(.type == "CONDITIONALS_BOUNDARY" and .line == 197 and .column == 17)] as $results |
+            ($results | length) > 0 and all($results[]; .status == "KILLED")
+          ' .verification/mutation/reports/*.json
+      - name: Remove task-owned services and qualification resources
+        if: always()
+        timeout-minutes: 5
+        env:
+          TASK_ROOT: ${{ runner.temp }}/temporal-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -uo pipefail
+          # Only newly acquired IDs on this dedicated runner are task-owned.
+          # Never prune Docker or remove pre-existing runner resources.
+          cleanup_status=0
+          for kind in container network volume image; do
+            if [[ ! -f "${TASK_ROOT}/initial-${kind}" ]]; then
+              continue
+            fi
+            case "${kind}" in
+              container) flags=(--all --quiet --no-trunc); removal=(--force --volumes) ;;
+              network) flags=(--quiet --no-trunc); removal=() ;;
+              volume) flags=(--quiet); removal=() ;;
+              image) flags=(--all --quiet --no-trunc); removal=() ;;
+            esac
+            if docker "${kind}" ls "${flags[@]}" | sort -u >"${TASK_ROOT}/final-${kind}"; then
+              if comm -13 "${TASK_ROOT}/initial-${kind}" "${TASK_ROOT}/final-${kind}" >"${TASK_ROOT}/owned-${kind}"; then
+                xargs -r docker "${kind}" rm "${removal[@]}" <"${TASK_ROOT}/owned-${kind}" || cleanup_status=1
+              else
+                cleanup_status=1
+              fi
+            else
+              cleanup_status=1
+            fi
+          done
+          for target in "${TASK_ROOT}" "${GITHUB_WORKSPACE}/producer" "${GITHUB_WORKSPACE}/verifier-tooling"; do
+            if [[ -d "${target}" ]]; then
+              find "${target}" -type d -exec chmod u+w {} + || cleanup_status=1
+              find "${target}" -depth -delete || cleanup_status=1
+            fi
+          done
+          exit "${cleanup_status}"
+
   postgres:
     name: PostgreSQL 18.6 release interoperability
-    if: github.event_name == 'workflow_dispatch' && inputs.release_dry_run == true
+    if: github.event_name == 'workflow_dispatch' && inputs.release_dry_run == true && !inputs.verifier_diagnostic
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     services:

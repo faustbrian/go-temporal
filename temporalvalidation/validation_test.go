@@ -1,6 +1,7 @@
 package temporalvalidation_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 	"github.com/faustbrian/go-temporal/v2/instant"
 	"github.com/faustbrian/go-temporal/v2/temporalvalidation"
 	"github.com/faustbrian/go-temporal/v2/timeofday"
-	validation "github.com/faustbrian/go-validation"
+	validation "github.com/faustbrian/go-validation/v2"
 )
 
 func TestNonEmptyValidatorsReturnStableViolations(t *testing.T) {
@@ -56,8 +57,8 @@ func TestRangeValidatorsUseSemanticTemporalOrdering(t *testing.T) {
 	if !timeRule.Validate(validation.Context{}, inside).Empty() || !timeRule.Validate(validation.Context{}, out).HasCode("time_of_day_range") {
 		t.Fatal("time range validator accepted or rejected the wrong value")
 	}
-	if _, err := temporalvalidation.TimeBetween(maximum, minimum); err == nil {
-		t.Fatal("TimeBetween(reversed) error = nil")
+	if _, err := temporalvalidation.TimeBetween(maximum, minimum); !errors.Is(err, temporal.ErrReversed) {
+		t.Fatalf("TimeBetween(reversed) error = %v, want ErrReversed", err)
 	}
 
 	durationRule, err := temporalvalidation.DurationBetween(
@@ -71,8 +72,8 @@ func TestRangeValidatorsUseSemanticTemporalOrdering(t *testing.T) {
 		!durationRule.Validate(validation.Context{}, timeofday.NewDuration(2*time.Hour)).HasCode("fixed_duration_range") {
 		t.Fatal("duration range validator accepted or rejected the wrong value")
 	}
-	if _, err := temporalvalidation.DurationBetween(timeofday.NewDuration(time.Hour), timeofday.NewDuration(time.Minute)); err == nil {
-		t.Fatal("DurationBetween(reversed) error = nil")
+	if _, err := temporalvalidation.DurationBetween(timeofday.NewDuration(time.Hour), timeofday.NewDuration(time.Minute)); !errors.Is(err, temporal.ErrReversed) {
+		t.Fatalf("DurationBetween(reversed) error = %v, want ErrReversed", err)
 	}
 }
 
@@ -90,8 +91,13 @@ func TestRangeValidatorsIncludeBothExactEndpointsAndSingletonRanges(t *testing.T
 			t.Fatalf("TimeBetween rejected endpoint %v: %v", endpoint, report)
 		}
 	}
-	if _, err := temporalvalidation.TimeBetween(minimum, minimum); err != nil {
+	singleTime, err := temporalvalidation.TimeBetween(minimum, minimum)
+	if err != nil {
 		t.Fatalf("TimeBetween(singleton): %v", err)
+	}
+	if !singleTime.Validate(validation.Context{}, minimum).Empty() ||
+		!singleTime.Validate(validation.Context{}, maximum).HasCode("time_of_day_range") {
+		t.Fatal("singleton time range did not accept only its endpoint")
 	}
 
 	minimumDuration := timeofday.NewDuration(time.Minute)
@@ -105,7 +111,12 @@ func TestRangeValidatorsIncludeBothExactEndpointsAndSingletonRanges(t *testing.T
 			t.Fatalf("DurationBetween rejected endpoint %v: %v", endpoint, report)
 		}
 	}
-	if _, err := temporalvalidation.DurationBetween(minimumDuration, minimumDuration); err != nil {
+	singleDuration, err := temporalvalidation.DurationBetween(minimumDuration, minimumDuration)
+	if err != nil {
 		t.Fatalf("DurationBetween(singleton): %v", err)
+	}
+	if !singleDuration.Validate(validation.Context{}, minimumDuration).Empty() ||
+		!singleDuration.Validate(validation.Context{}, maximumDuration).HasCode("fixed_duration_range") {
+		t.Fatal("singleton duration range did not accept only its endpoint")
 	}
 }

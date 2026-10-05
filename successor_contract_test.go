@@ -18,7 +18,7 @@ import (
 	oldconfig "github.com/faustbrian/go-temporal/v2/temporalconfig"         //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
 	oldvalidation "github.com/faustbrian/go-temporal/v2/temporalvalidation" //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
 	oldwire "github.com/faustbrian/go-temporal/v2/temporalwire"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
-	validation "github.com/faustbrian/go-validation"
+	validation "github.com/faustbrian/go-validation/v2"
 )
 
 func TestSuccessorNamedTypesOwnTheirPackageIdentity(t *testing.T) {

@@ -11,7 +11,7 @@ import (
 	"github.com/faustbrian/go-temporal/v2/dateperiod"
 	"github.com/faustbrian/go-temporal/v2/instant"
 	"github.com/faustbrian/go-temporal/v2/timeofday"
-	validation "github.com/faustbrian/go-validation"
+	validation "github.com/faustbrian/go-validation/v2"
 )
 
 func InstantNonEmpty() validation.Validator[instant.Period] { return adapter.InstantNonEmpty() }
