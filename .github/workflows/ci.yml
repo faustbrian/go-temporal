@@ -29,13 +29,14 @@ jobs:
     uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@14d1e594d5f246a795d0c0c11cf7d2d6c8e5617f # v1.6.1
     with:
       tooling_sha: 14d1e594d5f246a795d0c0c11cf7d2d6c8e5617f
-      release_dry_run: ${{ inputs.release_dry_run || false }}
+      # The published baseline remains ordinary CI, not a second release run.
+      release_dry_run: false
 
   verifier-diagnostic:
-    name: Native security and root-module mutation (development only)
-    if: github.event_name == 'workflow_dispatch' && inputs.verifier_diagnostic
+    name: Source-built tooling qualification (not a Tools release)
+    if: github.event_name == 'workflow_dispatch' && (inputs.verifier_diagnostic || inputs.release_dry_run)
     runs-on: ubuntu-24.04
-    timeout-minutes: 270
+    timeout-minutes: 360
     permissions:
       contents: read
     env:
@@ -50,10 +51,15 @@ jobs:
       GONOPROXY: ''
       GONOSUMDB: ''
     steps:
-      - name: Reject release substitution
+      - name: Reject conflicting qualification selectors
         env:
           RELEASE_DRY_RUN: ${{ inputs.release_dry_run }}
-        run: test "${RELEASE_DRY_RUN}" = false
+          VERIFIER_DIAGNOSTIC: ${{ inputs.verifier_diagnostic }}
+        run: |
+          if [[ "${RELEASE_DRY_RUN}" == true && "${VERIFIER_DIAGNOSTIC}" == true ]]; then
+            echo 'release rehearsal and verifier diagnostic are separate selections' >&2
+            exit 1
+          fi
       - name: Initialize task-owned resources
         env:
           TASK_ROOT: ${{ runner.temp }}/temporal-verifier-${{ github.run_id }}-${{ github.run_attempt }}
@@ -95,18 +101,22 @@ jobs:
         working-directory: verifier-tooling
         run: go build -p 1 -trimpath -buildvcs=false -o "${GOTMPDIR}/golib" ./cmd/golib
       - name: Run native security and bounded checks for all declared modules
+        if: inputs.verifier_diagnostic
         timeout-minutes: 60
         working-directory: producer
         run: '"${GOTMPDIR}/golib" check --local --all'
       - name: Verify existing five-second JSON size oracle
+        if: inputs.verifier_diagnostic
         timeout-minutes: 5
         working-directory: producer
         run: go test -p 1 ./adapters/wire -run '^TestJSONStringSizeMatchesStandardEncodingWithoutChangingRepresentation$' -count=1 -timeout=60s
       - name: Verify corrected source-directory backend regression
+        if: inputs.verifier_diagnostic
         timeout-minutes: 10
         working-directory: verifier-tooling
         run: go test -p 1 -tags=verifierintegration ./internal/mutation -run '^TestPatchedVerifierResolvesPackageDirectories$' -count=1 -timeout=5m
       - name: Verify union admission and exact counterfactual sensitivity
+        if: inputs.verifier_diagnostic
         timeout-minutes: 10
         working-directory: producer
         env:
@@ -140,12 +150,14 @@ jobs:
           ' "${proof_root}/counterfactual.json"
           git diff --exit-code -- dateperiod/set.go
       - name: Qualify mutation for all thirteen root-module packages
+        if: inputs.verifier_diagnostic
         timeout-minutes: 140
         working-directory: producer
         env:
           TEMPORAL_VERIFY_UNION_ADMISSION: 'true'
         run: '"${GOTMPDIR}/golib" mutation --module .'
       - name: Require the viable wire boundary mutant to be killed
+        if: inputs.verifier_diagnostic
         working-directory: producer
         run: |
           set -euo pipefail
@@ -154,6 +166,21 @@ jobs:
               select(.type == "CONDITIONALS_BOUNDARY" and .line == 197 and .column == 17)] as $results |
             ($results | length) > 0 and all($results[]; .status == "KILLED")
           ' .verification/mutation/reports/*.json
+      - name: Validate root release contract with integrated source tooling
+        if: inputs.release_dry_run
+        timeout-minutes: 5
+        working-directory: producer
+        run: '"${GOTMPDIR}/golib" release check --module .'
+      - name: Rehearse root release with integrated source tooling
+        if: inputs.release_dry_run
+        timeout-minutes: 300
+        working-directory: producer
+        env:
+          TEMPORAL_VERIFY_UNION_ADMISSION: 'true'
+        # The supported dry-run validates real evidence and runs every selected
+        # gate when reusable evidence is absent. Its candidate proxy is not a
+        # published module or public SumDB consumer proof.
+        run: '"${GOTMPDIR}/golib" release dry-run --module .'
       - name: Remove task-owned services and qualification resources
         if: always()
         timeout-minutes: 5
@@ -242,7 +269,7 @@ jobs:
   required:
     name: Required
     if: always()
-    needs: [ci, postgres]
+    needs: [ci, postgres, verifier-diagnostic]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -250,11 +277,14 @@ jobs:
         env:
           CI_RESULT: ${{ needs.ci.result }}
           POSTGRES_RESULT: ${{ needs.postgres.result }}
+          QUALIFICATION_RESULT: ${{ needs.verifier-diagnostic.result }}
           RELEASE_SELECTED: ${{ github.event_name == 'workflow_dispatch' && inputs.release_dry_run == true }}
         run: |
           test "${CI_RESULT}" = success
           if [ "${RELEASE_SELECTED}" = true ]; then
             test "${POSTGRES_RESULT}" = success
+            test "${QUALIFICATION_RESULT}" = success
           else
             test "${POSTGRES_RESULT}" = skipped
+            test "${QUALIFICATION_RESULT}" = skipped
           fi
