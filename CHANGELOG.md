@@ -6,6 +6,10 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ### Changed
 
+- Advance the test-only JSON codec composition dependency to published Wire
+  v3.0.0, superseding the earlier Unreleased v1.0.1 pin. Canonical and retained
+  adapters keep the same `temporal/v1` documents and Temporal v2 public API.
+
 - Use Wire v1.0.1 for JSON codec composition in canonical and retained
   wire adapters, preserving the `temporal/v1` document representation.
 
