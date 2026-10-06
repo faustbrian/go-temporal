@@ -12,7 +12,7 @@ import (
 	"github.com/faustbrian/go-temporal/v2/dateperiod"
 	"github.com/faustbrian/go-temporal/v2/instant"
 	"github.com/faustbrian/go-temporal/v2/timeofday"
-	"github.com/faustbrian/go-wire/jsonwire"
+	"github.com/faustbrian/go-wire/v3/jsonwire"
 )
 
 func TestVersionedDocumentsRoundTripEverySupportedValue(t *testing.T) {
