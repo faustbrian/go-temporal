@@ -4,6 +4,8 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ## Unreleased
 
+## 2.0.1 - 2026-10-07
+
 ### Changed
 
 - Advance the test-only JSON codec composition dependency to published Wire
