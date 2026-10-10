@@ -26,9 +26,11 @@ permissions:
 jobs:
   ci:
     if: github.event_name != 'workflow_dispatch' || !inputs.verifier_diagnostic
-    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@be0fd7d09b02c9dff29e6b00a5245ceac3cdfdfb # v1.8.5
+    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@c7f232472d9c4c5ac5359d70bbef3b8f1571b834 # reviewed security maintenance source
     with:
-      tooling_sha: 14d1e594d5f246a795d0c0c11cf7d2d6c8e5617f
+      tooling_sha: c7f232472d9c4c5ac5359d70bbef3b8f1571b834
+      source_bootstrap: true
+      public_dependencies: true
       # The published baseline remains ordinary CI, not a second release run.
       release_dry_run: false
 
@@ -240,6 +242,8 @@ jobs:
           --health-retries 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: '1.27.0'
