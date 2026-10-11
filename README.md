@@ -3,7 +3,7 @@
 [![CI](https://github.com/faustbrian/go-temporal/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-temporal/actions/workflows/ci.yml)
 [![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-temporal/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
-[![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Mutation](https://img.shields.io/badge/mutation-local_and_scheduled-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-temporal/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-temporal/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-temporal?sort=semver)](https://github.com/faustbrian/go-temporal/releases)
@@ -133,12 +133,16 @@ for the shared design language this module follows.
 ## Quality and local gates
 
 ```sh
-make cohesion
+go test ./...
 make check
-golib mutation --module .
-golib docs check --module .
-make -f verification/package.mk php-compat PHP_TEMPORAL_SOURCE=/path/to/php-temporal
 ```
+
+With the qualified public verifier, `make check` and `make ci` select bounded
+local checks; `make check-full` preserves explicit full assurance. The manifest's
+PostgreSQL service and integration tag make the Make route distinct from
+untagged Go tests. See [contributor verification](CONTRIBUTING.md#verification)
+for selected 2s fuzzing, optional single-package mutation and relevant PHP,
+PostgreSQL and release checks.
 
 See the [documentation index](docs/README.md) and [testing guide](docs/testing.md) for the evidence model and
 [docs/hardening.md](docs/hardening.md) for the current algebra audit. See

@@ -131,11 +131,12 @@ optional `temporalchart` extension seam over immutable public values.
 
 ## Gate evidence
 
-The release baseline recorded the following gate evidence. The migrated
-entrypoints below preserve those gate scopes; fresh post-migration execution
-is provided by the shared CI workflow.
+The release baseline recorded the following gate evidence. Those outcomes remain
+historical evidence, not proof for a later source. The explicit full entrypoint
+below preserves those gate scopes; ordinary `make check` and `make ci` now select
+bounded local verification. Current execution and hosted CI are separate facts.
 
-- `make check`: the shared contract's format, vet, lint, static analysis, tests,
+- `make check-full`: the shared contract's format, vet, lint, static analysis, tests,
   exact 100.0%
   statement coverage, race, fuzz smoke, workflow lint, docs, and API diff;
 - `golib check --all`: the shared contract's blocking security and benchmark
