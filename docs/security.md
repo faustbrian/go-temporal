@@ -1,5 +1,7 @@
 # Security model
 
+[Documentation index](README.md)
+
 ## Threat model revision 2 (2026-10-01)
 
 This model covers the Temporal `/v2` module and its retained compatibility
@@ -75,3 +77,5 @@ Hostile-boundary callers must classify failures with `errors.Is` or
 | Time-zone behavior depends on the Go runtime's supplied IANA data and explicit caller location. | Integrating application | Civil-time rules are external, versioned data and may change legislatively. | Pin and update the runtime or bundled tzdata deliberately; test business-critical transitions with the chosen resolution policy. | Revisit on Go or tzdata upgrades, or when supporting a new jurisdiction-sensitive workflow. |
 | Algorithms and errors are not constant-time. | Integrating application | Inputs are temporal values, not cryptographic secrets, and work remains bounded. | Do not encode secrets in temporal payloads; isolate callers that introduce secret-dependent behavior. | Revisit if temporal operations enter an authentication or cryptographic decision path. |
 | Database authentication, authorization, query timeouts, and transport security are outside the PostgreSQL value adapters. | Integrating application | The adapters do not open connections or issue queries. | Configure least privilege, TLS, statement timeouts, and cancellation in the owning database client. | Revisit if an adapter begins owning connections or executing SQL. |
+
+Continue with [Set-operation semantics](operations.md).

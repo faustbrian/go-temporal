@@ -1,5 +1,7 @@
 # Troubleshooting
 
+[Documentation index](README.md)
+
 - `ErrBounds`: the bound enum is unknown or notation brackets do not match the
   selected format.
 - `ErrEmpty`: the requested relation/gap requires a non-empty result.
@@ -16,3 +18,5 @@
   policy; do not retry with an implicit timezone.
 - PostgreSQL loss rejection: remove sub-microsecond precision explicitly at the
   application boundary if that loss is acceptable.
+
+Continue with [API reference](api.md).

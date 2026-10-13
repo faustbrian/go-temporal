@@ -1,5 +1,7 @@
 # Core semantic specification
 
+[Documentation index](README.md)
+
 This document fixes the mathematical and resource contracts before production
 implementation begins.
 
@@ -100,3 +102,5 @@ time and O(n) space. Operations over two normalized sets are O(n+m) after
 validation. Splitting and iteration are O(k), where `k` is checked against the
 output limit. No public operation may use an algorithm exponential in input
 cardinality.
+
+Continue with [API reference](api.md).

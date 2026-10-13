@@ -1,5 +1,7 @@
 # Performance
 
+[Documentation index](README.md)
+
 Values are small immutable structs. Normalized sets own copied slices.
 
 | Operation | Complexity |
@@ -22,3 +24,5 @@ The shared `golib check` contract runs relation, normalization, parser, and
 daily-set allocation benchmarks. Benchmark output is an artifact, not a
 cross-machine hard threshold; regression decisions compare like-for-like
 runners.
+
+Continue with [API reference](api.md).

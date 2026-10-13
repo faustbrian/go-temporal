@@ -1,5 +1,7 @@
 # PostgreSQL
 
+[Documentation index](README.md)
+
 `adapters/postgres` maps instant periods to `tstzrange`, date periods to
 `daterange`, and normalized sets to corresponding multiranges. The released
 `postgres` path remains a compatibility facade.
@@ -30,3 +32,5 @@ Run the disposable integration suite locally with:
 TEMPORAL_POSTGRES_DSN='postgres://temporal:temporal@localhost/temporal_test' \
   go test -tags=integration ./adapters/postgres ./postgres
 ```
+
+Continue with [API reference](api.md).

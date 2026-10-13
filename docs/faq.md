@@ -1,5 +1,7 @@
 # FAQ
 
+[Documentation index](README.md)
+
 ## Why is `[a,a)` empty but `[a,a]` a singleton?
 
 Endpoint membership defines the represented set. Equal endpoints do not erase
@@ -24,3 +26,5 @@ equal the next day's `00:00` in all contexts.
 
 Deferred from core. The compatibility matrix inventories it, but core makes no
 claim of full PHP compatibility while charting is absent.
+
+Continue with [API reference](api.md).

@@ -1,5 +1,7 @@
 # Notation and encoding
 
+[Documentation index](README.md)
+
 Parsers check UTF-8, complete notation structure, local precision checks,
 arithmetic overflow, and selected formats. Instant endpoints additionally
 delegate to Go `time.Parse(time.RFC3339Nano)`. The local fractional-digit check
@@ -44,3 +46,5 @@ uses `encoding/json` matching rules. Applications must synchronize mutable wrapp
 and document fields. Collection accessors borrow `Values` during the call; returned
 sets own their storage. Boundary diagnostics select safe causes explicitly; the
 internal diagnostic helper alone is not a redactor for arbitrary text or causes.
+
+Continue with [API reference](api.md).

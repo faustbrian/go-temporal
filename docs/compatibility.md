@@ -1,5 +1,7 @@
 # PHP compatibility matrix
 
+[Documentation index](README.md)
+
 This matrix audits `faustbrian/temporal` at commit
 `469603239dbe700739c29b4c532a90382b6cbedf` (2026-07-16). It is the contract
 for the Go successor, not a claim that the current implementation is complete.
@@ -168,3 +170,5 @@ unit or property tests, malformed/boundary tests where relevant, and a migration
 example. Codec rows additionally require round-trip and fuzz evidence. Algebra
 rows additionally require truth-table or set-property evidence. PostgreSQL rows
 require an integration fixture proving lossless bounds and precision.
+
+Continue with [API reference](api.md).

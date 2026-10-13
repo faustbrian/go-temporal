@@ -1,5 +1,7 @@
 # Temporal algebra hardening report
 
+[Documentation index](README.md)
+
 This report records the release evidence for the temporal algebra audit. The
 commands are reproducible through the `Makefile`; dated results below were
 captured on 2026-07-17 with Go 1.26.5 on Darwin/arm64.

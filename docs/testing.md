@@ -1,5 +1,7 @@
 # Testing evidence
 
+[Documentation index](README.md)
+
 Production statement coverage is exactly 100%, enforced by the shared `golib`
 repository contract.
 Confidence additionally comes from:

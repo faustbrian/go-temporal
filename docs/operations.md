@@ -1,5 +1,7 @@
 # Set-operation semantics
 
+[Documentation index](README.md)
+
 All operations return new values. Caller slices and returned slices are never
 retained as mutable aliases.
 

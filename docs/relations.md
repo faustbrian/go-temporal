@@ -1,5 +1,7 @@
 # Bounds and relations
 
+[Documentation index](README.md)
+
 ## Bounds
 
 | Go value | ISO 80000 | Start | End |
@@ -45,3 +47,5 @@ the semantic specification or its desired relation laws.
 requires both sides to include the shared endpoint. `Meets` is adjacency
 without a shared represented point. Set intersection remains the authority for
 actual membership.
+
+Continue with [API reference](api.md).

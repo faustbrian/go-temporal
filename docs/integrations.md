@@ -1,5 +1,7 @@
 # Calendar, clock, validation, config, and wire integration
 
+[Documentation index](README.md)
+
 `temporal` does not own a clock. Obtain current instants and timers from
 `clock`, then pass concrete `time.Time` values into `instant`.
 

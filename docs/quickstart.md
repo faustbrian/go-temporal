@@ -1,5 +1,7 @@
 # Quickstarts
 
+[Documentation index](README.md)
+
 ## Instant periods
 
 Construct operational ranges with `instant.Range`; it is always closed-open.
@@ -47,3 +49,5 @@ Circular intervals cross midnight. Equal endpoints are rejected by `Between`;
 use `Collapsed` or `FullDay`. `EndOfDay()` is the distinct `24:00` boundary.
 Applying `24:00` advances to the next civil midnight rather than aliasing the
 same date's `00:00`.
+
+Continue with [API reference](api.md).

@@ -1,5 +1,7 @@
 # API reference
 
+[Documentation index](README.md)
+
 ## Root
 
 - `Bounds`, typed `Side`, inclusion/exclusion/replacement helpers, text

@@ -1,5 +1,7 @@
 # Migration from faustbrian/temporal
 
+[Documentation index](README.md)
+
 ## Go major-version migration
 
 Use `github.com/faustbrian/go-temporal/v2` and add `/v2` before the package
@@ -105,3 +107,5 @@ fixture. The detailed inventory is in `docs/compatibility.md`.
 Do not mark a migration fully compatible if it uses PHP charting. Keep core
 period/set data and introduce an application renderer, or wait for a separately
 versioned future `temporalchart` package.
+
+Continue with [API reference](api.md).
