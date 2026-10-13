@@ -151,3 +151,12 @@ fixtures/corpora, producer inputs, dependency manifests, CI and catalog metadata
 remain exact. Cheap affected local links, source structure, changed-content and
 staged-content secret checks and explicit Intent commit hygiene complete the
 local handoff; hosted CI and remote-main delivery are coordinator-owned.
+
+## Objective Enforcement
+
+The checksum-pinned public Tools v2.4.0 verifier now supplies
+`make source-docs-check` as a prerequisite of the existing local and CI Make
+routes. Ordinary shared CI selects strict source-documentation checking and
+requires its result. Native prerequisites, operation budgets, security and
+release controls are retained. Hosted exact-head evidence is recorded by the
+coordination ledger; configuration alone does not establish green delivery.
