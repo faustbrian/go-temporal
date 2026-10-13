@@ -16,16 +16,34 @@ const (
 )
 
 // Limits controls allocation and work performed by variable-size operations.
-// A zero field selects its safe default. Values cannot exceed hard limits.
+// A zero field selects its default; negative or over-hard-cap values fail
+// Validate. Applicability is operation-specific: these are not a uniform total
+// allocation, CPU, callback, precision-on-format or process-memory guarantee.
 type Limits struct {
-	ParseBytes    int
-	Precision     int
-	ErrorBytes    int
-	FormatBytes   int
-	InputPeriods  int
+	// ParseBytes caps admitted input bytes at configured parser/text boundaries;
+	// zero selects 64 KiB.
+	ParseBytes int
+	// Precision caps counted fractional-second digits in parsers; zero selects nine,
+	// not zero digits. Formatters do not enforce this parse setting.
+	Precision int
+	// ErrorBytes caps selected diagnostic display text; zero selects 1024. It does
+	// not cap every directly constructed error/cause graph.
+	ErrorBytes int
+	// FormatBytes caps selected emitted notation/JSON byte lengths; zero selects 64
+	// KiB. Some formatters check after building text.
+	FormatBytes int
+	// InputPeriods caps raw constructor/collection input counts; zero selects
+	// 100000. Daily Union uses twice this count for normalized segments.
+	InputPeriods int
+	// OutputPeriods caps normalized set outputs and instant splitting; not every
+	// Steps/Split helper applies it. Zero selects 100000.
 	OutputPeriods int
-	Steps         int
-	ParserDepth   int
+	// Steps caps selected iteration/split result counts; zero selects 1000000. It is
+	// not a global callback/time budget.
+	Steps int
+	// ParserDepth caps nested JSON object/array depth at wire boundaries, with the
+	// root at one; zero selects eight.
+	ParserDepth int
 }
 
 // DefaultLimits returns the package's bounded operational defaults.
@@ -42,7 +60,8 @@ func DefaultLimits() Limits {
 	}
 }
 
-// Resolve replaces zero fields with safe defaults.
+// Resolve replaces zero fields with defaults without mutation or validation.
+// Negative and over-cap fields remain for Validate to reject.
 func (l Limits) Resolve() Limits {
 	defaults := DefaultLimits()
 
@@ -74,7 +93,9 @@ func (l Limits) Resolve() Limits {
 	return l
 }
 
-// Validate rejects negative fields and values above package hard limits.
+// Validate rejects negative fields and values above package hard limits; zero
+// placeholders are accepted. It returns the first field violation as LimitError
+// and does not resolve fields or validate any particular operation's input.
 func (l Limits) Validate() error {
 	checks := [...]struct {
 		name  string

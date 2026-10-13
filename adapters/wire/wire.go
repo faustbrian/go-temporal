@@ -1,5 +1,9 @@
 // Package temporalwire provides versioned, format-neutral documents for
-// encoding temporal values through wire or the standard JSON package.
+// encoding temporal values through wire or the standard JSON package. Documents
+// are mutable caller-owned records, not synchronized core values. No codec, IO,
+// context, goroutine or shutdown lifecycle is owned. JSON entrypoints apply byte,
+// UTF-8, exact-key duplicate and nesting checks plus encoding/json field matching;
+// arbitrary external codecs must arrange their own corresponding admission.
 package temporalwire
 
 import (
@@ -25,39 +29,63 @@ const Version1 = "temporal/v1"
 type Kind string
 
 const (
+	// KindInstantPeriod selects an instant-period scalar.
 	KindInstantPeriod Kind = "instant-period"
-	KindDatePeriod    Kind = "date-period"
+	// KindDatePeriod selects a civil-date-period scalar.
+	KindDatePeriod Kind = "date-period"
+	// KindDailyInterval selects a daily-interval scalar.
 	KindDailyInterval Kind = "daily-interval"
-	KindTime          Kind = "time-of-day"
-	KindDuration      Kind = "fixed-duration"
-	KindInstantSet    Kind = "instant-set"
-	KindDateSet       Kind = "date-set"
-	KindDailySet      Kind = "daily-set"
+	// KindTime selects a time-of-day scalar.
+	KindTime Kind = "time-of-day"
+	// KindDuration selects a fixed-duration scalar.
+	KindDuration Kind = "fixed-duration"
+	// KindInstantSet selects a normalized instant collection.
+	KindInstantSet Kind = "instant-set"
+	// KindDateSet selects a normalized civil-date collection.
+	KindDateSet Kind = "date-set"
+	// KindDailySet selects a normalized daily collection.
+	KindDailySet Kind = "daily-set"
 )
 
-// Document is a format-neutral stable wire representation. Value is canonical
-// ISO 80000 notation for intervals and strict ISO text for scalar values.
+// Document is a caller-owned format-neutral scalar envelope. Factories format
+// values; typed accessors and Marshal separately validate admission. Successful
+// factory formatting alone does not guarantee successful parsing or encoding.
 type Document struct {
+	// Version must equal Version1 for decoding.
 	Version string `json:"version" yaml:"version" toml:"version"`
-	Kind    Kind   `json:"kind" yaml:"kind" toml:"kind"`
-	Value   string `json:"value" yaml:"value" toml:"value"`
+	// Kind must match the selected scalar accessor.
+	Kind Kind `json:"kind" yaml:"kind" toml:"kind"`
+	// Value holds interval or scalar notation, validated by the typed accessor.
+	Value string `json:"value" yaml:"value" toml:"value"`
 }
 
+// FromInstant formats an instant value into a Version1 scalar envelope.
+// It returns a zero document on failure; formatting is not revalidation against
+// the selected parser profile. Marshal performs a separate admission check.
 func FromInstant(value instant.Period, limits temporal.Limits) (Document, error) {
 	encoded, err := notation.FormatInstant(value, notation.ISO80000, limits)
 	return fromEncoded(KindInstantPeriod, encoded, err)
 }
 
+// FromDate formats a civil-date value into a Version1 scalar envelope.
+// It returns a zero document on failure; formatting is not revalidation against
+// the selected parser profile. Marshal performs a separate admission check.
 func FromDate(value dateperiod.Period, limits temporal.Limits) (Document, error) {
 	encoded, err := notation.FormatDate(value, notation.ISO80000, limits)
 	return fromEncoded(KindDatePeriod, encoded, err)
 }
 
+// FromDailyInterval formats a daily-interval value into a Version1 scalar envelope.
+// It returns a zero document on failure; formatting is not revalidation against
+// the selected parser profile. Marshal performs a separate admission check.
 func FromDailyInterval(value timeofday.Interval, limits temporal.Limits) (Document, error) {
 	encoded, err := notation.FormatDailyInterval(value, notation.ISO80000, limits)
 	return fromEncoded(KindDailyInterval, encoded, err)
 }
 
+// FromTime formats a time-of-day value into a Version1 scalar envelope.
+// It returns a zero document on failure; formatting is not revalidation against
+// the selected parser profile. Marshal performs a separate admission check.
 func FromTime(value timeofday.Time, limits temporal.Limits) (Document, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {
@@ -70,6 +98,9 @@ func FromTime(value timeofday.Time, limits temporal.Limits) (Document, error) {
 	return Document{Version: Version1, Kind: KindTime, Value: encoded}, nil
 }
 
+// FromDuration formats a fixed-duration value into a Version1 scalar envelope.
+// It returns a zero document on failure; formatting is not revalidation against
+// the selected parser profile. Marshal performs a separate admission check.
 func FromDuration(value timeofday.Duration, limits temporal.Limits) (Document, error) {
 	encoded, err := notation.FormatDuration(value, limits)
 	return fromEncoded(KindDuration, encoded, err)
@@ -82,6 +113,8 @@ func fromEncoded(kind Kind, encoded string, err error) (Document, error) {
 	return Document{Version: Version1, Kind: kind, Value: encoded}, nil
 }
 
+// Instant checks the schema and kind, then parses Value using the supplied limits.
+// It returns the core zero value on failure and does not mutate the document.
 func (d Document) Instant(limits temporal.Limits) (instant.Period, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {
@@ -93,6 +126,8 @@ func (d Document) Instant(limits temporal.Limits) (instant.Period, error) {
 	return notation.ParseInstant(d.Value, notation.ISO80000, limits)
 }
 
+// Date checks the schema and kind, then parses Value using the supplied limits.
+// It returns the core zero value on failure and does not mutate the document.
 func (d Document) Date(limits temporal.Limits) (dateperiod.Period, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {
@@ -104,6 +139,8 @@ func (d Document) Date(limits temporal.Limits) (dateperiod.Period, error) {
 	return notation.ParseDate(d.Value, notation.ISO80000, limits)
 }
 
+// DailyInterval checks the schema and kind, then parses Value using the supplied limits.
+// It returns the core zero value on failure and does not mutate the document.
 func (d Document) DailyInterval(limits temporal.Limits) (timeofday.Interval, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {
@@ -115,6 +152,8 @@ func (d Document) DailyInterval(limits temporal.Limits) (timeofday.Interval, err
 	return notation.ParseDailyInterval(d.Value, notation.ISO80000, limits)
 }
 
+// Time checks the schema and kind, then parses Value using the supplied limits.
+// It returns the core zero value on failure and does not mutate the document.
 func (d Document) Time(limits temporal.Limits) (timeofday.Time, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {
@@ -126,6 +165,8 @@ func (d Document) Time(limits temporal.Limits) (timeofday.Time, error) {
 	return timeofday.Parse(d.Value, limits)
 }
 
+// Duration checks the schema and kind, then parses Value using the supplied limits.
+// It returns the core zero value on failure and does not mutate the document.
 func (d Document) Duration(limits temporal.Limits) (timeofday.Duration, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {
@@ -216,7 +257,10 @@ func boundedJSONSize(size, maximum int) (int, bool) {
 	return size, false
 }
 
-// Unmarshal strictly decodes exactly one versioned JSON document.
+// Unmarshal decodes exactly one versioned JSON value, checking bytes, UTF-8,
+// nesting, repeated exact keys, unknown fields and typed value admission. Field
+// matching otherwise follows encoding/json. Failures return a zero document with
+// selected bounded diagnostics rather than rejected payload/parser error text.
 func Unmarshal(payload []byte, limits temporal.Limits) (Document, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {

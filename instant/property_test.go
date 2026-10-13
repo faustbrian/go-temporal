@@ -81,6 +81,8 @@ func randomInstantSet(t *testing.T, random *rand.Rand, base time.Time) instant.S
 	return set
 }
 
+// BenchmarkInstantSetNormalize measures normalization of its prepared period
+// corpus, including constructor work and allocations but excluding fixture setup.
 func BenchmarkInstantSetNormalize(b *testing.B) {
 	base := time.Date(2026, time.January, 1, 0, 0, 0, 0, time.UTC)
 	periods := make([]instant.Period, 1_000)

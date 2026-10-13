@@ -70,7 +70,10 @@ func ParseDailyInterval(value string, format Format, limits temporal.Limits) (ti
 	return interval, nil
 }
 
-// FormatDailyInterval encodes a daily interval without semantic loss.
+// FormatDailyInterval emits declared local endpoints/kind through the selected
+// bounds profile. ISO8601 rejects collapsed/full-day/non-ClosedOpen values. It
+// does not revalidate a zero interval or enforce parse Precision; FormatBytes is
+// checked after text assembly. Errors return empty text.
 func FormatDailyInterval(interval timeofday.Interval, format Format, limits temporal.Limits) (string, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {

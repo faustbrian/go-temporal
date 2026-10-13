@@ -1,5 +1,14 @@
 // Package dateperiod provides immutable bounded intervals over civil calendar
-// dates. Calendar arithmetic is delegated to calendar.
+// dates. New requires valid ordered Calendar v2 dates; zero Period is invalid
+// and treated as empty by membership/count operations. Declared bounds and
+// represented-date equality differ: sets canonicalize to closed included dates.
+//
+// Sets snapshot outer slices, are immutable after construction, and use receiver
+// limits for derived operations. Iterators and mapping/reduction callbacks run
+// synchronously without context cancellation or panic recovery. Calendar policy,
+// supported date range and DST resolution belong to pinned Calendar v2; ToInstant
+// needs explicit location/resolution and can cover other than 24 elapsed hours.
+// This package owns no IO, clock, goroutine or persistence lifecycle.
 package dateperiod
 
 import (
@@ -145,6 +154,9 @@ func (p Period) ToInstant(location *time.Location, policy calendartz.Resolution)
 	return instant.Range(rangeValue.Start(), rangeValue.End())
 }
 
+// includedRange shifts excluded civil endpoints inward only after Days proves
+// at least one included date. The adjusted endpoints therefore stay inside the
+// valid declared range; ignored AddDays errors cannot publish an overflow here.
 func (p Period) includedRange() (calendar.Date, calendar.Date, bool) {
 	if p.IsEmpty() {
 		return calendar.Date{}, calendar.Date{}, false

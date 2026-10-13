@@ -46,7 +46,10 @@ func (r InstantRange) Value() (driver.Value, error) {
 		string(pgBracket(value.UpperType, false)), nil
 }
 
-// Scan implements sql.Scanner for NULL, string, and []byte sources.
+// Scan accepts NULL, string, and []byte sources under default ParseBytes.
+// NULL clears the wrapper; other failures leave it unchanged. A nil receiver
+// fails with ErrUnsupported. Input bytes are not retained; callers synchronize
+// concurrent use of a mutable wrapper.
 func (r *InstantRange) Scan(source any) error {
 	if r == nil {
 		return temporal.ErrUnsupported
@@ -103,7 +106,10 @@ func (r DateRange) Value() (driver.Value, error) {
 		value.Upper.String() + string(pgBracket(value.UpperType, false)), nil
 }
 
-// Scan implements sql.Scanner for NULL, string, and []byte sources.
+// Scan accepts NULL, string, and []byte sources under default ParseBytes.
+// NULL clears the wrapper; other failures leave it unchanged. A nil receiver
+// fails with ErrUnsupported. Input bytes are not retained; callers synchronize
+// concurrent use of a mutable wrapper.
 func (r *DateRange) Scan(source any) error {
 	if r == nil {
 		return temporal.ErrUnsupported

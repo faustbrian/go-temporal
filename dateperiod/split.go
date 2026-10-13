@@ -6,7 +6,9 @@ import (
 
 // SplitDays partitions represented dates into closed chunks of at most step
 // calendar days. Structural endpoint bounds are canonicalized while set
-// membership is conserved exactly.
+// membership is conserved exactly. Limits.Steps bounds allocated chunks; this
+// helper does not separately enforce OutputPeriods. Empty input returns nil;
+// invalid steps/limits fail without a partial slice.
 func (p Period) SplitDays(step int, limits temporal.Limits) ([]Period, error) {
 	if step <= 0 {
 		return nil, temporal.ErrStep

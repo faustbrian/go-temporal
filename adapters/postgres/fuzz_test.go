@@ -9,6 +9,8 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+// FuzzInstantRangeSQLScan exercises the SQL text/byte scanner boundary.
+// It checks panic freedom, not acceptance equivalence or a live database.
 func FuzzInstantRangeSQLScan(f *testing.F) {
 	f.Add("[\"2026-01-01T00:00:00Z\",\"2026-01-02T00:00:00Z\")")
 	f.Add("empty")
@@ -20,6 +22,8 @@ func FuzzInstantRangeSQLScan(f *testing.F) {
 	})
 }
 
+// FuzzDateRangeSQLScan exercises civil range text/byte scanning.
+// It checks panic freedom, not accepted-data round trips or a live database.
 func FuzzDateRangeSQLScan(f *testing.F) {
 	f.Add("[2026-01-01,2026-01-03)")
 	f.Add("empty")
@@ -31,6 +35,8 @@ func FuzzDateRangeSQLScan(f *testing.F) {
 	})
 }
 
+// FuzzInstantPGXMultirange bounds numeric endpoints and varies pgx bounds.
+// Admitted normalized sets must retain membership after pgx conversion and decoding.
 func FuzzInstantPGXMultirange(f *testing.F) {
 	f.Add(int64(0), int64(1), int64(2), int64(3), uint8(0))
 	f.Add(int64(3), int64(1), int64(-2), int64(4), uint8(255))

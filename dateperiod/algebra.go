@@ -5,8 +5,11 @@ import (
 	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
-// RelationTo returns the unique Allen endpoint relation to other. Empty date
-// periods do not have an Allen relation.
+// RelationTo classifies declared endpoints, not canonical included-date ranges.
+// Empty operands return RelationInvalid/ErrEmpty. Equal seam checks run before
+// full endpoint equality, including for same-endpoint singleton declarations;
+// degenerate declarations therefore do not follow the nondegenerate Allen table.
+// Use Equal or SetEqual when equality rather than endpoint classification matters.
 func (p Period) RelationTo(other Period) (temporal.Relation, error) {
 	if p.IsEmpty() || other.IsEmpty() {
 		return temporal.RelationInvalid, temporal.ErrEmpty

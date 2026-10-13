@@ -30,12 +30,17 @@ var (
 
 // LimitError describes which resource limit was invalid or exceeded.
 type LimitError struct {
+	// Field names the violated limit; direct callers own this unredacted text.
 	Field string
+	// Value is the rejected observed/configured value in the named field's units.
 	Value int
-	Max   int
+	// Max is the enforced ceiling in those same units.
+	Max int
 }
 
-// Error implements error.
+// Error formats caller-owned Field/Value/Max without a byte cap or redaction.
+// A nil receiver is unsupported; boundary-specific diagnostic wrappers provide
+// their own bounded text rather than making every LimitError safe to disclose.
 func (e *LimitError) Error() string {
 	return fmt.Sprintf("%s: %s=%d (maximum %d)", ErrLimit, e.Field, e.Value, e.Max)
 }

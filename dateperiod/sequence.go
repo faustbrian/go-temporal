@@ -8,7 +8,8 @@ import (
 	temporal "github.com/faustbrian/go-temporal/v2"
 )
 
-// All returns a stable iterator over normalized civil-date periods.
+// All returns a repeatable iterator over stable normalized order. It calls yield
+// synchronously until false; callback panics or blocking propagate to the caller.
 func (s Set) All() iter.Seq[Period] {
 	return func(yield func(Period) bool) {
 		for _, period := range s.periods {
@@ -34,7 +35,9 @@ func (s Set) Search(date calendar.Date) (int, bool) {
 	return index, false
 }
 
-// Transform applies mapper in stable order and returns a newly normalized set.
+// Transform calls mapper synchronously in stable order and normalizes with the
+// receiver limits. A nil mapper fails with ErrUnsupported; mapper or normalization
+// failure returns a zero set. Callback side effects are not rolled back.
 func (s Set) Transform(mapper func(Period) (Period, error)) (Set, error) {
 	if mapper == nil {
 		return Set{}, temporal.ErrUnsupported
@@ -50,7 +53,9 @@ func (s Set) Transform(mapper func(Period) (Period, error)) (Set, error) {
 	return NewSet(s.effectiveLimits(), periods...)
 }
 
-// Reduce folds periods in stable order without exposing mutable storage.
+// Reduce calls reducer synchronously in stable order. Nil reducers and callback
+// errors return initial with an error, not a partial accumulator. T is copied
+// only as a Go value: mutations through aliases or callback effects are not undone.
 func Reduce[T any](set Set, initial T, reducer func(T, Period) (T, error)) (T, error) {
 	if reducer == nil {
 		return initial, temporal.ErrUnsupported

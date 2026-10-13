@@ -7,6 +7,8 @@ import (
 	"github.com/faustbrian/go-temporal/v2/temporalwire"
 )
 
+// FuzzDocumentJSON exercises the scalar JSON admission boundary.
+// Admitted envelopes must marshal and re-admit; rejected payloads are not values.
 func FuzzDocumentJSON(f *testing.F) {
 	f.Add([]byte(`{"version":"temporal/v1","kind":"instant-period","value":"[2026-01-01T00:00:00Z,2026-01-02T00:00:00Z)"}`))
 	f.Add([]byte(`null`))
@@ -26,6 +28,8 @@ func FuzzDocumentJSON(f *testing.F) {
 	})
 }
 
+// FuzzCollectionDocumentJSON exercises collection JSON admission.
+// Admitted envelopes must marshal and re-admit with bounded canonical processing.
 func FuzzCollectionDocumentJSON(f *testing.F) {
 	f.Add([]byte(`{"version":"temporal/v1","kind":"instant-set","values":["[2026-01-01T00:00:00Z,2026-01-02T00:00:00Z)"]}`))
 	f.Add([]byte(`{"version":"temporal/v1","kind":"daily-set","values":[]}`))

@@ -8,6 +8,8 @@ import (
 	"github.com/faustbrian/go-temporal/v2/instant"
 )
 
+// FuzzInstantSplitting bounds endpoint offsets and split count for hostile steps.
+// Successful forward/backward splits must not exceed the configured Steps ceiling.
 func FuzzInstantSplitting(f *testing.F) {
 	f.Add(int64(0), int64(10), int64(1))
 	f.Add(int64(10), int64(0), int64(-1))
@@ -34,6 +36,8 @@ func FuzzInstantSplitting(f *testing.F) {
 	})
 }
 
+// BenchmarkInstantRelation measures one overlapping nondegenerate endpoint relation.
+// Period construction is outside the loop; this is not whole-set performance.
 func BenchmarkInstantRelation(b *testing.B) {
 	base := time.Unix(0, 0).UTC()
 	left, _ := instant.Range(base, base.Add(time.Hour))
@@ -46,6 +50,8 @@ func BenchmarkInstantRelation(b *testing.B) {
 	}
 }
 
+// BenchmarkInstantSplit measures forward splitting a fixed 24-hour period
+// into 15-minute chunks, including result allocation but excluding period setup.
 func BenchmarkInstantSplit(b *testing.B) {
 	base := time.Unix(0, 0).UTC()
 	period, _ := instant.Range(base, base.Add(24*time.Hour))
@@ -57,6 +63,8 @@ func BenchmarkInstantSplit(b *testing.B) {
 	}
 }
 
+// BenchmarkInstantSetLimitRejection measures rejection of two inputs under
+// a one-period cap; fixture construction is excluded, not successful normalization.
 func BenchmarkInstantSetLimitRejection(b *testing.B) {
 	base := time.Unix(0, 0).UTC()
 	period, _ := instant.Range(base, base.Add(time.Hour))

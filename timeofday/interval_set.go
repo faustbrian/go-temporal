@@ -109,7 +109,9 @@ func (s IntervalSet) Search(value Time) (int, bool) {
 	return index, index < len(s.segments) && segmentIncludes(s.segments[index], value.offset)
 }
 
-// All returns a stable iterator over copied normalized intervals.
+// All snapshots normalized intervals and returns a repeatable stable iterator.
+// It calls yield synchronously until false; callback blocking and panics are
+// caller-owned. It provides no cancellation or background lifecycle.
 func (s IntervalSet) All() iter.Seq[Interval] {
 	intervals := s.Intervals()
 	return func(yield func(Interval) bool) {
@@ -138,7 +140,9 @@ func (s IntervalSet) Union(other IntervalSet) (IntervalSet, error) {
 	return newIntervalSetFromSegments(limits, segments)
 }
 
-// Intersect returns the normalized common daily members in O(n+m) time.
+// Intersect scans normalized operands in O(n+m), then normalizes through a
+// stable sort of k results. Receiver limits govern admission/output, not a
+// blanket whole-operation linear-time guarantee.
 func (s IntervalSet) Intersect(other IntervalSet) (IntervalSet, error) {
 	limits := s.effectiveLimits()
 	result := make([]dailySegment, 0, min(len(s.segments), len(other.segments)))

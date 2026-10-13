@@ -13,15 +13,25 @@ import (
 type CivilUnit uint8
 
 const (
+	// Second selects a civil whole-second boundary.
 	Second CivilUnit = iota + 1
+	// Minute selects a civil whole-minute boundary.
 	Minute
+	// Hour selects a civil whole-hour boundary, not necessarily a fixed elapsed hour.
 	Hour
+	// Day selects a civil midnight boundary under the explicit DST policy.
 	Day
+	// ISOWeek selects the calendar ISO week start.
 	ISOWeek
+	// Month selects the civil month start.
 	Month
+	// Quarter selects the civil quarter start.
 	Quarter
+	// Semester selects the civil half-year start.
 	Semester
+	// Year selects the civil calendar year start.
 	Year
+	// ISOYear selects the ISO week-year start, which may differ from January 1.
 	ISOYear
 )
 
@@ -29,7 +39,9 @@ const (
 type SnapDirection uint8
 
 const (
+	// Floor selects the resolved containing civil boundary.
 	Floor SnapDirection = iota + 1
+	// Ceil selects that boundary if exact, otherwise the next resolved civil boundary.
 	Ceil
 )
 

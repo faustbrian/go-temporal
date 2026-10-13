@@ -7,6 +7,9 @@ import (
 	"github.com/faustbrian/go-temporal/v2/dateperiod"
 )
 
+// FuzzDateSplitting bounds date offsets and exercises bounds and step inputs.
+// Admitted splits must conserve membership under normalization; Steps and
+// OutputPeriods are set equally here, not tested as independent ceilings.
 func FuzzDateSplitting(f *testing.F) {
 	f.Add(int64(0), int64(10), int64(3), uint8(0))
 	f.Add(int64(10), int64(0), int64(-1), uint8(255))

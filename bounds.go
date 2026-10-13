@@ -1,5 +1,13 @@
 // Package temporal defines shared bounds, Allen relations, typed errors, and
-// resource limits for bounded temporal algebra packages.
+// resource limits for bounded temporal algebra packages. It owns no clock, zone
+// database, IO or background lifecycle. Use instant for dense endpoints,
+// dateperiod for discrete civil dates, and timeofday for a fixed daily universe.
+//
+// Bounds zero is ClosedOpen; Side and Relation zero are invalid. Limits zero
+// fields resolve independently to defaults. Enum helpers do not all reject an
+// invalid Bounds receiver: constructors and MarshalText validate explicitly.
+// Returned enum inventories are copied; immutable scalar values may be shared.
+// LimitError is a mutable caller-owned error record, not a universal redactor.
 package temporal
 
 import (
@@ -164,7 +172,10 @@ func (b Bounds) MarshalText() ([]byte, error) {
 	return []byte(b.String()), nil
 }
 
-// UnmarshalText implements encoding.TextUnmarshaler.
+// UnmarshalText accepts only the four exact bracket pairs using default byte
+// admission. Nil receivers return ErrUnsupported; failure preserves the receiver.
+// It borrows text for the call and replaces this mutable scalar only on success.
+// Concurrent reads/writes to the same receiver require caller synchronization.
 func (b *Bounds) UnmarshalText(text []byte) error {
 	if b == nil {
 		return ErrUnsupported

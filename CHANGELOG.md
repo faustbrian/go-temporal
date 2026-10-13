@@ -4,6 +4,13 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 
 ## Unreleased
 
+### Documentation
+
+- Clarify parser versus formatter admission, zero values, callback and adapter
+  ownership, applicable resource limits, and retained adapter semantics. Correct
+  intersection complexity and document source-visible precision and degenerate
+  relation caveats without changing the Temporal v2 API or runtime behavior.
+
 ## 2.0.1 - 2026-10-07
 
 ### Changed

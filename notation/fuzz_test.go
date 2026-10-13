@@ -8,6 +8,8 @@ import (
 	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
+// FuzzInstantNotation exercises interval text and selected notation alphabets.
+// Successful parses must format and reparse with the same represented set and bounds.
 func FuzzInstantNotation(f *testing.F) {
 	for _, seed := range []struct {
 		value  string
@@ -37,6 +39,8 @@ func FuzzInstantNotation(f *testing.F) {
 	})
 }
 
+// FuzzDailyIntervalNotation exercises local interval text including explicit kinds.
+// Successful parses must preserve structural interval identity through formatting.
 func FuzzDailyIntervalNotation(f *testing.F) {
 	for _, seed := range []struct {
 		value  string
@@ -67,6 +71,8 @@ func FuzzDailyIntervalNotation(f *testing.F) {
 	})
 }
 
+// FuzzDateNotation exercises civil interval text and notation alphabets.
+// Successful parses must preserve represented dates and bounds through formatting.
 func FuzzDateNotation(f *testing.F) {
 	for _, seed := range []struct {
 		value  string
@@ -101,6 +107,8 @@ func fuzzFormat(value uint8) notation.Format {
 	return formats[int(value)%len(formats)]
 }
 
+// FuzzFixedDurationNotation exercises fixed elapsed ISO-subset text.
+// Admitted values must retain exact duration through formatting and reparsing.
 func FuzzFixedDurationNotation(f *testing.F) {
 	for _, seed := range []string{"PT0S", "-P1DT2H3M4.123456789S", "P1M", "bad"} {
 		f.Add(seed)
@@ -121,6 +129,8 @@ func FuzzFixedDurationNotation(f *testing.F) {
 	})
 }
 
+// FuzzLocalTime exercises local-time text, including malformed seed inputs.
+// Admitted values must retain their String presentation on reparsing.
 func FuzzLocalTime(f *testing.F) {
 	for _, seed := range []string{"00:00", "24:00", "12:34:56.123456789", "bad"} {
 		f.Add(seed)
@@ -137,6 +147,8 @@ func FuzzLocalTime(f *testing.F) {
 	})
 }
 
+// BenchmarkInstantNotationParsing measures parsing one fixed fractional bracketed interval.
+// Input construction is excluded; allocations and timing compare like workloads.
 func BenchmarkInstantNotationParsing(b *testing.B) {
 	input := "[2026-01-02T03:04:05.123456789Z,2026-01-03T04:05:06.987654321Z)"
 	b.ReportAllocs()

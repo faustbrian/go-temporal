@@ -110,6 +110,8 @@ func TestCircularDailyAlgebraAcrossEveryHourAndBounds(t *testing.T) {
 	}
 }
 
+// BenchmarkDailySetAlgebra measures its prepared daily set operations,
+// including returned-result allocation but excluding the input set construction.
 func BenchmarkDailySetAlgebra(b *testing.B) {
 	interval := func(startHour, endHour int, bounds temporal.Bounds) timeofday.Interval {
 		start, _ := timeofday.New(startHour, 0, 0, 0, 0)

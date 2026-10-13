@@ -93,7 +93,10 @@ func ParseDuration(value string, limits temporal.Limits) (timeofday.Duration, er
 	return result, nil
 }
 
-// FormatDuration returns canonical fixed elapsed ISO 8601 notation.
+// FormatDuration returns the package's fixed elapsed ISO8601-subset spelling,
+// including negative and minimum durations. It does not enforce parse Precision;
+// FormatBytes is checked after building the text. No calendar months/years or
+// civil-zone resolution are introduced; errors return empty text.
 func FormatDuration(value timeofday.Duration, limits temporal.Limits) (string, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {

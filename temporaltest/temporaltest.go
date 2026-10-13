@@ -1,5 +1,8 @@
 // Package temporaltest provides canonical algebra fixtures and assertions for
-// temporal package consumers.
+// temporal package consumers. Assertions borrow TestingT and call its methods
+// synchronously; nil implementations, panics and side effects remain caller-owned.
+// Fixtures require representable caller-chosen base/unit offsets and do not
+// independently certify all degenerate, calendar, timezone or compatibility cases.
 package temporaltest
 
 import (
@@ -12,19 +15,30 @@ import (
 
 // TestingT is the minimal testing contract used by assertions.
 type TestingT interface {
+	// Helper marks the calling assertion as a testing helper.
 	Helper()
+	// Errorf records a formatted failure; assertions do not require fatal behavior.
 	Errorf(format string, arguments ...any)
 }
 
 // RelationCase is a canonical pair demonstrating one Allen relation.
 type RelationCase struct {
-	Name  string
-	Left  instant.Period
+	// Name is the canonical relation label for this fixture, not an independent
+	// expected oracle.
+	Name string
+	// Left is the first half-open instant operand.
+	Left instant.Period
+	// Right is the second half-open instant operand.
 	Right instant.Period
-	Want  temporal.Relation
+	// Want is the expected endpoint classification for this constructed
+	// nondegenerate pair.
+	Want temporal.Relation
 }
 
-// AllenCases returns exactly one canonical case for every Allen relation.
+// AllenCases builds one half-open nondegenerate fixture per Allen relation.
+// unit must be positive; choose a unit/base whose small offset products and
+// time.Time additions are representable. These deterministic cases are not an
+// independent algebra oracle and do not exercise singleton or DST boundaries.
 func AllenCases(base time.Time, unit time.Duration) ([]RelationCase, error) {
 	if unit <= 0 {
 		return nil, temporal.ErrStep

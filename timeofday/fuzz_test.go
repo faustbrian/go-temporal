@@ -8,6 +8,9 @@ import (
 	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
+// FuzzDailyIntervalIteration exercises daily kinds, bounds and hostile steps.
+// Successful splitting must conserve normalized membership and iteration respects
+// Steps. Equal Steps/OutputPeriods settings do not prove independent output caps.
 func FuzzDailyIntervalIteration(f *testing.F) {
 	f.Add(uint8(22), uint8(2), uint8(0), int64(time.Minute))
 	f.Add(uint8(8), uint8(17), uint8(3), int64(0))
@@ -54,6 +57,8 @@ func FuzzDailyIntervalIteration(f *testing.F) {
 	})
 }
 
+// FuzzDailySetNormalization caps bytes before constructing daily inputs.
+// Reconstructing normalized output must preserve represented membership.
 func FuzzDailySetNormalization(f *testing.F) {
 	f.Add([]byte{22, 2, 0, 8, 17, 1})
 	f.Add([]byte{0, 24, 3})

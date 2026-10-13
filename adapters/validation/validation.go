@@ -1,5 +1,7 @@
 // Package temporalvalidation adapts temporal values to validation's
-// deterministic immutable validator contract.
+// deterministic validator contract. These rules inspect values synchronously,
+// use the caller context path and report limits, and own no cancellation or
+// background lifecycle. They do not coerce or mutate the input values.
 package temporalvalidation
 
 import (
@@ -24,7 +26,8 @@ func DateNonEmpty() validation.Validator[dateperiod.Period] {
 	})
 }
 
-// DailyNonEmpty rejects collapsed daily intervals.
+// DailyNonEmpty rejects CollapsedKind only; it does not test general set
+// emptiness or reject every zero-length OrdinaryKind representation.
 func DailyNonEmpty() validation.Validator[timeofday.Interval] {
 	return validation.ValidatorFunc[timeofday.Interval](func(ctx validation.Context, value timeofday.Interval) validation.Report {
 		return nonEmptyReport(ctx, value.Kind() != timeofday.CollapsedKind)

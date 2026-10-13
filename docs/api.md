@@ -21,7 +21,8 @@ require an explicit location and `calendar` DST policy.
 periods, equality, span, total duration, containment, gaps, union,
 intersection, subtraction, iteration, search, transform, and generic `Reduce`.
 Normalization is `O(n log n)`; binary search and membership are `O(log n)`;
-two-set intersection is `O(n+m)`.
+two-set intersection scans in `O(n+m)` and normalizes `k` results through
+`O(k log k)` sorting. See [resource and allocation limits](performance.md).
 
 ## dateperiod
 
@@ -50,15 +51,17 @@ subtraction, gaps, and explicit full-day complement.
 
 ## Adapters
 
-`notation` provides strict instant/date/daily and fixed-duration codecs.
+`notation` provides the selected instant/date/daily and fixed-duration profiles,
+not full ISO conformance. [Encoding caveats](encoding.md) distinguish formatting
+from parser admission and pinned-standard-library endpoint delegation.
 `adapters/postgres` provides pgx ranges/multiranges and nullable `database/sql`
 values. `adapters/wire.Document` and `CollectionDocument` are the `temporal/v1` stable
 scalar and normalized-set wire envelopes.
-`adapters/config` supplies atomic text wrappers. `adapters/validation`
-supplies deterministic validators. The released `postgres`, `temporalwire`,
+`adapters/config` supplies transactional text wrappers (not concurrent atomics).
+`adapters/validation` supplies deterministic validators. The released `postgres`, `temporalwire`,
 `temporalconfig`, and `temporalvalidation` packages retain their named types
 and signatures as compatibility facades. `temporaltest` supplies exhaustive
-fixtures and assertions.
+nondegenerate Allen fixtures and set assertions.
 
 The Go package documentation is the signature-level source of truth:
 

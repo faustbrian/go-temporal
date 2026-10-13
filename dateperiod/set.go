@@ -137,7 +137,9 @@ func (s Set) Union(other Set) (Set, error) {
 	return NewSet(limits, combined...)
 }
 
-// Intersect returns common represented dates in O(n+m) time.
+// Intersect scans normalized operands in O(n+m), then NewSet reconstructs and
+// stably sorts k results. Receiver limits govern the result; this is not a
+// whole-operation linear-time claim.
 func (s Set) Intersect(other Set) (Set, error) {
 	limits := s.effectiveLimits()
 	result := make([]Period, 0, min(len(s.periods), len(other.periods)))

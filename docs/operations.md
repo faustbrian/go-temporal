@@ -14,5 +14,8 @@ retained as mutable aliases.
 - Daily complement is `FullDay - set`, not an implicit ambient universe.
 
 Set output is normalized and disjoint. Input and output cardinality are checked
-against `Limits` before unbounded allocation. Intersection is linear after
-normalization; repeated subtraction is bounded by the configured output limit.
+against `Limits` before unbounded allocation. Intersection uses a linear scan then
+common stable-sorting result normalization;
+repeated subtraction is bounded by the configured output limit. Receiver limits
+govern derived set operations. These are count ceilings, not a total allocation
+or request-budget guarantee; see [performance](performance.md).

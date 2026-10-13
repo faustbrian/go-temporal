@@ -59,7 +59,10 @@ func ParseDate(value string, format Format, limits temporal.Limits) (dateperiod.
 	return period, nil
 }
 
-// FormatDate encodes a bounded civil-date interval without semantic loss.
+// FormatDate emits declared civil endpoints and the selected bounds profile.
+// ISO8601 rejects non-ClosedOpen bounds. It does not validate zero/invalid input
+// periods by reparsing; FormatBytes is checked after text assembly. Errors return
+// empty text. Use successfully constructed periods for parser-domain text.
 func FormatDate(period dateperiod.Period, format Format, limits temporal.Limits) (string, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {

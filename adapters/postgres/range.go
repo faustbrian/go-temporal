@@ -1,5 +1,9 @@
 // Package temporalpostgres provides loss-checked PostgreSQL range and multirange
-// mappings for temporal values.
+// mappings for temporal values. These are value/text conversions, not a database
+// client: no connection, transaction, context, or shutdown lifecycle is owned.
+// Admission rejects finite-range precision loss but does not qualify every value
+// against a running PostgreSQL server or its full timestamp domain. Multirange
+// inputs are borrowed during conversion; output slices and normalized sets are owned.
 package temporalpostgres
 
 import (

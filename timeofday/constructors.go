@@ -7,6 +7,8 @@ import (
 )
 
 // Since constructs a daily interval of duration beginning at start.
+// Negative duration fails; zero returns Collapsed and at least 24 fixed hours
+// returns FullDay before checking bounds. Short positive spans use Between.
 func Since(start Time, duration time.Duration, bounds temporal.Bounds) (Interval, error) {
 	if duration < 0 {
 		return Interval{}, temporal.ErrStep
@@ -22,6 +24,8 @@ func Since(start Time, duration time.Duration, bounds temporal.Bounds) (Interval
 }
 
 // Until constructs a daily interval of duration ending at end.
+// Negative duration fails; zero returns Collapsed and at least 24 fixed hours
+// returns FullDay before checking bounds. Short positive spans use Between.
 func Until(end Time, duration time.Duration, bounds temporal.Bounds) (Interval, error) {
 	if duration < 0 {
 		return Interval{}, temporal.ErrStep
@@ -37,6 +41,8 @@ func Until(end Time, duration time.Duration, bounds temporal.Bounds) (Interval, 
 }
 
 // Around constructs a daily interval extending radius on both sides.
+// Negative radius fails, doubling is overflow-checked, and zero is Collapsed.
+// A full-day result follows Since and does not retain the supplied bounds.
 func Around(center Time, radius time.Duration, bounds temporal.Bounds) (Interval, error) {
 	if radius < 0 {
 		return Interval{}, temporal.ErrStep

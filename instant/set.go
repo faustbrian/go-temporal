@@ -162,7 +162,9 @@ func (s Set) Union(other Set) (Set, error) {
 	return NewSet(limits, combined...)
 }
 
-// Intersect returns the normalized intersection with other in O(n+m) time.
+// Intersect scans the two normalized sets in O(n+m), then reconstructs through
+// NewSet, including stable sorting of the k results. The whole operation is not
+// solely that linear scan; receiver limits govern the returned set.
 func (s Set) Intersect(other Set) (Set, error) {
 	limits := s.effectiveLimits()
 	result := make([]Period, 0, min(len(s.periods), len(other.periods)))

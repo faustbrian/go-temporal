@@ -1,5 +1,16 @@
 // Package timeofday provides immutable date-independent local time values and
-// circular daily interval algebra.
+// circular daily interval algebra over fixed offsets from 00:00 through 24:00.
+// New or Parse constructs valid Time values; zero is ordinary midnight without
+// printed seconds. Time equality compares offset, not preserved text precision.
+//
+// Between requires distinct endpoints; Collapsed and FullDay are explicit kinds.
+// A zero Interval is a degenerate Ordinary value, not the Collapsed marker.
+// IntervalSet snapshots and normalizes linear segments, splitting circular input
+// at midnight. Stored limits govern set operations; local offsets do not model
+// DST or leap seconds. Apply/ToInstant delegate explicit date/location/resolution
+// to pinned Calendar v2, so civil full days need not be 24 elapsed hours.
+// Values are immutable and own no clock/IO/background work; synchronous iterators
+// and returned slice snapshots leave callback/lifecycle ownership to callers.
 package timeofday
 
 import (
@@ -257,7 +268,9 @@ func (t Time) Clamp(minimum, maximum Time) (Time, error) {
 	return t, nil
 }
 
-// Shift adds a fixed duration according to policy.
+// Shift adds a fixed duration according to policy. A zero duration returns t
+// unchanged before validating policy; nonzero shifts validate policy and reset
+// presentation to nine fractional digits. Wrap maps 24:00 onto the midnight cycle.
 func (t Time) Shift(duration time.Duration, policy WrapPolicy) (Time, error) {
 	if duration == 0 {
 		return t, nil

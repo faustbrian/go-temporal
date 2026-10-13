@@ -16,7 +16,14 @@ inferred: callers choose `Collapsed` or `FullDay`.
 
 ## Allen relations
 
-Relations compare declared endpoints and require non-empty intervals.
+Relations compare declared endpoints and reject empty operands. The table below
+is the nondegenerate Allen domain. In the actual instant/date implementations,
+shared-end/start checks precede full endpoint equality; closed degenerate points
+therefore follow seam-check precedence, not a verified singleton Allen extension.
+Use `Equal` or `SetEqual` for equality and represented membership predicates for
+singletons. Civil-date relation ordering uses declared endpoints, not the
+canonical included-date range. This source-derived limitation does not supersede
+the semantic specification or its desired relation laws.
 
 | Relation | Endpoint truth | Converse |
 |---|---|---|

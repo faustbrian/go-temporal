@@ -1,4 +1,17 @@
-// Package notation provides strict codecs for temporal interval notation.
+// Package notation implements pinned interval/fixed-duration profiles, not full
+// ISO standards. ParseInstant delegates endpoints to Go time.RFC3339Nano after
+// byte/UTF-8 and dot-fraction checks; Date and local-time parsing have their own
+// exact grammars. ISO8601 start/end implies ClosedOpen; ISO80000 and Bourbaki
+// are explicit bracket alphabets. See docs/specification-decisions.md (RFC3339
+// and pinned compatibility profile 469603239dbe700739c29b4c532a90382b6cbedf).
+//
+// Limits zero fields resolve to defaults. Formatting preserves selected bounds
+// but is not general revalidation or a same-limit parse round-trip promise:
+// precision is a parse setting, output checks can follow text construction, and
+// in-memory values can lie outside endpoint parser domains. Calls borrow inputs,
+// return new text/values or zero results on failure, and retain no IO resources.
+// Pinned Go parser permissiveness is not certification of the desired strict
+// profile; normative decisions and conformance expectations remain separate.
 package notation
 
 import (
@@ -28,7 +41,11 @@ const (
 	Bourbaki
 )
 
-// ParseInstant decodes one complete bounded instant interval.
+// ParseInstant decodes one complete interval with resolved byte/UTF-8/bounds
+// checks and zero Period on failure. Dot-fraction digit counting precedes the
+// pinned Go RFC3339Nano parser; other forms accepted by that parser are not all
+// covered by this local precision check. This existing admission limitation is
+// not a strict-RFC conformance guarantee or an intended policy interpretation.
 func ParseInstant(value string, format Format, limits temporal.Limits) (instant.Period, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {
@@ -97,7 +114,11 @@ func boundedParseError(limits temporal.Limits, stage string, cause error) error 
 	return diagnostic.New(limits.ErrorBytes, "temporal: parse error: "+stage, causes...)
 }
 
-// FormatInstant encodes a bounded instant interval without semantic loss.
+// FormatInstant emits declared endpoints in Go RFC3339Nano spelling and the
+// selected bounds profile; ISO8601 rejects non-ClosedOpen bounds. Location
+// identity is not encoded. It does not reparse endpoints or enforce parse
+// Precision/year-domain validity; FormatBytes is checked after text assembly.
+// Returns empty text on error, not a universal same-limit round-trip promise.
 func FormatInstant(period instant.Period, format Format, limits temporal.Limits) (string, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {

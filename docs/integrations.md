@@ -12,14 +12,15 @@ implicit gap/fold choice.
 `adapters/validation` returns immutable `validation` reports with stable
 codes: `temporal_empty`, `time_of_day_range`, and `fixed_duration_range`.
 
-`adapters/config` wrappers implement atomic text decoding recognized by
-`config`. Keep the wrapper in configuration structs and call `Value()` after
-successful loading.
+`adapters/config` wrappers implement transactional text decoding recognized by
+`config`: assignment occurs only after parsing succeeds, but shared mutable
+wrappers require caller synchronization. Keep the wrapper in configuration structs
+and call `Value()` after successful loading.
 
 `adapters/wire.Document` and `CollectionDocument` are format-neutral and carry
 JSON/YAML/TOML tags. They may be passed through the corresponding `wire`
-encoder. Their JSON helpers are strict, bounded conveniences for consumers
-that need no broader wire stack.
+encoder. Their JSON helpers apply the admission documented in [encoding](encoding.md);
+other codecs do not automatically inherit those structural checks.
 
 `adapters/postgres` maps finite Temporal periods and normalized sets to pgx
 ranges and multiranges and supplies nullable `database/sql` wrappers. It owns

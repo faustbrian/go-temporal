@@ -104,7 +104,7 @@ fmt.Println(night.Kind(), night.Duration(), offHours.Len(), instantNight.Start()
 - `adapters/postgres`: loss-checked PostgreSQL range and multirange adapters.
 - `adapters/wire`: versioned format-neutral scalar and set documents.
 - `adapters/validation`: deterministic `validation` rules.
-- `adapters/config`: atomic `config` text wrappers.
+- `adapters/config`: transactional `config` text wrappers (not concurrent atomics).
 - `temporaltest`: exhaustive relation fixtures and set assertions.
 
 The released `postgres`, `temporalwire`, `temporalvalidation`, and

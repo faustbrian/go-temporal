@@ -1,4 +1,13 @@
-// Package instant provides immutable bounded intervals over time.Time instants.
+// Package instant provides immutable dense intervals over time.Time instants.
+// New validates ordering/bounds and strips monotonic readings, retaining endpoint
+// locations. The zero Period is anchored empty; Point creates a closed singleton.
+// Endpoint Allen classification is separate from represented-set membership.
+//
+// Set copies input/output slices and normalizes endpoints; zero sets are empty
+// with default limits. Operations return new values and use receiver limits.
+// Iterators/callbacks execute synchronously, own no goroutines, and cannot preempt
+// blocking or panicking caller code. Scalar algebra owns no clock or persistence;
+// explicit civil snapping delegates to the pinned Calendar v2 timezone contract.
 package instant
 
 import (
@@ -77,8 +86,11 @@ func (p Period) Includes(value time.Time) bool {
 	return true
 }
 
-// RelationTo returns the unique Allen endpoint relation to other. Empty
-// intervals do not have an Allen relation.
+// RelationTo classifies declared endpoint ordering; empty operands return
+// RelationInvalid/ErrEmpty. Inclusion is not used beyond emptiness. Seam checks
+// precede full endpoint equality, so closed degenerate points follow that branch
+// precedence instead of the nondegenerate Allen table. Use Equal/SetEqual
+// for equality; represented membership is separate from endpoint classification.
 func (p Period) RelationTo(other Period) (temporal.Relation, error) {
 	if p.IsEmpty() || other.IsEmpty() {
 		return temporal.RelationInvalid, temporal.ErrEmpty

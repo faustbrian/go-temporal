@@ -13,12 +13,17 @@ import (
 	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
-// CollectionDocument is a stable wire envelope for one normalized interval
-// set. Values are canonical ISO 80000 elements in normalized order.
+// CollectionDocument is a caller-owned wire envelope for one interval set.
+// Factories produce normalized ISO 80000 elements; arbitrary struct values are
+// validated separately. Accessors and MarshalCollection borrow Values during
+// the call, so callers must prevent concurrent mutation.
 type CollectionDocument struct {
-	Version string   `json:"version" yaml:"version" toml:"version"`
-	Kind    Kind     `json:"kind" yaml:"kind" toml:"kind"`
-	Values  []string `json:"values" yaml:"values" toml:"values"`
+	// Version must equal Version1.
+	Version string `json:"version" yaml:"version" toml:"version"`
+	// Kind selects one of the three set kinds.
+	Kind Kind `json:"kind" yaml:"kind" toml:"kind"`
+	// Values is element notation, parsed and normalized by the typed accessor.
+	Values []string `json:"values" yaml:"values" toml:"values"`
 }
 
 // FromInstantSet constructs a versioned normalized instant-set document.
