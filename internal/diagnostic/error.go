@@ -4,7 +4,10 @@
 // It owns no IO and provides no erasure or independent retained-memory budget.
 package diagnostic
 
-import "unicode/utf8"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // Error holds immutable bounded display text and an outer cause snapshot.
 // Cause objects remain shared and caller-owned; their mutation and text are not
@@ -16,11 +19,12 @@ type Error struct {
 
 // New truncates message to at most maxBytes, returning empty display text for
 // non-positive limits. A truncated prefix is shortened to valid UTF-8; admitted
-// shorter strings are not revalidated. Prefix/string backing and cause objects
-// may remain shared, so callers must supply safe text/causes. No input is mutated.
+// shorter strings are not revalidated. Display text owns its backing storage;
+// cause objects remain borrowed, so callers must supply safe text/causes.
+// No input is mutated and arbitrary cause graphs are not redacted or copied.
 func New(maxBytes int, message string, causes ...error) error {
 	return &Error{
-		message: truncateUTF8(message, maxBytes),
+		message: strings.Clone(truncateUTF8(message, maxBytes)),
 		causes:  append([]error(nil), causes...),
 	}
 }

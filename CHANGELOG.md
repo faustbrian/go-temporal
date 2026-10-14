@@ -11,6 +11,38 @@ This project follows Semantic Versioning. Dates use ISO 8601.
   intersection complexity and document source-visible precision and degenerate
   relation caveats without changing the Temporal v2 API or runtime behavior.
 
+## 2.0.2 - 2026-10-14
+
+### Fixed
+
+- Classify coincident non-empty closed singleton endpoints as Equal in instant
+  and civil-date relations without changing structural or represented-set equality.
+- Restore TEMPORAL-DEC-001 endpoint admission: reject one-digit hours, comma
+  fractions, offsets of 24 hours or 60 minutes, and excess fractional precision.
+  Canonical and retained adapters share the parser: configuration retains prior
+  values and wire returns zero on refusal. Valid numeric offsets and nanosecond
+  fractions remain.
+- Detach bounded diagnostic text from input backing storage while preserving safe
+  classification and caller-owned cause objects. Declare the existing internal
+  diagnostic package in the native inventories.
+
+### Source accountability
+
+Prepared from 9 non-merge commits after public v2.0.1 source
+`9464371d0d72094c2096799de24e37389d1a5a99` through
+`0c7a2d18c5b452c467173dc31f1a2b78f1aa31f9`. The restoration is delivered
+separately after this frozen range; other Unreleased notes remain.
+
+- `b0e0111a52e42e3bf6f7fb403842469000a66c61` — ci: use patched documentation tooling
+- `fe964990960faf83f65147d77838ba59a813c945` — ci: adopt bounded published verification
+- `01aa3dc435877e0c4f564c0df90ff5166c8d7b94` — docs: standardize repository development policy
+- `78741c274d231addd6f323d115f649f419bf3869` — chore: cover non-Go dependency updates
+- `62d7193e16e2f87785f5757e46674bfc73afcbe5` — chore(ci): pin shared tooling to v2.3.0
+- `0e407212e5b10f9fcbeaf0ecd4b9b0db852b2302` — chore(ci): align manual tooling source pins
+- `c7c36fd8865af6d1b7d52a776a07cfc926579c19` — docs: clarify temporal admission and ownership
+- `762de8ebeddc393a320e705091c9914d5a7859b2` — chore: enforce source documentation contracts
+- `0c7a2d18c5b452c467173dc31f1a2b78f1aa31f9` — docs: align adoption and documentation navigation
+
 ## 2.0.1 - 2026-10-07
 
 ### Changed

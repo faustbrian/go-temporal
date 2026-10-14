@@ -94,6 +94,18 @@
         },
         {
           "module_directory": ".",
+          "directory": "internal/diagnostic",
+          "name": "diagnostic",
+          "import_path": "github.com/faustbrian/go-temporal/v2/internal/diagnostic",
+          "kind": "internal",
+          "production": true,
+          "executable": true,
+          "coverage_required": true,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
           "directory": "notation",
           "name": "notation",
           "import_path": "github.com/faustbrian/go-temporal/v2/notation",
@@ -293,7 +305,7 @@
           "release": "in-progress"
         }
       },
-      "version": "2.0.1",
+      "version": "2.0.2",
       "tag_prefix": "v",
       "owned_dependencies": [
         "github.com/faustbrian/go-calendar/v2",

@@ -2,15 +2,13 @@
 
 [Documentation index](README.md)
 
-Parsers check UTF-8, complete notation structure, local precision checks,
-arithmetic overflow, and selected formats. Instant endpoints additionally
-delegate to Go `time.Parse(time.RFC3339Nano)`. The local fractional-digit check
-recognizes a dot; the pinned Go 1.27.2 fallback parser also admits comma fractions
-and truncates excess fractional digits. Consequently the strict DEC-001 profile
-is an expectation, not a blanket guarantee for every delegated endpoint spelling.
-This admission-path caveat is source-derived, not newly exercised interoperability
-or an intentional profile extension. Bracketed forms separately check their
-separator structure.
+Parsers check UTF-8, complete notation structure, precision, arithmetic overflow
+and selected formats. Instant endpoints enforce TEMPORAL-DEC-001: two-digit
+hours, dot-only fractions within the configured precision (at most nine digits),
+and Z or numeric offsets with hours below 24 and minutes below 60. The complete
+Go RFC3339Nano parser validates the remaining date/time fields; local checks
+reject its permissive fallback extensions. Parsed numeric offsets remain
+observable. Bracketed forms separately check their separator structure.
 
 - ISO 8601 `start/end` implies `ClosedOpen`; formatting another bound mode is
   rejected as lossy.
@@ -45,6 +43,7 @@ JSON structure validation rejects repeated exact key strings; field binding stil
 uses `encoding/json` matching rules. Applications must synchronize mutable wrapper
 and document fields. Collection accessors borrow `Values` during the call; returned
 sets own their storage. Boundary diagnostics select safe causes explicitly; the
-internal diagnostic helper alone is not a redactor for arbitrary text or causes.
+internal diagnostic helper owns its bounded display text, but is not a redactor
+for arbitrary text or caller-owned cause objects.
 
 Continue with [API reference](api.md).

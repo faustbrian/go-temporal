@@ -1,6 +1,6 @@
 // Package notation implements pinned interval/fixed-duration profiles, not full
-// ISO standards. ParseInstant delegates endpoints to Go time.RFC3339Nano after
-// byte/UTF-8 and dot-fraction checks; Date and local-time parsing have their own
+// ISO standards. ParseInstant enforces strict RFC3339Nano endpoints with
+// byte/UTF-8 and fractional-precision checks; Date and local-time parsing have their own
 // exact grammars. ISO8601 start/end implies ClosedOpen; ISO80000 and Bourbaki
 // are explicit bracket alphabets. See docs/specification-decisions.md (RFC3339
 // and pinned compatibility profile 469603239dbe700739c29b4c532a90382b6cbedf).
@@ -10,8 +10,8 @@
 // precision is a parse setting, output checks can follow text construction, and
 // in-memory values can lie outside endpoint parser domains. Calls borrow inputs,
 // return new text/values or zero results on failure, and retain no IO resources.
-// Pinned Go parser permissiveness is not certification of the desired strict
-// profile; normative decisions and conformance expectations remain separate.
+// The complete Go parser validates dates and times; local guards reject its
+// permissive fallback extensions outside the selected strict endpoint profile.
 package notation
 
 import (
@@ -42,10 +42,9 @@ const (
 )
 
 // ParseInstant decodes one complete interval with resolved byte/UTF-8/bounds
-// checks and zero Period on failure. Dot-fraction digit counting precedes the
-// pinned Go RFC3339Nano parser; other forms accepted by that parser are not all
-// covered by this local precision check. This existing admission limitation is
-// not a strict-RFC conformance guarantee or an intended policy interpretation.
+// checks and zero Period on failure. Endpoints require two-digit hours, dot-only
+// fractions within Precision, and Z or numeric offsets with hours below 24 and
+// minutes below 60. Date/time validation uses the pinned Go RFC3339Nano parser.
 func ParseInstant(value string, format Format, limits temporal.Limits) (instant.Period, error) {
 	limits = limits.Resolve()
 	if err := limits.Validate(); err != nil {
@@ -246,12 +245,26 @@ func parseInstant(value string, precision int) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, err
 	}
+	// Go's fallback parser admits one-digit hours, comma fractions and offsets
+	// of 24 hours or 60 minutes. Parsing first establishes all other field and
+	// length invariants while these checks restore the selected strict profile.
+	if len(value) < 20 || value[13] != ':' || value[19] == ',' {
+		return time.Time{}, temporal.ErrParse
+	}
+	if value[len(value)-1] != 'Z' {
+		zone := value[len(value)-6:]
+		if zone[1:3] > "23" || zone[4:6] > "59" {
+			return time.Time{}, temporal.ErrParse
+		}
+	}
 
 	return parsed, nil
 }
 
 func fractionDigits(value string) int {
-	dot := strings.IndexByte(value, '.')
+	// Count Go's comma fallback before rejecting its syntax so excess precision
+	// retains the same admission category as a dot fraction.
+	dot := strings.IndexAny(value, ".,")
 	if dot < 0 {
 		return 0
 	}

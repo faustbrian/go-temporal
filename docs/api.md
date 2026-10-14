@@ -63,7 +63,7 @@ scalar and normalized-set wire envelopes.
 `adapters/validation` supplies deterministic validators. The released `postgres`, `temporalwire`,
 `temporalconfig`, and `temporalvalidation` packages retain their named types
 and signatures as compatibility facades. `temporaltest` supplies exhaustive
-nondegenerate Allen fixtures and set assertions.
+non-degenerate Allen fixtures and set assertions.
 
 The Go package documentation is the signature-level source of truth:
 

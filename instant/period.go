@@ -87,13 +87,15 @@ func (p Period) Includes(value time.Time) bool {
 }
 
 // RelationTo classifies declared endpoint ordering; empty operands return
-// RelationInvalid/ErrEmpty. Inclusion is not used beyond emptiness. Seam checks
-// precede full endpoint equality, so closed degenerate points follow that branch
-// precedence instead of the nondegenerate Allen table. Use Equal/SetEqual
-// for equality; represented membership is separate from endpoint classification.
+// RelationInvalid/ErrEmpty. Inclusion is not used beyond emptiness. Matching
+// endpoints are Equal, including coincident closed singletons. Represented
+// membership is separate from endpoint classification and structural equality.
 func (p Period) RelationTo(other Period) (temporal.Relation, error) {
 	if p.IsEmpty() || other.IsEmpty() {
 		return temporal.RelationInvalid, temporal.ErrEmpty
+	}
+	if p.start.Equal(other.start) && p.end.Equal(other.end) {
+		return temporal.Equal, nil
 	}
 
 	if p.end.Before(other.start) {

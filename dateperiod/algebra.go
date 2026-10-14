@@ -6,13 +6,15 @@ import (
 )
 
 // RelationTo classifies declared endpoints, not canonical included-date ranges.
-// Empty operands return RelationInvalid/ErrEmpty. Equal seam checks run before
-// full endpoint equality, including for same-endpoint singleton declarations;
-// degenerate declarations therefore do not follow the nondegenerate Allen table.
-// Use Equal or SetEqual when equality rather than endpoint classification matters.
+// Empty operands return RelationInvalid/ErrEmpty. Matching declared endpoints
+// are Equal, including coincident closed singletons. Use SetEqual when equality
+// of represented dates rather than endpoint classification matters.
 func (p Period) RelationTo(other Period) (temporal.Relation, error) {
 	if p.IsEmpty() || other.IsEmpty() {
 		return temporal.RelationInvalid, temporal.ErrEmpty
+	}
+	if compareDate(p.start, other.start) == 0 && compareDate(p.end, other.end) == 0 {
+		return temporal.Equal, nil
 	}
 
 	if compareDate(p.end, other.start) < 0 {
