@@ -46,8 +46,6 @@ func (p Period) RelationTo(other Period) (temporal.Relation, error) {
 		switch endComparison {
 		case -1:
 			return temporal.Starts, nil
-		case 0:
-			return temporal.Equal, nil
 		default:
 			return temporal.StartedBy, nil
 		}
