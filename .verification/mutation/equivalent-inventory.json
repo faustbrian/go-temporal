@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "packages": [
+    {
+      "module_directory": ".",
+      "package_directory": "internal/diagnostic",
+      "source_digest": "855bc245e3791491d123dae5e9ee62385b57eeeb79191cb55989abb8e72506b1",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "390cf4085a0063fe5dcaa29ce942ea4cb8c7876347da90376b65dc8c5c811104",
+      "mutations": [
+        {
+          "file_name": "error.go",
+          "type": "CONDITIONALS_BOUNDARY",
+          "line": 40,
+          "column": 14,
+          "contract_domain": "Diagnostic New over all int limits, arbitrary Go strings and caller-owned causes on supported 32-bit and 64-bit architectures",
+          "reason": "The <=0 to <0 replacement differs only when maxBytes is zero. Empty strings return empty through the following length comparison; nonempty strings are sliced to [:0], which is valid UTF-8 and needs no trimming. Both paths feed strings.Clone(\"\") into the same Error constructor and copy the same outer cause slice. Exact display bytes, errors.Is/As and Unwrap cause identity and slice ownership, input immutability and absence of retained message backing are unchanged. Negative and positive limits are identical. This proof includes malformed UTF-8 and does not assume the narrower static ASCII current callers. Independently source-reviewed by /root/schema_repair on 2026-10-14; expires 2026-11-14 or earlier material change to diagnostic helper, Clone, UTF-8 behavior, cause construction, caller contract, Go toolchain or verifier inputs. No deep-cause copying, redaction, erasure or total-time guarantee is inferred; every other non-killed mutant remains fatal."
+        }
+      ]
+    }
+  ]
+}
