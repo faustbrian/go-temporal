@@ -63,12 +63,12 @@ GOMAXPROCS=2 go test -run '^$' -fuzz '^FuzzInstantNotation$' -fuzztime=2s -paral
 golib mutation --module . --package ./notation
 ```
 
-Relevant PostgreSQL changes use a disposable database and exercise canonical
-and retained adapters. Never use shared or production data:
+Relevant PostgreSQL changes use a disposable database and exercise the
+adapter. Never use shared or production data:
 
 ```bash
 TEMPORAL_POSTGRES_DSN='postgres://temporal:temporal@127.0.0.1:5432/temporal_test?sslmode=disable' \
-go test -tags=integration -run '^TestPostgreSQLRangeAndMultirangeRoundTrips$' -count=1 -timeout=2m ./adapters/postgres ./postgres
+go test -tags=integration -run '^TestPostgreSQLRangeAndMultirangeRoundTrips$' -count=1 -timeout=2m ./adapters/postgres
 ```
 
 `make check-full` retains the complete full-assurance contract, all fourteen

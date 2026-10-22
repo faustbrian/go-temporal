@@ -249,7 +249,7 @@ jobs:
         with:
           go-version: '1.27.2'
           cache: false
-      - name: Verify canonical and retained PostgreSQL adapters
+      - name: Verify the PostgreSQL adapter
         shell: bash
         env:
           TEMPORAL_POSTGRES_DSN: postgres://temporal:temporal@localhost:5432/temporal_test?sslmode=disable
@@ -264,10 +264,10 @@ jobs:
           trap 'find "$task_cache" -type d -exec chmod u+w {} +; find "$task_cache" -depth -delete' EXIT
           export GOCACHE="$task_cache/build" GOMODCACHE="$task_cache/modules" GOTMPDIR="$task_cache/tmp"
           mkdir "$GOCACHE" "$GOMODCACHE" "$GOTMPDIR"
-          go test -tags=integration ./adapters/postgres ./postgres -run '^TestPostgreSQLRangeAndMultirangeRoundTrips$' -count=1 -timeout=120s -json | tee "$task_cache/tests.json"
+          go test -tags=integration ./adapters/postgres -run '^TestPostgreSQLRangeAndMultirangeRoundTrips$' -count=1 -timeout=120s -json | tee "$task_cache/tests.json"
           jq -s -e '
             ([.[] | select(.Test == "TestPostgreSQLRangeAndMultirangeRoundTrips" and .Action == "pass") | .Package] | sort) ==
-            ["github.com/faustbrian/go-temporal/v2/adapters/postgres", "github.com/faustbrian/go-temporal/v2/postgres"] and
+            ["github.com/faustbrian/go-temporal/v3/adapters/postgres"] and
             ([.[] | select(.Test == "TestPostgreSQLRangeAndMultirangeRoundTrips" and .Action == "skip")] | length) == 0
           ' "$task_cache/tests.json"
 

@@ -16,8 +16,8 @@ the report; the owner explains any changed target to the reporter.
 ## Supported versions
 
 The latest minor of each supported released major receives security fixes.
-The v1.1 line remains supported; the v2 security model applies to the `/v2`
-module. Published tags and GitHub releases establish version availability.
+The v1.1 and v2 lines remain supported; the security model applies to the
+`/v3` module and the `/v2` line. Published tags and GitHub releases establish version availability.
 
 ## Threat model
 

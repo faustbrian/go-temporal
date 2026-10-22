@@ -18,7 +18,6 @@ them.
 
 ### To v2
 
-
 Use `github.com/faustbrian/go-temporal/v2` and add `/v2` before the package
 suffix in every Temporal import. Update directly composed dependencies and
 consumers together: a v1 `instant.Period`, `temporal.Limits`, or facade value is
@@ -98,18 +97,15 @@ All variable-output operations accept `temporal.Limits` and may return
 
 ## Adapter import migration
 
-| Retained compatibility import | Canonical import |
+| Removed v2 import | v3 import |
 |---|---|
-| `go-temporal/v2/temporalconfig` | `go-temporal/v2/adapters/config` |
-| `go-temporal/v2/postgres` | `go-temporal/v2/adapters/postgres` |
-| `go-temporal/v2/temporalvalidation` | `go-temporal/v2/adapters/validation` |
-| `go-temporal/v2/temporalwire` | `go-temporal/v2/adapters/wire` |
+| `go-temporal/v2/temporalconfig` | `go-temporal/v3/adapters/config` |
+| `go-temporal/v2/postgres` | `go-temporal/v3/adapters/postgres` |
+| `go-temporal/v2/temporalvalidation` | `go-temporal/v3/adapters/validation` |
+| `go-temporal/v2/temporalwire` | `go-temporal/v3/adapters/wire` |
 
-Change imports when convenient; compatibility signatures and named-type identities
-remain supported within the same module major. The compatibility paths remain for the
-longer of 180 days after successor public availability and two subsequently
-published stable root-module minor releases. Removal additionally requires an
-authorized next major release and consumer verification.
+The v2 line keeps the compatibility paths with their named-type identities;
+v3 removes them.
 
 ## Unsupported charting gap
 

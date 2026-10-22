@@ -26,5 +26,4 @@ other codecs do not automatically inherit those structural checks.
 
 `adapters/postgres` maps finite Temporal periods and normalized sets to pgx
 ranges and multiranges and supplies nullable `database/sql` wrappers. It owns
-no connection or transaction. The four legacy integration imports remain
-supported compatibility facades during the documented migration interval.
+no connection or transaction.

@@ -4,8 +4,9 @@
 
 ## Threat model revision 2 (2026-10-01)
 
-This model covers the Temporal `/v2` module and its retained compatibility
-packages; it does not certify the earlier v1.1.0 release. Public tags and
+This model covers the Temporal `/v3` module; the `/v2` line and its retained
+compatibility packages keep the same properties. It does not certify the
+earlier v1.1.0 release. Public tags and
 releases establish version availability. Calendar major adoption requires
 explicit nominal-type and consumer reconciliation. This model must be reviewed
 when a new input format, persistence adapter,

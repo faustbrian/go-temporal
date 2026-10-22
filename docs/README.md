@@ -20,8 +20,8 @@
 - [Support](../SUPPORT.md)
 - [Changelog](../CHANGELOG.md)
 
-Temporal is one root module. The target-oriented adapter packages and their
-retained compatibility paths are released with that module; they are not
+Temporal is one root module. The target-oriented adapter packages are
+released with that module; they are not
 independently versioned nested modules.
 
 ## Ecosystem navigation
