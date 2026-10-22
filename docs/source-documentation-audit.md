@@ -1,5 +1,8 @@
 # Source documentation audit
 
+This audit describes the v2 tree. Version 3 removed the facades and the
+successor parity test it lists; it is not refreshed for v3.
+
 [Documentation index](README.md)
 
 ## Pre-edit acceptance, owner and selected checks
