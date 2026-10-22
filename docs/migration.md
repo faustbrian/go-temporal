@@ -10,10 +10,10 @@ Replace `/v2` with `/v3` in every Temporal import, and replace the removed
 `postgres`, `temporalwire`, `temporalconfig` and `temporalvalidation` facades
 with `adapters/postgres`, `adapters/wire`, `adapters/config` and
 `adapters/validation`. `adapters/validation` now returns
-`github.com/faustbrian/go-validation/v3` validators and `adapters/config`
-builds on `go-config/v3`; move those dependencies in the same change. Wire
+`github.com/faustbrian/go-validation/v3` validators; move that dependency in
+the same change. Wire
 schema, SQL range formats and represented-set semantics are unchanged. The
-facades are removed before their announced window ended; the v2 line keeps
+facades were removed before their announced window ended; the v2 line keeps
 them.
 
 ### To v2
@@ -87,7 +87,7 @@ the unit, direction, location, and `calendar` gap/fold policy. PHP
 `Time::applyTo` becomes `Time.Apply`, and circular `Interval::toNative` becomes
 `Interval.ToInstant`; both require the same explicit civil context.
 
-Unversioned `jsonSerialize` payloads become `temporalwire.Document` for scalar
+Unversioned `jsonSerialize` payloads become `adapters/wire.Document` for scalar
 values and `CollectionDocument` for normalized sets. Decoders reject unknown
 fields and trailing data instead of accepting partially understood payloads.
 

@@ -152,7 +152,7 @@ jobs:
               (.Output | contains("Union allocated before refusing input_periods")))
           ' "${proof_root}/counterfactual.json"
           git diff --exit-code -- dateperiod/set.go
-      - name: Qualify mutation for all thirteen root-module packages
+      - name: Qualify mutation for all root-module packages
         if: inputs.verifier_diagnostic
         timeout-minutes: 140
         working-directory: producer

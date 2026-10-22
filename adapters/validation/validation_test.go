@@ -1,6 +1,7 @@
 package temporalvalidation_test
 
 import (
+	"context"
 	"errors"
 	"testing"
 	"time"
@@ -118,5 +119,23 @@ func TestRangeValidatorsIncludeBothExactEndpointsAndSingletonRanges(t *testing.T
 	if !singleDuration.Validate(validation.Context{}, minimumDuration).Empty() ||
 		!singleDuration.Validate(validation.Context{}, maximumDuration).HasCode("fixed_duration_range") {
 		t.Fatal("singleton duration range did not accept only its endpoint")
+	}
+}
+
+// Applications merge a cancelled request's context report with the adapter's
+// report; both the cancellation and the adapter violation must survive.
+func TestReportsMergeWithCanceledContextReport(t *testing.T) {
+	t.Parallel()
+
+	vctx, err := validation.NewContext(validation.DefaultLimits())
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	merged := validation.ContextReport(vctx, ctx).Merge(temporalvalidation.InstantNonEmpty().Validate(vctx, instant.Period{}))
+	if !errors.Is(merged.Err(), context.Canceled) || !errors.Is(merged.Err(), validation.ErrInvalid) ||
+		!merged.HasCode("temporal_empty") {
+		t.Fatalf("merged report = %v, err=%v", merged, merged.Err())
 	}
 }

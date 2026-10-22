@@ -1,4 +1,3 @@
-//lint:file-ignore SA1019 Compatibility coverage intentionally exercises deprecated paths.
 package temporal_test
 
 import (
@@ -10,9 +9,9 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar/v2"
 	temporal "github.com/faustbrian/go-temporal/v3"
-	newconfig "github.com/faustbrian/go-temporal/v3/adapters/config"
-	newpostgres "github.com/faustbrian/go-temporal/v3/adapters/postgres"
-	newwire "github.com/faustbrian/go-temporal/v3/adapters/wire"
+	temporalconfig "github.com/faustbrian/go-temporal/v3/adapters/config"
+	temporalpostgres "github.com/faustbrian/go-temporal/v3/adapters/postgres"
+	temporalwire "github.com/faustbrian/go-temporal/v3/adapters/wire"
 	"github.com/faustbrian/go-temporal/v3/notation"
 	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
@@ -48,7 +47,7 @@ func TestHostileDiagnosticsAreBoundedAndSanitized(t *testing.T) {
 		"wire scalar member": {
 			limit: 24,
 			run: func() error {
-				_, err := newwire.Unmarshal(
+				_, err := temporalwire.Unmarshal(
 					[]byte(`{"version":"temporal/v1","`+secret+`":true}`),
 					temporal.Limits{ErrorBytes: 24},
 				)
@@ -59,7 +58,7 @@ func TestHostileDiagnosticsAreBoundedAndSanitized(t *testing.T) {
 		"wire collection member": {
 			limit: 24,
 			run: func() error {
-				_, err := newwire.UnmarshalCollection(
+				_, err := temporalwire.UnmarshalCollection(
 					[]byte(`{"version":"temporal/v1","`+secret+`":true}`),
 					temporal.Limits{ErrorBytes: 24},
 				)
@@ -109,16 +108,16 @@ func TestAdapterHostileTextBoundariesUseTheSameDiagnosticContract(t *testing.T) 
 
 	secret := strings.Repeat("private-value-", 100)
 	checks := map[string]func() error{
-		"successor config": func() error {
-			var value newconfig.InstantPeriod
+		"config adapter": func() error {
+			var value temporalconfig.InstantPeriod
 			return value.UnmarshalText([]byte(secret))
 		},
-		"successor postgres": func() error {
-			var value newpostgres.InstantRange
+		"postgres adapter": func() error {
+			var value temporalpostgres.InstantRange
 			return value.Scan(secret)
 		},
-		"successor wire": func() error {
-			_, err := newwire.Unmarshal([]byte(`{"`+secret+`":true}`), temporal.Limits{})
+		"wire adapter": func() error {
+			_, err := temporalwire.Unmarshal([]byte(`{"`+secret+`":true}`), temporal.Limits{})
 			return err
 		},
 	}
@@ -169,7 +168,7 @@ func TestWireCollectionLimitKeepsSafeStructuredCause(t *testing.T) {
 	t.Parallel()
 
 	payload := []byte(`{"version":"temporal/v1","kind":"instant-set","values":["a","b"]}`)
-	_, err := newwire.UnmarshalCollection(payload, temporal.Limits{InputPeriods: 1, ErrorBytes: 12})
+	_, err := temporalwire.UnmarshalCollection(payload, temporal.Limits{InputPeriods: 1, ErrorBytes: 12})
 	if err == nil || len(err.Error()) > 12 || !errors.Is(err, temporal.ErrLimit) {
 		t.Fatalf("err = %v", err)
 	}
@@ -221,13 +220,13 @@ func TestWireDateDiagnosticsPreserveCalendarClassification(t *testing.T) {
 
 	for name, run := range map[string]func() error{
 		"scalar": func() error {
-			_, err := newwire.Unmarshal([]byte(
+			_, err := temporalwire.Unmarshal([]byte(
 				`{"version":"temporal/v1","kind":"date-period","value":"[2026-02-30,2026-03-01)"}`,
 			), temporal.Limits{})
 			return err
 		},
 		"collection": func() error {
-			_, err := newwire.UnmarshalCollection([]byte(
+			_, err := temporalwire.UnmarshalCollection([]byte(
 				`{"version":"temporal/v1","kind":"date-set","values":["[2026-02-30,2026-03-01)"]}`,
 			), temporal.Limits{})
 			return err
@@ -246,14 +245,14 @@ func TestWireDateDiagnosticsPreserveCalendarClassification(t *testing.T) {
 func TestDirectWireDecodersBoundEveryTerminalError(t *testing.T) {
 	t.Parallel()
 
-	_, err := (newwire.Document{}).Time(temporal.Limits{ErrorBytes: 1})
+	_, err := (temporalwire.Document{}).Time(temporal.Limits{ErrorBytes: 1})
 	if err == nil || len(err.Error()) > 1 || !errors.Is(err, temporal.ErrUnsupported) {
 		t.Fatalf("Document.Time() error = %v", err)
 	}
 
-	document := newwire.CollectionDocument{
-		Version: newwire.Version1,
-		Kind:    newwire.KindInstantSet,
+	document := temporalwire.CollectionDocument{
+		Version: temporalwire.Version1,
+		Kind:    temporalwire.KindInstantSet,
 		Values: []string{
 			"[2026-01-01T00:00:00Z,2026-01-01T01:00:00Z)",
 			"[2026-01-02T00:00:00Z,2026-01-02T01:00:00Z)",

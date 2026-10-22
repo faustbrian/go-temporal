@@ -7,8 +7,8 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 ### Changed
 
 - Move the module to `github.com/faustbrian/go-temporal/v3` and adopt
-  `go-validation/v3` and `go-config/v3`; `adapters/validation` returns
-  Validation v3 validators.
+  `go-validation/v3`; `adapters/validation` returns Validation v3 validators.
+  Tests use `go-config/v3`; `adapters/config` does not import go-config.
 
 ### Removed
 

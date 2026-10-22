@@ -2,10 +2,13 @@
 
 [Documentation index](README.md)
 
-## Threat model revision 2 (2026-10-01)
+## Threat model revision 3 (2026-10-22)
 
 This model covers the Temporal `/v3` module; the `/v2` line and its retained
-compatibility packages keep the same properties. It does not certify the
+compatibility packages keep the same properties. Revision 3 reviewed the v3
+move to Validation v3, which `adapters/validation` exposes, and Config v3,
+which only tests use; neither adds an input format, callback surface or
+resource-producing operation. It does not certify the
 earlier v1.1.0 release. Public tags and
 releases establish version availability. Calendar major adoption requires
 explicit nominal-type and consumer reconciliation. This model must be reviewed
