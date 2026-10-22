@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
 )
 
 func TestDateSetAlgebraProperties(t *testing.T) {

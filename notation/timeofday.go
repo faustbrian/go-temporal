@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"unicode/utf8"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 // ParseDailyInterval decodes one complete ordinary, circular, collapsed, or

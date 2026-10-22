@@ -2,7 +2,22 @@
 
 This project follows Semantic Versioning. Dates use ISO 8601.
 
-## Unreleased
+## 3.0.0 - 2026-10-22
+
+### Changed
+
+- Move the module to `github.com/faustbrian/go-temporal/v3` and adopt
+  `go-validation/v3` and `go-config/v3`; `adapters/validation` returns
+  Validation v3 validators.
+
+### Removed
+
+- Remove the deprecated `postgres`, `temporalwire`, `temporalconfig` and
+  `temporalvalidation` facades. Import the matching `adapters/*` package. The
+  removal precedes the announced support window, which the v2 line continues
+  to honour.
+
+## Earlier unversioned notes (shipped by 2.0.3)
 
 ### Documentation
 

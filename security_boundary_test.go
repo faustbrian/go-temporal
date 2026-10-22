@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	config "github.com/faustbrian/go-temporal/v2/adapters/config"
-	wire "github.com/faustbrian/go-temporal/v2/adapters/wire"
-	"github.com/faustbrian/go-temporal/v2/instant"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	config "github.com/faustbrian/go-temporal/v3/adapters/config"
+	wire "github.com/faustbrian/go-temporal/v3/adapters/wire"
+	"github.com/faustbrian/go-temporal/v3/instant"
 )
 
 func TestWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *testing.T) {

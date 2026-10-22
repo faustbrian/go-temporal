@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 // FuzzDailyIntervalIteration exercises daily kinds, bounds and hostile steps.

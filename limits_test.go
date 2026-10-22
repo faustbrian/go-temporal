@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
 )
 
 func TestDefaultLimitsAreBounded(t *testing.T) {

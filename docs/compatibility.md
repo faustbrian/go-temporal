@@ -56,7 +56,7 @@ an intentional Go-native replacement or omission.
 | `fromRange` | explicit iterator/range conversion | diverges; no implicit PHP `DatePeriod` semantics |
 | `fromYear`, `fromIsoYear`, `fromSemester`, `fromQuarter`, `fromMonth`, `fromIsoWeek`, `fromDay` | `dateperiod` factories | supported; calendar arithmetic delegated |
 | `toIso80000`, `toBourbaki`, `toIso8601` | text codecs | supported; stable canonical output |
-| `jsonSerialize` | `temporalwire.Document` | supported; versioned strict JSON replaces unversioned magic serialization |
+| `jsonSerialize` | `adapters/wire.Document` | supported; versioned strict JSON replaces unversioned magic serialization |
 | `timeDuration` | `instant.Period.Duration` | supported; elapsed `time.Duration` |
 | `dateInterval` | calendar difference adapter | diverges; never returned for an instant period |
 | duration comparison methods | `Duration`, `CompareDuration` | supported; one comparison primitive plus predicates |
@@ -87,8 +87,8 @@ Typed PHP errors (`InvalidInterval`, `InaccessibleInterval`, and
 `errors.As`; error strings are not compatibility contracts.
 
 The additive `adapters/config`, `adapters/postgres`, `adapters/validation`, and
-`adapters/wire` paths are canonical. Their released predecessor imports remain
-source-compatible facades with distinct named-type identities. Hostile-input
+`adapters/wire` paths are the only integration paths; version 3 removed their
+predecessor facades. Hostile-input
 diagnostic text and access to unsafe parser-specific causes are intentionally
 corrected security behavior; stable Temporal classifications remain available.
 
@@ -101,7 +101,7 @@ corrected security behavior; stable Temporal classifications remain available.
 | `RoundingMode` cases | `timeofday.RoundingMode` | supported |
 | `Duration::of`, `zero`, `min`, `max`, `minOf`, `maxOf` | `NewDuration`, `ZeroDuration`, `Compare` | diverges; package-level extrema helpers are replaced by comparison and ordinary Go selection |
 | duration `fromDateInterval` | calendar adapter | diverges; rejects months/years without reference |
-| duration `fromFormat`, `format`, JSON | strict fixed ISO codec and `temporalwire` | diverges; PHP format tokens are not parsed and fixed ISO text is canonical |
+| duration `fromFormat`, `format`, JSON | strict fixed ISO codec and `adapters/wire` | diverges; PHP format tokens are not parsed and fixed ISO text is canonical |
 | `toDateInterval`, `total` | standard duration conversion | diverges; fractional totals use explicit quotient/remainder |
 | `isZero`, `negated`, `abs`, `sum`, `increase`, `decrease` | checked arithmetic | supported; overflow is typed |
 | `roundTo`, comparisons, `clamp`, `multipliedBy`, `dividedBy` | checked arithmetic | supported; division documents truncation and remainder |

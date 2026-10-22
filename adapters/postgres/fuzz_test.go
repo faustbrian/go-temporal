@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	postgres "github.com/faustbrian/go-temporal/v2/adapters/postgres"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	postgres "github.com/faustbrian/go-temporal/v3/adapters/postgres"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

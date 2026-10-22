@@ -6,10 +6,10 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar/v2"
 	calendartz "github.com/faustbrian/go-calendar/v2/timezone"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
-	"github.com/faustbrian/go-temporal/v2/instant"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
+	"github.com/faustbrian/go-temporal/v3/instant"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 func Example_instantPeriod() {

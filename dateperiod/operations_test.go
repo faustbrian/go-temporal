@@ -6,8 +6,8 @@ import (
 	"time"
 
 	calendar "github.com/faustbrian/go-calendar/v2"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
 )
 
 func TestDateImmutableReplacementAndCalendarMovement(t *testing.T) {

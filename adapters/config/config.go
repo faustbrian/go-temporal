@@ -7,12 +7,12 @@
 package temporalconfig
 
 import (
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
-	"github.com/faustbrian/go-temporal/v2/instant"
-	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
-	"github.com/faustbrian/go-temporal/v2/notation"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
+	"github.com/faustbrian/go-temporal/v3/instant"
+	"github.com/faustbrian/go-temporal/v3/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v3/notation"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 // InstantPeriod is a configuration boundary for an immutable instant period.

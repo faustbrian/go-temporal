@@ -60,13 +60,13 @@ from parser admission and pinned-standard-library endpoint delegation.
 values. `adapters/wire.Document` and `CollectionDocument` are the `temporal/v1` stable
 scalar and normalized-set wire envelopes.
 `adapters/config` supplies transactional text wrappers (not concurrent atomics).
-`adapters/validation` supplies deterministic validators. The released `postgres`, `temporalwire`,
-`temporalconfig`, and `temporalvalidation` packages retain their named types
-and signatures as compatibility facades. `temporaltest` supplies exhaustive
+`adapters/validation` supplies deterministic validators. Version 3 removed the
+former `postgres`, `temporalwire`, `temporalconfig`, and `temporalvalidation`
+facades. `temporaltest` supplies exhaustive
 non-degenerate Allen fixtures and set assertions.
 
 The Go package documentation is the signature-level source of truth:
 
 ```sh
-go doc -all github.com/faustbrian/go-temporal/v2/instant
+go doc -all github.com/faustbrian/go-temporal/v3/instant
 ```

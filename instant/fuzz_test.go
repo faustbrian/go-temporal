@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/instant"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/instant"
 )
 
 // FuzzInstantSplitting bounds endpoint offsets and split count for hostile steps.

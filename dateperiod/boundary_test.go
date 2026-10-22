@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
 )
 
 func assertDatePeriods(t *testing.T, got []dateperiod.Period, want ...[2]int) {

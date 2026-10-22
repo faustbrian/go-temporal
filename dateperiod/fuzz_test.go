@@ -3,8 +3,8 @@ package dateperiod_test
 import (
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
 )
 
 // FuzzDateSplitting bounds date offsets and exercises bounds and step inputs.

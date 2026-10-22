@@ -4,6 +4,21 @@
 
 ## Go major-version migration
 
+### To v3
+
+Replace `/v2` with `/v3` in every Temporal import, and replace the removed
+`postgres`, `temporalwire`, `temporalconfig` and `temporalvalidation` facades
+with `adapters/postgres`, `adapters/wire`, `adapters/config` and
+`adapters/validation`. `adapters/validation` now returns
+`github.com/faustbrian/go-validation/v3` validators and `adapters/config`
+builds on `go-config/v3`; move those dependencies in the same change. Wire
+schema, SQL range formats and represented-set semantics are unchanged. The
+facades are removed before their announced window ended; the v2 line keeps
+them.
+
+### To v2
+
+
 Use `github.com/faustbrian/go-temporal/v2` and add `/v2` before the package
 suffix in every Temporal import. Update directly composed dependencies and
 consumers together: a v1 `instant.Period`, `temporal.Limits`, or facade value is

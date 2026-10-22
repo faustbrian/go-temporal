@@ -4,7 +4,7 @@
 [![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-temporal/actions/workflows/ci.yml)
 [![Mutation](https://img.shields.io/badge/mutation-local_and_scheduled-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-structural_checks_in_CI-blue)](docs/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-temporal/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-temporal/v2)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-temporal/v3.svg)](https://pkg.go.dev/github.com/faustbrian/go-temporal/v3)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-temporal?sort=semver)](https://github.com/faustbrian/go-temporal/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -21,7 +21,7 @@ preserves useful mathematics without copying mutable or PHP-specific APIs.
 ## Install
 
 ```sh
-go get github.com/faustbrian/go-temporal/v2
+go get github.com/faustbrian/go-temporal/v3
 ```
 
 The minimum supported toolchain is Go 1.27.0. Civil-date features use
@@ -106,9 +106,8 @@ fmt.Println(night.Kind(), night.Duration(), offHours.Len(), instantNight.Start()
 - `adapters/config`: transactional `config` text wrappers (not concurrent atomics).
 - `temporaltest`: exhaustive relation fixtures and set assertions.
 
-The released `postgres`, `temporalwire`, `temporalvalidation`, and
-`temporalconfig` imports remain compatibility facades for the longer of 180
-days after successor availability and two subsequent stable minor releases.
+Version 3 removed the former `postgres`, `temporalwire`, `temporalvalidation`,
+and `temporalconfig` facades; import the matching `adapters/*` package.
 
 ## Compatibility status
 

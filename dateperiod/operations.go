@@ -2,7 +2,7 @@ package dateperiod
 
 import (
 	calendar "github.com/faustbrian/go-calendar/v2"
-	temporal "github.com/faustbrian/go-temporal/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
 )
 
 // WithStart returns a period with its civil start replaced.

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 func TestDailyUnionAdmitsNormalizedSegmentsBeforeCombining(t *testing.T) {

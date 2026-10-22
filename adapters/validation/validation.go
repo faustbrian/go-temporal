@@ -5,11 +5,11 @@
 package temporalvalidation
 
 import (
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
-	"github.com/faustbrian/go-temporal/v2/instant"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
-	validation "github.com/faustbrian/go-validation/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
+	"github.com/faustbrian/go-temporal/v3/instant"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
+	validation "github.com/faustbrian/go-validation/v3"
 )
 
 // InstantNonEmpty rejects instant periods representing the empty set.

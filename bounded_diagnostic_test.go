@@ -9,14 +9,12 @@ import (
 	"unicode/utf8"
 
 	calendar "github.com/faustbrian/go-calendar/v2"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	newconfig "github.com/faustbrian/go-temporal/v2/adapters/config"
-	newpostgres "github.com/faustbrian/go-temporal/v2/adapters/postgres"
-	newwire "github.com/faustbrian/go-temporal/v2/adapters/wire"
-	"github.com/faustbrian/go-temporal/v2/notation"
-	oldconfig "github.com/faustbrian/go-temporal/v2/temporalconfig" //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
-	"github.com/faustbrian/go-temporal/v2/temporalwire"             //nolint:staticcheck // Compatibility coverage exercises the deprecated path.
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	newconfig "github.com/faustbrian/go-temporal/v3/adapters/config"
+	newpostgres "github.com/faustbrian/go-temporal/v3/adapters/postgres"
+	newwire "github.com/faustbrian/go-temporal/v3/adapters/wire"
+	"github.com/faustbrian/go-temporal/v3/notation"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 func TestHostileDiagnosticsAreBoundedAndSanitized(t *testing.T) {
@@ -50,7 +48,7 @@ func TestHostileDiagnosticsAreBoundedAndSanitized(t *testing.T) {
 		"wire scalar member": {
 			limit: 24,
 			run: func() error {
-				_, err := temporalwire.Unmarshal(
+				_, err := newwire.Unmarshal(
 					[]byte(`{"version":"temporal/v1","`+secret+`":true}`),
 					temporal.Limits{ErrorBytes: 24},
 				)
@@ -61,7 +59,7 @@ func TestHostileDiagnosticsAreBoundedAndSanitized(t *testing.T) {
 		"wire collection member": {
 			limit: 24,
 			run: func() error {
-				_, err := temporalwire.UnmarshalCollection(
+				_, err := newwire.UnmarshalCollection(
 					[]byte(`{"version":"temporal/v1","`+secret+`":true}`),
 					temporal.Limits{ErrorBytes: 24},
 				)
@@ -113,10 +111,6 @@ func TestAdapterHostileTextBoundariesUseTheSameDiagnosticContract(t *testing.T) 
 	checks := map[string]func() error{
 		"successor config": func() error {
 			var value newconfig.InstantPeriod
-			return value.UnmarshalText([]byte(secret))
-		},
-		"legacy config": func() error {
-			var value oldconfig.InstantPeriod
 			return value.UnmarshalText([]byte(secret))
 		},
 		"successor postgres": func() error {

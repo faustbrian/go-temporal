@@ -3,8 +3,8 @@ package temporalwire_test
 import (
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	temporalwire "github.com/faustbrian/go-temporal/v2/adapters/wire"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	temporalwire "github.com/faustbrian/go-temporal/v3/adapters/wire"
 )
 
 // FuzzDocumentJSON exercises the scalar JSON admission boundary.

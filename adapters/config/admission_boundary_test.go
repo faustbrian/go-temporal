@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	config "github.com/faustbrian/go-temporal/v2/adapters/config"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	config "github.com/faustbrian/go-temporal/v3/adapters/config"
 )
 
 func TestConfigurationNilReceiversRejectWithoutPanic(t *testing.T) {

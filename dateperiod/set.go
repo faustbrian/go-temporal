@@ -6,7 +6,7 @@ import (
 	"sort"
 
 	calendar "github.com/faustbrian/go-calendar/v2"
-	temporal "github.com/faustbrian/go-temporal/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
 )
 
 // Set is an immutable normalized collection of disjoint civil-date periods.

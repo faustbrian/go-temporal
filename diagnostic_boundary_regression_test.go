@@ -7,11 +7,11 @@ import (
 	"time"
 	"unicode/utf8"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	config "github.com/faustbrian/go-temporal/v2/adapters/config"
-	wire "github.com/faustbrian/go-temporal/v2/adapters/wire"
-	"github.com/faustbrian/go-temporal/v2/instant"
-	"github.com/faustbrian/go-temporal/v2/notation"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	config "github.com/faustbrian/go-temporal/v3/adapters/config"
+	wire "github.com/faustbrian/go-temporal/v3/adapters/wire"
+	"github.com/faustbrian/go-temporal/v3/instant"
+	"github.com/faustbrian/go-temporal/v3/notation"
 )
 
 func TestRejectedEndpointDiagnosticsPreserveSafeClassificationAndOwnership(t *testing.T) {

@@ -5,12 +5,12 @@ import (
 	"time"
 
 	calendar "github.com/faustbrian/go-calendar/v2"
-	configdecode "github.com/faustbrian/go-config/v2/decode"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	temporalconfig "github.com/faustbrian/go-temporal/v2/adapters/config"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
-	"github.com/faustbrian/go-temporal/v2/instant"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	configdecode "github.com/faustbrian/go-config/v3/decode"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	temporalconfig "github.com/faustbrian/go-temporal/v3/adapters/config"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
+	"github.com/faustbrian/go-temporal/v3/instant"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 func TestConfigurationWrappersRoundTripCanonicalText(t *testing.T) {

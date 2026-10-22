@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v3/internal/diagnostic"
 )
 
 type boundaryCause struct{ message string }

@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 func mustTime(t *testing.T, hour, minute, second, nanosecond, digits int) timeofday.Time {

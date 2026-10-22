@@ -18,8 +18,8 @@ import (
 	calendar "github.com/faustbrian/go-calendar/v2"
 	calendartemporal "github.com/faustbrian/go-calendar/v2/adapters/temporal"
 	calendartz "github.com/faustbrian/go-calendar/v2/timezone"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/instant"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/instant"
 )
 
 // Period is an immutable bounded interval over discrete civil dates.

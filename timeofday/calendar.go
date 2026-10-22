@@ -5,7 +5,7 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar/v2"
 	calendartz "github.com/faustbrian/go-calendar/v2/timezone"
-	temporal "github.com/faustbrian/go-temporal/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
 )
 
 // Apply resolves t on date in location according to an explicit DST policy.

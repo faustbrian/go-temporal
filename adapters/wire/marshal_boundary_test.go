@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	wire "github.com/faustbrian/go-temporal/v2/adapters/wire"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	wire "github.com/faustbrian/go-temporal/v3/adapters/wire"
 )
 
 func TestWireScalarMarshalExactEncodedBudget(t *testing.T) {

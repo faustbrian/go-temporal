@@ -3,9 +3,9 @@ package notation_test
 import (
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/notation"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/notation"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 // FuzzInstantNotation exercises interval text and selected notation alphabets.

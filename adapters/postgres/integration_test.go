@@ -9,10 +9,10 @@ import (
 	"time"
 
 	calendar "github.com/faustbrian/go-calendar/v2"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	temporalpostgres "github.com/faustbrian/go-temporal/v2/adapters/postgres"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
-	"github.com/faustbrian/go-temporal/v2/instant"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	temporalpostgres "github.com/faustbrian/go-temporal/v3/adapters/postgres"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
+	"github.com/faustbrian/go-temporal/v3/instant"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 )

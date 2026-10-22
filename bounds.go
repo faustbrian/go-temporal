@@ -13,7 +13,7 @@ package temporal
 import (
 	"fmt"
 
-	"github.com/faustbrian/go-temporal/v2/internal/diagnostic"
+	"github.com/faustbrian/go-temporal/v3/internal/diagnostic"
 )
 
 // Side identifies one endpoint of a bounded interval.

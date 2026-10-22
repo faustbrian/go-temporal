@@ -5,8 +5,8 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar/v2"
 	calendartz "github.com/faustbrian/go-calendar/v2/timezone"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/instant"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/instant"
 )
 
 // ToInstant resolves a daily interval beginning on date. Circular intervals

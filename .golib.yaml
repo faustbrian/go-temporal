@@ -16,7 +16,7 @@ api:
   baselines:
   - module: .
     mode: apidiff
-    path: api/v2.export
+    path: api/v3.export
 operations:
 - module: .
   gate: conformance
@@ -26,7 +26,7 @@ operations:
     run: '^(TestBoundedNotationRoundTripsEveryBoundsMode|TestISO8601RoundTripAndLosslessBoundPolicy|TestBracketSemanticsAreExact|TestFixedISODurationFormatRoundTrips)$'
     timeout: 5m
   - type: go-test
-    packages: [./postgres]
+    packages: [./adapters/postgres]
     run: '^(TestInstantPGXRangeRoundTripsEveryBoundsMode|TestDatePGXRangeCanonicalizesRepresentedDates)$'
     timeout: 5m
 - module: .
@@ -37,7 +37,7 @@ operations:
     run: '^(TestBoundedNotationRoundTripsEveryBoundsMode|TestBracketSemanticsAreExact|TestFixedISODurationRejectsCalendarAndMalformedComponents)$'
     timeout: 5m
   - type: go-test
-    packages: [./postgres]
+    packages: [./adapters/postgres]
     run: '^TestDatePGXRangeCanonicalizesRepresentedDates$'
     timeout: 5m
 - module: .
@@ -89,27 +89,27 @@ operations:
     budget: 10000x
     timeout: 2m
   - type: go-test
-    packages: [./temporalwire]
+    packages: [./adapters/wire]
     fuzz: '^FuzzDocumentJSON$'
     budget: 10000x
     timeout: 2m
   - type: go-test
-    packages: [./temporalwire]
+    packages: [./adapters/wire]
     fuzz: '^FuzzCollectionDocumentJSON$'
     budget: 10000x
     timeout: 2m
   - type: go-test
-    packages: [./postgres]
+    packages: [./adapters/postgres]
     fuzz: '^FuzzInstantRangeSQLScan$'
     budget: 10000x
     timeout: 2m
   - type: go-test
-    packages: [./postgres]
+    packages: [./adapters/postgres]
     fuzz: '^FuzzDateRangeSQLScan$'
     budget: 10000x
     timeout: 2m
   - type: go-test
-    packages: [./postgres]
+    packages: [./adapters/postgres]
     fuzz: '^FuzzInstantPGXMultirange$'
     budget: 10000x
     timeout: 2m

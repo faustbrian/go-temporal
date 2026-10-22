@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
 )
 
 func TestJSONStringSizeMatchesStandardEncodingWithoutChangingRepresentation(t *testing.T) {

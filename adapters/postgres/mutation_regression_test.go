@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/instant"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/instant"
 )
 
 func TestInstantRangeRejectsEitherSubmicrosecondEndpoint(t *testing.T) {

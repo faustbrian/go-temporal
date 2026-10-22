@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
 )
 
 func TestSQLTextExactByteLimitReachesRangeParsers(t *testing.T) {

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/notation"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/notation"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 func dailyTime(t *testing.T, value string) timeofday.Time {

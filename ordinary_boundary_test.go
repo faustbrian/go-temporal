@@ -8,12 +8,12 @@ import (
 	"time"
 
 	calendar "github.com/faustbrian/go-calendar/v2"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	postgres "github.com/faustbrian/go-temporal/v2/adapters/postgres"
-	wire "github.com/faustbrian/go-temporal/v2/adapters/wire"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
-	"github.com/faustbrian/go-temporal/v2/instant"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	postgres "github.com/faustbrian/go-temporal/v3/adapters/postgres"
+	wire "github.com/faustbrian/go-temporal/v3/adapters/wire"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
+	"github.com/faustbrian/go-temporal/v3/instant"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
 func TestOrdinarySQLShortScanPreservesReceiver(t *testing.T) {

@@ -6,12 +6,12 @@ import (
 	"time"
 
 	calendar "github.com/faustbrian/go-calendar/v2"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	temporalvalidation "github.com/faustbrian/go-temporal/v2/adapters/validation"
-	"github.com/faustbrian/go-temporal/v2/dateperiod"
-	"github.com/faustbrian/go-temporal/v2/instant"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
-	validation "github.com/faustbrian/go-validation/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	temporalvalidation "github.com/faustbrian/go-temporal/v3/adapters/validation"
+	"github.com/faustbrian/go-temporal/v3/dateperiod"
+	"github.com/faustbrian/go-temporal/v3/instant"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
+	validation "github.com/faustbrian/go-validation/v3"
 )
 
 func TestNonEmptyValidatorsReturnStableViolations(t *testing.T) {

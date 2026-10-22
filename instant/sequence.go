@@ -5,7 +5,7 @@ import (
 	"sort"
 	"time"
 
-	temporal "github.com/faustbrian/go-temporal/v2"
+	temporal "github.com/faustbrian/go-temporal/v3"
 )
 
 // All returns a repeatable iterator over stable normalized order. It calls yield
