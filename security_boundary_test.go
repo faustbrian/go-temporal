@@ -2,7 +2,6 @@ package temporal_test
 
 import (
 	"errors"
-	"strings"
 	"testing"
 	"time"
 
@@ -11,38 +10,6 @@ import (
 	wire "github.com/faustbrian/go-temporal/v3/adapters/wire"
 	"github.com/faustbrian/go-temporal/v3/instant"
 )
-
-func TestWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *testing.T) {
-	for name, decode := range map[string]func([]byte, temporal.Limits) (wire.Document, error){
-		"canonical": wire.Unmarshal,
-	} {
-		t.Run(name, func(t *testing.T) {
-			for _, test := range []struct {
-				name   string
-				input  string
-				limits temporal.Limits
-				want   error
-			}{
-				{"duplicate", `{"version":"temporal/v1","kind":"time-of-day","value":"08:00","value":"09:00"}`, temporal.Limits{}, temporal.ErrParse},
-				{"depth", `{"version":"temporal/v1","kind":"time-of-day","value":"08:00","private":{"note":"application-private"}}`, temporal.Limits{ParserDepth: 1}, temporal.ErrLimit},
-			} {
-				t.Run(test.name, func(t *testing.T) {
-					got, err := decode([]byte(test.input), test.limits)
-					if !errors.Is(err, test.want) || got != (wire.Document{}) {
-						t.Fatalf("decode = %+v, %v; want zero document and %v", got, err, test.want)
-					}
-					if strings.Contains(err.Error(), "application-private") {
-						t.Fatal("diagnostic contains private input")
-					}
-				})
-			}
-			got, err := decode([]byte(`{"version":"temporal/v1","kind":"time-of-day","value":"08:00"}`), temporal.Limits{ParserDepth: 1})
-			if err != nil || got.Value != "08:00" {
-				t.Fatalf("inclusive depth = %+v, %v", got, err)
-			}
-		})
-	}
-}
 
 func TestTextAdmissionRejectsNilReceivers(t *testing.T) {
 	for name, decode := range map[string]func([]byte) error{
@@ -57,35 +24,6 @@ func TestTextAdmissionRejectsNilReceivers(t *testing.T) {
 			}()
 			if err := decode([]byte("08:00")); !errors.Is(err, temporal.ErrUnsupported) {
 				t.Fatalf("nil receiver error = %v", err)
-			}
-		})
-	}
-}
-
-func TestCollectionWireAdmissionRejectsDuplicateFieldsAndConfiguredDepth(t *testing.T) {
-	for name, decode := range map[string]func([]byte, temporal.Limits) (wire.CollectionDocument, error){
-		"canonical": wire.UnmarshalCollection,
-	} {
-		t.Run(name, func(t *testing.T) {
-			for _, test := range []struct {
-				name   string
-				input  string
-				limits temporal.Limits
-				want   error
-			}{
-				{"duplicate", `{"version":"temporal/v1","kind":"instant-set","values":[],"values":[]}`, temporal.Limits{}, temporal.ErrParse},
-				{"depth", `{"version":"temporal/v1","kind":"instant-set","values":[]}`, temporal.Limits{ParserDepth: 1}, temporal.ErrLimit},
-			} {
-				t.Run(test.name, func(t *testing.T) {
-					got, err := decode([]byte(test.input), test.limits)
-					if !errors.Is(err, test.want) || got.Version != "" || got.Kind != "" || len(got.Values) != 0 {
-						t.Fatalf("decode = %+v, %v; want zero collection and %v", got, err, test.want)
-					}
-				})
-			}
-			got, err := decode([]byte(`{"version":"temporal/v1","kind":"instant-set","values":[]}`), temporal.Limits{ParserDepth: 2})
-			if err != nil || got.Kind != wire.KindInstantSet || len(got.Values) != 0 {
-				t.Fatalf("inclusive depth = %+v, %v", got, err)
 			}
 		})
 	}

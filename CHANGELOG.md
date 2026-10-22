@@ -13,9 +13,10 @@ This project follows Semantic Versioning. Dates use ISO 8601.
 ### Removed
 
 - Remove the deprecated `postgres`, `temporalwire`, `temporalconfig` and
-  `temporalvalidation` facades. Import the matching `adapters/*` package. The
-  removal precedes the announced support window, which the v2 line continues
-  to honour.
+  `temporalvalidation` facades. Import the matching `adapters/*` package;
+  `adapters/postgres` is package `temporalpostgres`. The removal precedes the
+  announced support window; published v2 releases keep the facades and no
+  further v2 releases are planned.
 
 ## Earlier unversioned notes (shipped by 2.0.3)
 

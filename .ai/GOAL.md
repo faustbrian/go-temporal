@@ -181,8 +181,8 @@ Charting is explicitly deferred from the initial Go implementation.
 - `dateperiod`: optional `calendar.Date` periods and sequences.
 - `timeofday`: local times, fixed durations, intervals, and interval sets.
 - `notation`: ISO 8601, ISO 80000, and Bourbaki codecs.
-- `postgres`: range/multirange SQL and pgx integration.
-- `temporalwire`, `temporalvalidation`, and `temporalconfig`: adapters.
+- `adapters/postgres`: range/multirange SQL and pgx integration.
+- `adapters/wire`, `adapters/validation`, and `adapters/config`: adapters.
 - `temporaltest`: relation tables, fixtures, generators, and assertions.
 
 ## Testing And Quality Standard

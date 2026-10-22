@@ -108,6 +108,7 @@ fmt.Println(night.Kind(), night.Duration(), offHours.Len(), instantNight.Start()
 
 Version 3 removed the former `postgres`, `temporalwire`, `temporalvalidation`,
 and `temporalconfig` facades; import the matching `adapters/*` package.
+`adapters/postgres` is package `temporalpostgres`.
 
 ## Compatibility status
 
