@@ -106,8 +106,8 @@ All variable-output operations accept `temporal.Limits` and may return
 
 The v2 line keeps the compatibility paths with their named-type identities;
 v3 removes them. `adapters/postgres` declares package `temporalpostgres`, not
-`postgres`, so unaliased `postgres.` references need the new identifier or an
-import alias; the other adapters keep their package names.
+`postgres`, so `postgres.` references without an import alias need the new
+identifier; the other adapters keep their package names.
 
 ## Unsupported charting gap
 
