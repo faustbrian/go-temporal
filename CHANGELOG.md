@@ -11,6 +11,12 @@ This project follows Semantic Versioning. Dates use ISO 8601.
   intersection complexity and document source-visible precision and degenerate
   relation caveats without changing the Temporal v2 API or runtime behavior.
 
+## 2.0.3 - 2026-10-22
+
+### Changed
+
+- Publish the current source and documentation with a fresh immutable tag.
+
 ## 2.0.2 - 2026-10-14
 
 ### Fixed
