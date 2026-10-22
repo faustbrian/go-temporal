@@ -133,7 +133,8 @@ optional `temporalchart` extension seam over immutable public values.
 
 ## Gate evidence
 
-The release baseline recorded the following gate evidence. Those outcomes remain
+The v2 release baseline recorded the following gate evidence, including the
+`postgres` package that v3 moved to `adapters/postgres`. Those outcomes remain
 historical evidence, not proof for a later source. The explicit full entrypoint
 below preserves those gate scopes; ordinary `make check` and `make ci` now select
 bounded local verification. Current execution and hosted CI are separate facts.

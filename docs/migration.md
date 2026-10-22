@@ -105,7 +105,9 @@ All variable-output operations accept `temporal.Limits` and may return
 | `go-temporal/v2/temporalwire` | `go-temporal/v3/adapters/wire` |
 
 The v2 line keeps the compatibility paths with their named-type identities;
-v3 removes them.
+v3 removes them. `adapters/postgres` declares package `temporalpostgres`, not
+`postgres`, so unaliased `postgres.` references need the new identifier or an
+import alias; the other adapters keep their package names.
 
 ## Unsupported charting gap
 
