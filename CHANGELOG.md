@@ -2,7 +2,7 @@
 
 This project follows Semantic Versioning. Dates use ISO 8601.
 
-## 3.0.0 - 2026-10-22
+## 3.0.0 - 2026-10-23
 
 ### Changed
 
