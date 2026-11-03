@@ -5,8 +5,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/faustbrian/go-calendar/v2 v2.0.0 h1:ZIwXb4/VZF0VSLIRnFvdO0rFFzVRLu1O544F/zpcnnM=
 github.com/faustbrian/go-calendar/v2 v2.0.0/go.mod h1:oCiPd+h3SHu73FdHcpBt0e8InizcIzkEZ9AW3lUsPGg=
-github.com/faustbrian/go-config/v3 v3.0.0 h1:EM78bsVWZaI876cqEAiy3G2DXIyJrG2/ZWncJPVj8Sw=
-github.com/faustbrian/go-config/v3 v3.0.0/go.mod h1:YwXZ8OJwr9Hd1E2/KiAc8UA5Tx4N066q93HLNlNsfew=
+github.com/faustbrian/go-config/v3 v3.1.0 h1:wU7CzB1ISU4NaNKFv+3MCTlijm1ELnRSjGFmTSMuugE=
+github.com/faustbrian/go-config/v3 v3.1.0/go.mod h1:YwXZ8OJwr9Hd1E2/KiAc8UA5Tx4N066q93HLNlNsfew=
 github.com/faustbrian/go-validation/v3 v3.0.1 h1:KSC3671n3JMth1geUvU7JxjY/GVMFZ/rFPQxUsnaIY4=
 github.com/faustbrian/go-validation/v3 v3.0.1/go.mod h1:LBx0QgnEvR3kp+PhOwO92TR3PsbtxpFfu3t/EuKputo=
 github.com/faustbrian/go-wire/v3 v3.0.0 h1:lNSSquTwH2ALHKahCbG2UuLkW/2n6yp4ptwy0iDSlVI=
